@@ -226,7 +226,7 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
 
         // Logo
         const logoPath = path.join(__dirname, 'assets', 'logo.png');
-        const logoWidth = 100; // Adjusted logo width
+        const logoWidth = 350; // Adjusted logo width
         if (fs.existsSync(logoPath)) {
             doc.image(logoPath, pageW / 2 - logoWidth / 2, contentMargin, { width: logoWidth });
         } else {
@@ -234,50 +234,60 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
             doc.font('Helvetica-Bold').fontSize(12).fillColor(textColor)
                .text('Galgotias University Logo Placeholder', pageW / 2 - 100, contentMargin + 20, { width: 200, align: 'center' });
         }
-        doc.moveDown(3); // Spacing after logo
+        doc.moveDown(10); // Spacing after logo
 
-        // University Name
-        doc.font('Helvetica-Bold').fontSize(28).fillColor(universityNameColor)
-           .text('GALGOTIAS UNIVERSITY', contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
-        doc.moveDown(0.8);
+        // University Name - This is already positioned after the logo and its moveDown
+
 
         // "Certificate of Achievement"
         doc.font('Helvetica-Bold').fontSize(22).fillColor(achievementTitleColor)
-           .text('Certificate of Achievement', { align: 'center' });
+           .text('Certificate of Achievement', contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
         doc.moveDown(1.5);
 
         // "This is to certify that"
         doc.font('Helvetica').fontSize(16).fillColor(textColor)
-           .text('This is to certify that', { align: 'center' });
+           .text('This is to certify that', contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
         doc.moveDown(1);
 
         // Student Name
-        // For cursive/script fonts, you'd need to register the font file. Using Times-BoldItalic as a fallback.
         doc.font('Times-BoldItalic').fontSize(28).fillColor(studentNameColor)
-           .text(certificate.fullName, { align: 'center' });
+           .text(certificate.fullName, contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
+        
         // Underline for student name (manual line drawing)
-        const studentNameWidth = doc.widthOfString(certificate.fullName);
-        const studentNameY = doc.y - (doc.currentLineHeight() * 0.2); // Adjust Y to be just under text
-        doc.lineWidth(1.5).moveTo(pageW/2 - studentNameWidth/2, studentNameY)
-           .lineTo(pageW/2 + studentNameWidth/2, studentNameY)
+        const studentNameTextActualWidth = doc.widthOfString(certificate.fullName); 
+        const studentNameContainingBlockWidth = pageW - 2 * contentMargin; 
+        const studentNameUnderlineStartX = contentMargin + (studentNameContainingBlockWidth - studentNameTextActualWidth) / 2;
+        const studentNameY = doc.y - (doc.currentLineHeight() * 0.2); 
+        
+        doc.lineWidth(1.5).moveTo(studentNameUnderlineStartX, studentNameY)
+           .lineTo(studentNameUnderlineStartX + studentNameTextActualWidth, studentNameY)
            .stroke(borderColor);
         doc.moveDown(1.5);
 
 
         // "has successfully completed the course"
         doc.font('Helvetica').fontSize(16).fillColor(textColor)
-           .text('has successfully completed the course', { align: 'center' });
+           .text('has successfully completed the course', contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
         doc.moveDown(0.5);
 
         // Course Name
         doc.font('Helvetica-Bold').fontSize(20).fillColor(textColor)
-           .text(certificate.course, { align: 'center' });
+           .text(certificate.course, contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
         doc.moveDown(1.5);
         
         // Other Details
+        const detailsTextContainerWidth = pageW - 2 * contentMargin;
         doc.font('Helvetica').fontSize(12).fillColor(textColor);
-        doc.text(`Admission Number: ${certificate.admissionNumber}`, { align: 'center' });
-        doc.text(`Date of Birth: ${new Date(certificate.dob).toLocaleDateString()}`, { align: 'center' });
+        doc.text(`Admission Number: ${certificate.admissionNumber}`, contentMargin, doc.y, { 
+            align: 'center', 
+            width: detailsTextContainerWidth 
+        });
+        doc.moveDown(0.5); 
+
+        doc.text(`Date of Birth: ${new Date(certificate.dob).toLocaleDateString()}`, contentMargin, doc.y, { 
+            align: 'center', 
+            width: detailsTextContainerWidth 
+        });
         doc.moveDown(2);
 
 
