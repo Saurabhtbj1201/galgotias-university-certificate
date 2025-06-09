@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Your Certificate</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="images/logo.png" alt="Galgotias University Logo">
+        </div>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+            <span class="hamburger-icon"></span>
+            <span class="hamburger-icon"></span>
+            <span class="hamburger-icon"></span>
+        </button>
+        <nav id="mainNav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="get_certificate.html">Get Your Certificate</a></li>
+                <li><a href="download_certificate.html">Download Certificate</a></li>
+                <li><a href="verify_certificate.html">Verify Certificate</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Welcome to the Certificate Generator</h2>
+        <section class="form-section">
+            <h2>Get Your Certificate</h2>
+            <form id="certificateForm">
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+
+                <label for="mobile">Mobile:</label>
+                <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" required>
+
+                <label for="college">College Name:</label>
+                <input type="text" id="college" name="college" placeholder="Enter your college name" required>
+
+                <label for="course">Course:</label>
+                <input type="text" id="course" name="course" placeholder="Enter your course name" required>
+
+                <label for="admissionNumber">Admission Number:</label>
+                <input type="text" id="admissionNumber" name="admissionNumber" placeholder="Enter your admission number" required>
+
+                <label for="section">Section:</label>
+                <input type="text" id="section" name="section" placeholder="Enter your section" required>
+
+                <label for="semester">Semester:</label>
+                <input type="text" id="semester" name="semester" placeholder="Enter your semester" required>
+
+                <label for="address">Address:</label>
+                <textarea id="address" name="address" placeholder="Enter your full address" required></textarea>
+
+                <button type="submit">Submit</button>
+            </form>
+            <div id="popupMessage" class="popup">
+                <p>Congratulations! Form submitted successfully. Your certificate will be generated soon. You can download your certificate from the download certificate button.</p>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section quick-links">
+                <h3>QUICK LINKS</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="get_certificate.html">Get Your Certificate</a></li>
+                    <li><a href="download_certificate.html">Download Certificate</a></li>
+                    <li><a href="verify_certificate.html">Verify Certificate</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section reach-us">
+                <h3>REACH US</h3>
+                <p><a href="tel:9798024301">9798024301</a></p>
+                <p><a href="mailto:admission@galgotiasuniversity.edu.in">admission@galgotiasuniversity.edu.in</a></p>
+            </div>
+            <div class="footer-section locate-us">
+                <h3>LOCATE US</h3>
+                <address>
+                    Plot No.2, Sector 17-A Yamuna Expressway, Opposite Buddha International Circuit, Greater Noida, Gautam Buddh Nagar, Uttar Pradesh 203201
+                </address>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Galgotias University. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="js/script.js"></script>
+</body>
+</html>

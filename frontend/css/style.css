@@ -1,0 +1,950 @@
+/* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #1a1a1a;
+    /* Dark background */
+    color: #f0f0f0;
+    /* Light text */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex-grow: 1;
+}
+
+/* Header */
+header {
+    background-color: #8B0000;
+    /* Dark Red */
+    color: white;
+    padding: 1rem 2rem;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+header .logo img {
+    width: 300px;
+    height: auto;
+    transition: transform 0.3s ease;
+    display: block;
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 1));
+}
+
+header .logo img:hover {
+    transform: scale(1.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    flex-grow: 1;
+    text-align: center;
+    /* Center title if nav is separate */
+}
+
+header nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+header nav ul li {
+    margin: 0.5rem 1rem;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.5rem 0.8rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+header nav ul li a:hover,
+header nav ul li a:focus {
+    background-color: #f0f0f0;
+    /* White background on hover/focus */
+    color: #8B0000;
+    /* Dark Red text on hover/focus */
+    outline: none;
+}
+
+/* Hamburger Menu Styles */
+.menu-toggle {
+    display: none;
+    /* Hidden by default on larger screens */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    margin-left: auto;
+    /* Pushes it to the right if logo is on left */
+}
+
+.hamburger-icon {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 5px 0;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Main Content & Sections */
+.container,
+main section {
+    width: 85%;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #d1d1d1;
+    /* Slightly lighter dark shade for content */
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hero Background Section */
+.background {
+    position: relative;
+    min-height: 400px; /* Or your desired height */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* This will center the .overlay-left and .overlay-right if they are the only direct children after the image container is absolutely positioned */
+    overflow: hidden;
+    width: 100%; /* Ensure it takes full width */
+    padding: 2rem 0; /* Add some padding if needed, adjust as necessary */
+    flex-wrap: wrap; /* Allow overlays to wrap on smaller screens */
+    gap: 10rem; /* Space between overlays */
+}
+
+.background-image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('../images/bg.webp') center center/cover no-repeat; /* Ensure path to image is correct from CSS file location */
+    z-index: 1;
+}
+
+.overlay-left {
+    position: relative; /* Keeps it in the flex flow of .background */
+    z-index: 2; /* Above the background image */
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    padding: 3rem; /* Adjusted padding */
+    border-radius: 0; /* As per original inline style, can be changed */
+    margin: 1rem; /* Adjusted margin */
+    max-width: 500px; /* Adjusted max-width */
+    text-align: left;
+}
+
+.overlay-left h1 {
+    font-size: 3rem; /* Example size */
+    margin-bottom: 1rem;
+    color: #fff; /* Ensure h1 color is white */
+}
+
+.overlay-left p {
+    font-size: 1.2rem; /* Example size */
+    line-height: 1.6;
+}
+
+.overlay-right {
+    position: relative; /* Keeps it in the flex flow of .background */
+    z-index: 2; /* Above the background image */
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    padding: 2rem;
+    border-radius: 0; /* As per original inline style, can be changed */
+    margin: 1rem; /* Adjusted margin */
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Increased gap */
+    max-width: 300px;
+}
+
+.overlay-right .stat {
+    text-align: center;
+}
+
+.overlay-right .stat h3 {
+    font-size: 2rem; /* Example size */
+    margin-bottom: 0.3rem;
+    color: #fff; /* Ensure h3 color is white */
+}
+
+.overlay-right .stat p {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+
+h2 {
+    color: #8B0000;
+    /* Dark Red for headings */
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.8em;
+}
+
+.landing p {
+    font-size: 1.2rem;
+    color: #1c1c1c;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.landing p.tagline {
+    /* New class for the specific paragraph */
+    color: #000000;
+    /* Black color */
+}
+
+
+/* Buttons */
+.button,
+button,
+.btn {
+    background-color: #8B0000;
+    /* Dark Red */
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    display: inline-block;
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.button:hover,
+button:hover,
+.btn:hover {
+    background-color: #a50000;
+    /* Slightly lighter red on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.button:focus,
+button:focus,
+.btn:focus {
+    outline: 2px solid #f0f0f0;
+    /* White outline on focus */
+    outline-offset: 2px;
+    background-color: #a50000;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Forms */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group,
+form label {
+    /* Combined for simplicity */
+    display: block;
+    /* Ensure label takes full width */
+    margin-bottom: 0.25rem;
+    /* Reduced space below label */
+    color: #242424;
+    font-weight: bold;
+}
+
+.form-group input,
+form input[type="text"],
+form input[type="email"],
+form input[type="tel"],
+form input[type="date"],
+form input[type="number"],
+form textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #000000;
+    /* Darker border */
+    border-radius: 5px;
+    background-color: #333333;
+    /* Dark input background */
+    color: #f0f0f0;
+    /* Light text in input */
+    box-sizing: border-box;
+    /* Ensure padding doesn't add to width */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 0;
+    /* Ensure no extra top margin on input */
+}
+
+form input[type="text"]::placeholder,
+form input[type="email"]::placeholder,
+form input[type="tel"]::placeholder,
+form input[type="date"]::placeholder,
+/* Note: Styling date placeholder can be tricky and browser-dependent */
+form input[type="number"]::placeholder,
+form textarea::placeholder {
+    color: #d6d6d6;
+    /* Lighter gray for placeholder text */
+    opacity: 0.8;
+    /* Make it slightly transparent */
+    font-style: italic;
+}
+
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form input[type="tel"]:focus,
+form input[type="date"]:focus,
+form input[type="number"]:focus,
+form textarea:focus {
+    border-color: #8B0000;
+    /* Dark Red border on focus */
+    box-shadow: 0 0 8px rgba(139, 0, 0, 0.5);
+    /* Red glow */
+    outline: none;
+}
+
+form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+footer {
+    background-color: #8B0000; /* Dark Red */
+    color: white;
+    padding: 2rem 5rem 1rem 5rem; /* Adjusted padding */
+    margin-top: auto; /* Pushes footer to bottom */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around; /* Distributes space between sections */
+    gap: 2rem; /* Space between sections */
+    margin-bottom: 2rem;
+    text-align: left; /* Override general footer text-align for sections */
+}
+
+.footer-section {
+    flex: 1; /* Allows sections to grow and shrink */
+    min-width: 250px; /* Minimum width before wrapping */
+    padding: 0 1rem; /* Padding within each section */
+}
+
+.footer-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #f0f0f0; /* Lighter color for headings */
+    border-bottom: 1px solid #a50000; /* Subtle separator */
+    padding-bottom: 0.5rem;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-section ul li a,
+.footer-section.reach-us p a {
+    color: #e0e0e0; /* Slightly off-white for links */
+    text-decoration: none;
+    transition: color 0.3s ease, padding-left 0.3s ease;
+}
+
+.footer-section ul li a:hover,
+.footer-section.reach-us p a:hover {
+    color: #ffffff; /* Brighter white on hover */
+    padding-left: 5px; /* Slight indent on hover */
+}
+
+.footer-section.reach-us p,
+.footer-section.locate-us address {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+    color: #e0e0e0;
+}
+
+.footer-section.locate-us address {
+    font-style: normal;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid #a50000; /* Separator for copyright */
+    margin-top: 1rem;
+}
+
+.footer-bottom p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #f0f0f0;
+}
+
+/* Popup / Modal */
+.popup {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    background-color: #2c2c2c;
+    /* Dark background for popup */
+    color: #f0f0f0;
+    border: 1px solid #8B0000;
+    /* Dark Red border */
+    padding: 2rem;
+    z-index: 1000;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    width: 80%;
+    max-width: 500px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.popup.active {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.popup p {
+    margin-bottom: 1.5rem;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    /* Darker overlay */
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* Certificate Preview & Results */
+#certificatePreview,
+#verificationResult {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: #333;
+    border: 1px solid #8B0000;
+    border-radius: 5px;
+    animation: slideInUp 0.5s ease-out;
+}
+
+#certificatePreview.hidden {
+    display: none;
+}
+
+/* This rule is for general messages within #previewContent, like "Fetching..." or "Not found"
+   It should NOT override specific styles within the .certificate-design itself. */
+#previewContent > p, /* Target only direct children p for general messages */
+#verificationResult p {
+    margin: 0.5rem 0;
+    color: #f0f0f0;
+}
+
+#previewContent strong, /* This might need adjustment if used inside .certificate-design */
+#verificationResult strong {
+    color: #8B0000;
+}
+
+/* Certificate Preview Styling */
+#certificatePreview {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+#certificatePreview h3 {
+    margin-top: 0;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.certificate-design {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px; /* Inner padding for content, distinct from border padding */
+    background-color: #fdfdfd; /* Off-white for the certificate paper */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* More pronounced shadow */
+    color: #222; /* Darker default text color for better contrast */
+    position: relative;
+}
+
+.certificate-border {
+    border: 10px double #c0a062; /* Ornate gold-ish double border */
+    padding: 25px;
+    position: relative;
+    /* Adding a subtle inner border/shadow for depth */
+    box-shadow: inset 0 0 0 2px #daa520; /* Goldenrod inner line */
+}
+
+/* Optional: Add a subtle background pattern or texture if desired */
+/* .certificate-design::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('../images/subtle-parchment.png'); 
+    opacity: 0.05;
+    z-index: 0;
+} */
+
+.certificate-header,
+.certificate-body,
+.certificate-footer {
+    text-align: center;
+    position: relative; 
+    z-index: 1;
+}
+
+.certificate-logo {
+    max-width: 300px; /* Adjust as needed */
+    margin-bottom: 10px;
+}
+
+.certificate-design .certificate-header h1 { 
+    font-size: 32px; /* Larger for University Name */
+    color: #8B0000; /* Dark Red, matching header theme */
+    margin: 10px 0;
+    font-weight: bold;
+    font-family: 'Trajan Pro', 'Times New Roman', serif; /* More formal font if available */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.certificate-design .certificate-header h2 { 
+    font-size: 24px; /* Prominent "Certificate of Achievement" */
+    color: #504020; /* Dark brown, complementary to gold */
+    margin: 5px 0 25px 0;
+    font-style: normal; /* Changed from italic for more formality */
+    font-weight: 600;
+}
+
+.certificate-body {
+    margin: 30px 0;
+}
+
+.certificate-design .certify-text,
+.certificate-design .course-text {
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #333; /* Explicitly set dark color */
+}
+
+.certificate-design .student-name {
+    font-size: 30px; /* More prominent student name */
+    font-weight: bold;
+    color: #8B0000; /* Dark Red */
+    margin: 15px 0;
+    border-bottom: 2px solid #b8860b; /* Gold underline */
+    display: inline-block;
+    padding-bottom: 8px;
+    font-family: 'Brush Script MT', 'cursive'; /* Cursive font for name, ensure fallback */
+}
+
+.certificate-design .course-name {
+    font-size: 22px; /* Prominent course name */
+    font-weight: 600; /* Semi-bold */
+    color: #333; 
+    margin: 15px 0 25px 0;
+}
+
+.certificate-design .details-text {
+    font-size: 15px; /* Clear and readable */
+    line-height: 1.7;
+    margin-top: 20px;
+    color: #444; 
+}
+
+.certificate-design .certificate-footer {
+    margin-top: 45px;
+    font-size: 14px; /* Slightly larger footer text */
+    display: flex;
+    justify-content: space-between;
+    color: #222; 
+    padding-top: 15px;
+    border-top: 1px solid #daa520; /* Light gold separator line */
+}
+
+.certificate-design .certificate-number,
+.certificate-design .issue-date {
+    margin: 0;
+    color: #222; 
+}
+
+#certificatePreview #downloadButton,
+#certificatePreview .share-options button {
+    margin-top: 15px;
+    margin-right: 10px;
+}
+
+#certificatePreview .share-options {
+    margin-top: 15px;
+    text-align: center;
+}
+
+#certificatePreview .share-options h4 {
+    margin-bottom: 10px;
+}
+
+/* Ensure the preview content is not hidden by default if it has content */
+#certificatePreview:not(.hidden) #previewContent {
+    display: block;
+}
+
+/* Styles for popup messages (if not already defined well) */
+.popup {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 25px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    font-size: 16px;
+    text-align: center;
+}
+
+.popup.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup.success {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
+
+.popup.error {
+    background-color: #f44336; /* Red */
+    color: white;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .footer {
+        padding: 2rem 1rem 5rem;
+    }
+    .certificate-design {
+        padding: 10px;
+    }
+    .certificate-border {
+        padding: 20px; /* Adjusted padding */
+        border-width: 8px; /* Thinner border on mobile */
+        box-shadow: inset 0 0 0 1px #daa520; /* Thinner inner line */
+    }
+    .certificate-design .certificate-header h1 { 
+        font-size: 24px; /* Adjusted for mobile */
+    }
+    .certificate-design .certificate-header h2 { 
+        font-size: 20px; /* Adjusted for mobile */
+    }
+    .certificate-design .student-name { 
+        font-size: 22px; /* Adjusted for mobile */
+    }
+    .certificate-design .course-name { 
+        font-size: 18px; /* Adjusted for mobile */
+    }
+    .certificate-design .certify-text,
+    .certificate-design .course-text {
+        font-size: 16px;
+    }
+    .certificate-design .details-text {
+        font-size: 13px;
+    }
+     .certificate-design .certificate-footer {
+        font-size: 12px; /* Adjusted for mobile */
+        flex-direction: column;
+        align-items: center;
+    }
+    .certificate-design .certificate-footer p { 
+        margin-bottom: 8px; /* Spacing for stacked items */
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header {
+        flex-direction: row; 
+        justify-content: space-between; 
+        align-items: center; 
+        padding: 0.75rem 1rem; /* Adjusted padding for responsive header */
+        position: relative;
+        flex-wrap: nowrap; /* Ensure logo and menu toggle stay on the same line */
+    }
+
+    header .logo { /* Optional: if div.logo needs specific flex properties */
+        flex-shrink: 0; /* Prevent logo container from shrinking */
+    }
+
+    header .logo img {
+        width: 250px;
+    }
+    .menu-toggle {
+        display: block; 
+        order: 2; /* Ensures it's logically after the logo if other items were in flow */
+        /* margin-left: auto; is inherited from the base .menu-toggle style, which pushes it to the right. */
+    }
+
+    header nav {
+        display: none; /* Hide nav by default on mobile */
+        width: 100%;
+        background-color: #7a0000; /* Slightly darker red for dropdown */
+        position: absolute;
+        top: 100%; /* Position below the header */
+        left: 0;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        z-index: 100; /* Ensure it's above other content */
+        order: 3; /* After logo and toggle */
+    }
+
+    header nav.active {
+        display: block; /* Show nav when active */
+    }
+
+    header nav ul {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        padding: 1rem 0;
+    }
+
+    header nav ul li {
+        margin: 0.8rem 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    header nav ul li a {
+        padding: 0.8rem 1rem;
+        display: block; /* Make links take full width */
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    header nav ul li a:hover,
+    header nav ul li a:focus {
+        background-color: #f0f0f0;
+        color: #8B0000;
+    }
+
+    /* Hamburger animation when active */
+    .menu-toggle.active .hamburger-icon:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+    .menu-toggle.active .hamburger-icon:nth-child(2) {
+        opacity: 0;
+    }
+    .menu-toggle.active .hamburger-icon:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .background {
+        gap: 1rem; /* Adjust gap for vertical stacking */
+    }
+
+    .overlay-left h1 {
+        font-size: 1.8rem;
+    }
+    .overlay-left p {
+        font-size: 1rem;
+    }
+    .overlay-right .stat h3 {
+        font-size: 1.5rem;
+    }
+    .overlay-right {
+        gap: 1rem;
+    }
+
+    .container,
+    main section {
+        padding: 1.5rem;
+        margin: 1.5rem auto;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .button,
+    button,
+    .btn {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .landing h1 {
+        font-size: 2rem;
+    }
+
+    .landing p {
+        font-size: 1rem;
+    }
+
+    .popup {
+        width: 90%;
+    }
+
+    footer {
+        padding: 1rem; /* Adjusted padding for smaller screens */
+    }
+
+    .footer-container {
+        flex-direction: column;
+        align-items: center; /* Center sections when stacked */
+        text-align: center; /* Center text within sections on mobile */
+        gap: 0; /* Space between sections */
+        margin: 0;
+    }
+
+    .footer-section {
+        min-width: 100%; /* Sections take full width when stacked */
+        margin-bottom: 1.5rem;
+        padding: 0;
+    }
+
+    .footer-section h3 {
+        text-align: center;
+    }
+
+    .footer-section ul {
+        text-align: center;
+    }
+
+    .certificate-logo {
+        max-width: 250px; 
+    }
+}
+
+/* Responsive adjustments for the background section */
+@media (max-width: 992px) { /* Adjust breakpoint as needed */
+    .background {
+        gap: 1rem; /* Adjust gap for vertical stacking */
+    }
+    
+    .certificate-logo {
+        max-width: 250px; 
+    }
+}
+@media (max-width: 1024px) { /* Adjust breakpoint as needed */
+    .background {
+        gap: 1rem; /* Adjust gap for vertical stacking */
+    }
+}
+
+@media (max-width: 480px) {
+    header .logo img {
+        width: 200px;
+    }
+
+    header h1 { /* If h1 is present in some headers and needs to be smaller */
+        font-size: 1.1rem; /* Adjust h1 size on small screens */
+        margin: 0.5rem 0.25rem; /* Adjust margins */
+        flex-grow: 1; /* Allow it to take space if needed, but ensure it doesn't break layout */
+        text-align: center;
+    }
+
+    header nav ul li a {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.9rem;
+    }
+
+    .background {
+        gap: 1.5rem; /* Adjust gap for vertical stacking */
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    form input[type="text"],
+    form input[type="email"],
+    form input[type="tel"],
+    form input[type="date"],
+    form input[type="number"],
+    form textarea {
+        padding: 0.7rem;
+    }
+    .certificate-logo {
+        max-width: 200px; 
+    }
+    .overlay-left {
+        padding: 1.5rem;
+        margin: 0.3rem;
+    }
+    .footer {
+        padding: 1rem;
+    }
+}
