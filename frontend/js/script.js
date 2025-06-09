@@ -2,7 +2,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const menuToggle = document.getElementById('menuToggle');
     const mainNav = document.getElementById('mainNav');
     // const popup = document.getElementById('popupMessage'); // This will be null if #popupMessage is not on the current page
-    const API_BASE_URL = 'http://localhost:3000/api'; // Backend API URL
+    
+    // IMPORTANT: Replace with your actual Render backend URL
+    const API_BASE_URL = 'https://galgotias-university-certificate.onrender.com'; // Example: https://galgotias-backend.onrender.com/api
 
     // Toggle the navigation menu on mobile
     if (menuToggle && mainNav) {
