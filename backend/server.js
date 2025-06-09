@@ -7,15 +7,17 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000; // Render will set the PORT environment variable
 
 // Middleware
+// For production, you should restrict CORS to your specific frontend domain
+// Example: app.use(cors({ origin: 'https://your-frontend-name.onrender.com' }));
 app.use(cors()); // Enable CORS for all routes
 app.use(bodyParser.json()); // Parse JSON request bodies
 
 // MongoDB Connection
 // IMPORTANT: For production, use environment variables for sensitive data like DB URIs.
-const MONGO_URI = 'mongodb+srv://saurabhtbj143:dHnZtR418tPCh1av@certificate.o6oezvn.mongodb.net/?retryWrites=true&w=majority&appName=certificate';
+const MONGO_URI = process.env.MONGO_URI; // Ensure this is set in Render's environment variables
 
 mongoose.connect(MONGO_URI)
     .then(() => console.log('MongoDB connected successfully'))
@@ -332,5 +334,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on port ${PORT}`); // Log the port Render assigns
 });
