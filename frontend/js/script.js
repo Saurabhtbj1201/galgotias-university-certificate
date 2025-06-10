@@ -178,26 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Share functions for download_certificate.html
-    window.shareOn = function(platform) {
-        const certificateURL = window.location.href; // Or a specific certificate link
-        const certificateText = "Check out my new certificate from Galgotias University!";
-        let shareURL = '';
 
-        if (platform === 'linkedin') {
-            shareURL = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(certificateURL)}&title=${encodeURIComponent(certificateText)}`;
-        } else if (platform === 'twitter') {
-            shareURL = `https://twitter.com/intent/tweet?url=${encodeURIComponent(certificateURL)}&text=${encodeURIComponent(certificateText)}`;
-        } else if (platform === 'email') {
-            shareURL = `mailto:?subject=${encodeURIComponent(certificateText)}&body=${encodeURIComponent(certificateURL)}`;
-        }
-
-        if (shareURL) {
-            window.open(shareURL, '_blank');
-        } else {
-            alert(`Sharing on ${platform} (URL: ${certificateURL})`);
-        }
-    };
 
     // Handle Verification Form Submission (verify_certificate.html)
     const verifyForm = document.getElementById('verifyForm');
