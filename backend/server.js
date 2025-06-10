@@ -266,13 +266,23 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
         doc.moveDown(0.5);
 
         // "has successfully completed the course [Course Name] - demonstrating dedication, academic excellence, and commitment to learning."
+        const beforeCourse = 'has successfully completed the course ';
+        const afterCourse = ' - demonstrating dedication, academic excellence, and commitment to learning.';
+
+        // Calculate widths for centering
+        const beforeWidth = doc.widthOfString(beforeCourse, { font: 'Helvetica', size: 16 });
+        const courseWidth = doc.widthOfString(certificate.course, { font: 'Helvetica-Bold', size: 16 });
+        const afterWidth = doc.widthOfString(afterCourse, { font: 'Helvetica', size: 16 });
+        const totalWidth = beforeWidth + courseWidth + afterWidth;
+        const startX = contentMargin + ((pageW - 2 * contentMargin) - totalWidth) / 2;
+        const y = doc.y;
+
         doc.font('Helvetica').fontSize(16).fillColor(textColor)
-           .text(
-               `has successfully completed the course ${certificate.course} - demonstrating dedication, academic excellence, and commitment to learning.`,
-               contentMargin,
-               doc.y,
-               { align: 'center', width: pageW - 2 * contentMargin }
-           );
+           .text(beforeCourse, startX, y, { continued: true });
+        doc.font('Helvetica-Bold').fontSize(16).fillColor(textColor)
+           .text(certificate.course, { continued: true });
+        doc.font('Helvetica').fontSize(16).fillColor(textColor)
+           .text(afterCourse);
         doc.moveDown(0.5);
 
         // "fulfilled all academic requirements"
@@ -283,10 +293,20 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
         // Other Details
         const detailsTextContainerWidth = pageW - 2 * contentMargin;
         doc.font('Helvetica').fontSize(12).fillColor(textColor);
-        doc.text(`Admission Number: ${certificate.admissionNumber}`, contentMargin, doc.y, { 
-            align: 'center', 
-            width: detailsTextContainerWidth 
-        });
+
+        // Bold "Admission Number" and the value
+        const admissionLabel = 'Admission Number: ';
+        const admissionValue = certificate.admissionNumber;
+
+        // Calculate width for label and value for centering
+        const labelWidth = doc.widthOfString(admissionLabel, { font: 'Helvetica-Bold' });
+        const valueWidth = doc.widthOfString(admissionValue, { font: 'Helvetica-Bold' });
+        const totalWidth = labelWidth + valueWidth;
+        const startX = contentMargin + (detailsTextContainerWidth - totalWidth) / 2;
+        const y = doc.y;
+
+        doc.font('Helvetica-Bold').text(admissionLabel, startX, y, { continued: true });
+        doc.font('Helvetica-Bold').text(admissionValue);
         doc.moveDown(2); // Increased spacing before signatures
 
         // --- Signatures Section ---
