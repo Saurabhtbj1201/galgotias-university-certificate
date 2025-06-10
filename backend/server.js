@@ -243,7 +243,7 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
         // "Certificate of Achievement"
         doc.font('Helvetica-Bold').fontSize(22).fillColor(achievementTitleColor)
            .text('Certificate of Achievement', contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
-        doc.moveDown(1.5);
+        doc.moveDown(1);
 
         // "This is to certify that"
         doc.font('Helvetica').fontSize(16).fillColor(textColor)
@@ -263,7 +263,7 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
         doc.lineWidth(1.5).moveTo(studentNameUnderlineStartX, studentNameY)
            .lineTo(studentNameUnderlineStartX + studentNameTextActualWidth, studentNameY)
            .stroke(borderColor);
-        doc.moveDown(0.7);
+        doc.moveDown(0.5);
 
         // "has successfully completed the course [Course Name] - demonstrating dedication, academic excellence, and commitment to learning."
         doc.font('Helvetica').fontSize(16).fillColor(textColor)
@@ -278,7 +278,7 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
         // "fulfilled all academic requirements"
         doc.font('Helvetica').fontSize(16).fillColor(textColor)
            .text('Throughout the duration of the course, he has fulfilled all academic requirements, completed assigned coursework, and participated in relevant academic activities as per the standards prescribed by Galgotias University.', contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
-        doc.moveDown(1.5);
+        doc.moveDown(1);
         
         // Other Details
         const detailsTextContainerWidth = pageW - 2 * contentMargin;
@@ -287,7 +287,7 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
             align: 'center', 
             width: detailsTextContainerWidth 
         });
-        doc.moveDown(3); // Increased spacing before signatures
+        doc.moveDown(2); // Increased spacing before signatures
 
         // --- Signatures Section ---
         const signatureY = doc.y; // Y position for both signatures
