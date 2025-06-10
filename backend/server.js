@@ -240,7 +240,6 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
 
         // University Name - This is already positioned after the logo and its moveDown
 
-
         // "Certificate of Achievement"
         doc.font('Helvetica-Bold').fontSize(22).fillColor(achievementTitleColor)
            .text('Certificate of Achievement', contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
@@ -249,7 +248,7 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
         // "This is to certify that"
         doc.font('Helvetica').fontSize(16).fillColor(textColor)
            .text('This is to certify that', contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
-        doc.moveDown(1);
+        doc.moveDown(0.5);
 
         // Student Name
         doc.font('Times-BoldItalic').fontSize(28).fillColor(studentNameColor)
@@ -264,17 +263,21 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
         doc.lineWidth(1.5).moveTo(studentNameUnderlineStartX, studentNameY)
            .lineTo(studentNameUnderlineStartX + studentNameTextActualWidth, studentNameY)
            .stroke(borderColor);
-        doc.moveDown(1.5);
+        doc.moveDown(1);
 
-
-        // "has successfully completed the course"
+        // "has successfully completed the course [Course Name] - demonstrating dedication, academic excellence, and commitment to learning."
         doc.font('Helvetica').fontSize(16).fillColor(textColor)
-           .text('has successfully completed the course', contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
+           .text(
+               `has successfully completed the course ${certificate.course} - demonstrating dedication, academic excellence, and commitment to learning.`,
+               contentMargin,
+               doc.y,
+               { align: 'center', width: pageW - 2 * contentMargin }
+           );
         doc.moveDown(0.5);
 
-        // Course Name
-        doc.font('Helvetica-Bold').fontSize(20).fillColor(textColor)
-           .text(certificate.course, contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
+        // "fulfilled all academic requirements"
+        doc.font('Helvetica').fontSize(16).fillColor(textColor)
+           .text('Throughout the duration of the course, he has fulfilled all academic requirements, completed assigned coursework, and participated in relevant academic activities as per the standards prescribed by Galgotias University.', contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
         doc.moveDown(1.5);
         
         // Other Details
@@ -284,13 +287,8 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
             align: 'center', 
             width: detailsTextContainerWidth 
         });
-        doc.moveDown(0.5); 
+        doc.moveDown(2); 
 
-        doc.text(`Date of Birth: ${new Date(certificate.dob).toLocaleDateString()}`, contentMargin, doc.y, { 
-            align: 'center', 
-            width: detailsTextContainerWidth 
-        });
-        doc.moveDown(2);
 
 
         // Footer section for Certificate Number and Issue Date
