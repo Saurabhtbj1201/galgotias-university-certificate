@@ -649,6 +649,313 @@ footer {
     margin-bottom: 10px;
 }
 
+/* About Us Section Styles */
+.about-section {
+    background-color: #f9f9f9; /* Light background for the section */
+    color: #333; /* Darker text for readability */
+    animation: fadeIn 1s ease-out;
+}
+
+.about-section .container {
+    width: 85%;
+    margin: 0 auto; /* Center the container */
+    padding: 2rem;
+    background-color: #ffffff; /* White background for content box */
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.about-section h2 {
+    color: #8B0000; /* Dark Red for main heading */
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.2em;
+    position: relative;
+}
+
+.about-section h2::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    background-color: #8B0000;
+    margin: 0.5rem auto 0;
+}
+
+.about-section p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    text-align: justify;
+    color: #444;
+}
+
+.about-section h3 {
+    color: #8B0000; /* Dark Red for subheadings */
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.8em;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+}
+
+/* Mission List Styles */
+.mission-container, .core-values-container {
+    margin-top: 2rem;
+}
+
+.mission-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.mission-list li {
+    background-color: #f0f4f8; /* Light blue-grey background */
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border-left: 5px solid #8B0000; /* Dark Red accent border */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideInUpList 0.5s ease-out forwards;
+}
+
+.mission-list li:nth-child(1) { animation-delay: 0.1s; }
+.mission-list li:nth-child(2) { animation-delay: 0.2s; }
+.mission-list li:nth-child(3) { animation-delay: 0.3s; }
+.mission-list li:nth-child(4) { animation-delay: 0.4s; }
+
+
+.mission-list li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+}
+
+.mission-list li strong {
+    color: #8B0000;
+    font-weight: 700;
+    margin-right: 0.5rem;
+}
+
+/* Core Values List Styles */
+.core-values-list {
+    list-style: none;
+    padding-left: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.core-values-list li {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+    text-align: center;
+    font-size: 1.1rem;
+    color: #333;
+    font-weight: 500;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideInUpList 0.5s ease-out forwards;
+    position: relative;
+    overflow: hidden;
+}
+
+.core-values-list li:nth-child(1) { animation-delay: 0.5s; }
+.core-values-list li:nth-child(2) { animation-delay: 0.6s; }
+.core-values-list li:nth-child(3) { animation-delay: 0.7s; }
+.core-values-list li:nth-child(4) { animation-delay: 0.8s; }
+.core-values-list li:nth-child(5) { animation-delay: 0.9s; }
+
+
+.core-values-list li::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(139, 0, 0, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.core-values-list li:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 8px 20px rgba(139, 0, 0, 0.15);
+    border-color: #8B0000;
+}
+
+.core-values-list li:hover::before {
+    left: 100%;
+}
+
+@keyframes slideInUpList {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Contact Page Specific Styles */
+.contact-section .container {
+    background-color: #ffffff; /* White background for content box */
+    color: #333; /* Darker text for readability */
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.contact-section .contact-block {
+    margin-bottom: 2.5rem;
+}
+
+.contact-section .contact-block:last-child {
+    margin-bottom: 0;
+}
+
+.contact-section h3 {
+    color: #8B0000; /* Dark Red for subheadings */
+    margin-top: 0; 
+    margin-bottom: 1.5rem;
+    font-size: 1.8em;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 0.75rem;
+}
+
+.contact-section h4 {
+    color: #4a4a4a; 
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.4em;
+    font-weight: 600;
+}
+
+.contact-section p,
+.contact-section ul li {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
+    color: #444;
+}
+
+.contact-section p strong {
+    color: #333;
+    font-weight: 600;
+}
+
+.contact-section a {
+    color: #8B0000;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+.contact-section a:hover,
+.contact-section a:focus {
+    color: #a50000; 
+    text-decoration: underline;
+    outline: none; 
+}
+
+.contact-section a:focus-visible { 
+    outline: 2px solid #8B0000;
+    outline-offset: 2px;
+    border-radius: 2px; 
+}
+
+.contact-section .contact-email-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.contact-section .contact-email-list li {
+    margin-bottom: 0.5rem;
+}
+
+.contact-section .direction-method,
+.contact-section .admission-type {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: #f9f9f9; 
+    border-radius: 6px;
+    border-left: 5px solid #8B0000; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.contact-section .direction-method:hover,
+.contact-section .admission-type:hover {
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    transform: translateY(-4px);
+}
+
+.contact-section .direction-method ul {
+    list-style: disc;
+    padding-left: 25px; 
+    margin-top: 0.75rem;
+}
+
+.contact-section .direction-method ul li {
+    color: #555;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem; 
+}
+
+/* Responsive adjustments for contact section */
+@media (max-width: 768px) {
+    .contact-section .container {
+        padding: 1.5rem;
+    }
+    .contact-section h3 {
+        font-size: 1.6em; 
+        margin-bottom: 1.2rem;
+        padding-bottom: 0.6rem;
+    }
+    .contact-section h4 {
+        font-size: 1.25em; 
+        margin-bottom: 0.8rem;
+    }
+    .contact-section p,
+    .contact-section ul li {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+    .contact-section .direction-method,
+    .contact-section .admission-type {
+        padding: 1.2rem;
+        border-left-width: 4px;
+    }
+    .contact-section .direction-method ul {
+        padding-left: 20px;
+    }
+    .contact-section .direction-method ul li {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-section h3 {
+        font-size: 1.4em; 
+    }
+    .contact-section h4 {
+        font-size: 1.15em; 
+    }
+    .contact-section p,
+    .contact-section ul li {
+        font-size: 0.9rem;
+    }
+    .contact-section .direction-method,
+    .contact-section .admission-type {
+        padding: 1rem;
+    }
+}
+
 /* Ensure the preview content is not hidden by default if it has content */
 #certificatePreview:not(.hidden) #previewContent {
     display: block;
@@ -725,6 +1032,39 @@ footer {
     }
     .certificate-design .certificate-footer p { 
         margin-bottom: 8px; /* Spacing for stacked items */
+    }
+
+    /* About Section Responsive */
+    .about-section .container {
+        padding: 1.5rem;
+    }
+
+    .about-section h2 {
+        font-size: 1.8em;
+    }
+
+    .about-section h3 {
+        font-size: 1.5em;
+    }
+
+    .about-section p {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .mission-list li {
+        padding: 1rem;
+        font-size: 0.95rem;
+    }
+
+    .core-values-list {
+        grid-template-columns: 1fr; /* Stack core values on smaller screens */
+        gap: 1rem;
+    }
+
+    .core-values-list li {
+        padding: 1.5rem;
+        font-size: 1rem;
     }
 }
 
@@ -946,5 +1286,24 @@ footer {
     }
     .footer {
         padding: 1rem;
+    }
+
+    /* About Section Responsive Small Screens */
+    .about-section h2 {
+        font-size: 1.6em;
+    }
+    .about-section h3 {
+        font-size: 1.3em;
+    }
+    .about-section p {
+        font-size: 0.9rem;
+    }
+    .mission-list li {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+    .core-values-list li {
+        padding: 1rem;
+        font-size: 0.95rem;
     }
 }
