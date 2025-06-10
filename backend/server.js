@@ -263,7 +263,7 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
         doc.lineWidth(1.5).moveTo(studentNameUnderlineStartX, studentNameY)
            .lineTo(studentNameUnderlineStartX + studentNameTextActualWidth, studentNameY)
            .stroke(borderColor);
-        doc.moveDown(1);
+        doc.moveDown(0.7);
 
         // "has successfully completed the course [Course Name] - demonstrating dedication, academic excellence, and commitment to learning."
         doc.font('Helvetica').fontSize(16).fillColor(textColor)
@@ -287,12 +287,65 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
             align: 'center', 
             width: detailsTextContainerWidth 
         });
-        doc.moveDown(2); 
+        doc.moveDown(3); // Increased spacing before signatures
 
+        // --- Signatures Section ---
+        const signatureY = doc.y; // Y position for both signatures
+        const signatureImageWidth = 80; // Desired width for signature images
+        const signatureImageHeight = 40; // Desired height for signature images
+        const signatureTextOffsetY = 5; // Space between image and text
+        const signatureBlockWidth = (pageW - 2 * contentMargin) / 2 - 20; // Width for each signature block (Dean/HOD)
+        const deanSignatureX = contentMargin + 50; // X position for Dean's signature block (left)
+        const hodSignatureX = pageW / 2 + 10; // X position for HOD's signature block (right)
+
+        // Dean's Signature
+        const deanSignPath = path.join(__dirname, 'assets', 'Dean.png');
+        if (fs.existsSync(deanSignPath)) {
+            doc.image(deanSignPath, deanSignatureX + (signatureBlockWidth - signatureImageWidth) / 2, signatureY, {
+                width: signatureImageWidth,
+                height: signatureImageHeight,
+                align: 'center'
+            });
+        } else {
+            console.warn('Dean.png not found at:', deanSignPath);
+            doc.font('Helvetica').fontSize(10).fillColor(textColor)
+               .text('[Dean Sign Placeholder]', deanSignatureX, signatureY + signatureImageHeight / 2 - 5, { width: signatureBlockWidth, align: 'center' });
+        }
+        doc.font('Helvetica').fontSize(11).fillColor(textColor)
+           .text('Signature of Dean', deanSignatureX, signatureY + signatureImageHeight + signatureTextOffsetY, {
+               width: signatureBlockWidth,
+               align: 'center'
+           });
+
+        // HOD's Signature
+        // Note: We use the same 'signatureY' so they are on the same line.
+        // PDFKit places subsequent elements based on the last 'y' position, so we need to manage 'y' carefully if drawing text for Dean first.
+        // For images, it's less of an issue if they are placed at absolute coordinates.
+        // For text, we'll use the original signatureY for HOD's text as well.
+        const hodSignPath = path.join(__dirname, 'assets', 'HOD.png');
+        if (fs.existsSync(hodSignPath)) {
+            doc.image(hodSignPath, hodSignatureX + (signatureBlockWidth - signatureImageWidth) / 2, signatureY, {
+                width: signatureImageWidth,
+                height: signatureImageHeight,
+                align: 'center'
+            });
+        } else {
+            console.warn('HOD.png not found at:', hodSignPath);
+            doc.font('Helvetica').fontSize(10).fillColor(textColor)
+               .text('[HOD Sign Placeholder]', hodSignatureX, signatureY + signatureImageHeight / 2 - 5, { width: signatureBlockWidth, align: 'center' });
+        }
+        doc.font('Helvetica').fontSize(11).fillColor(textColor)
+           .text('Signature of HOD', hodSignatureX, signatureY + signatureImageHeight + signatureTextOffsetY, {
+               width: signatureBlockWidth,
+               align: 'center'
+           });
+        
+        // Move down significantly after signatures before the footer line
+        doc.y = signatureY + signatureImageHeight + signatureTextOffsetY + 30; // Ensure enough space before footer line
 
 
         // Footer section for Certificate Number and Issue Date
-        const footerY = pageH - contentMargin - 20; // Position from bottom
+        const footerY = pageH - contentMargin - 10; // Position from bottom
         doc.font('Helvetica').fontSize(11).fillColor(footerTextColor);
         
         // Draw a line above footer text
