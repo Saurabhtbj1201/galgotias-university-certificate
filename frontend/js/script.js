@@ -1,94 +1,91 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const menuToggle = document.getElementById('menuToggle');
-    const mainNav = document.getElementById('mainNav');
-    // const popup = document.getElementById('popupMessage'); // This will be null if #popupMessage is not on the current page
-    // TODO: Replace 'YOUR_RENDER_BACKEND_URL' with the actual URL of your deployed Render backend service
+document.addEventListener('DOMContentLoaded', () => {
     const API_BASE_URL = 'https://galgotias-university-certificate.onrender.com/api';
 
-    // Toggle the navigation menu on mobile
+    // ✅ Toggle menu
+    const menuToggle = document.getElementById('menuToggle');
+    const mainNav = document.getElementById('mainNav');
     if (menuToggle && mainNav) {
         menuToggle.addEventListener('click', function () {
             mainNav.classList.toggle('active');
             const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
             menuToggle.setAttribute('aria-expanded', !isExpanded);
-            menuToggle.classList.toggle('active'); // For hamburger icon animation
+            menuToggle.classList.toggle('active');
         });
     }
 
-    // Show popup message
+    // ✅ Popup display logic
     window.showPopup = function (message, isError = false) {
-        const localPopup = document.getElementById('popupMessage'); // Get popup on the current page
-        if (localPopup) {
-            localPopup.textContent = message;
-            localPopup.classList.add('active');
-            localPopup.classList.toggle('error', isError); // Add error class if needed
-            localPopup.classList.toggle('success', !isError);
-
-            // Ensure display is not none if it was set inline
-            localPopup.style.display = '';
-            setTimeout(() => {
-                localPopup.classList.remove('active');
-            }, 4000); // Hide after 4 seconds
+        const popup = document.getElementById('popupMessage');
+        if (popup) {
+            popup.innerHTML = `<p>${message}</p>`;
+            popup.classList.add('active');
+            popup.classList.toggle('error', isError);
+            popup.classList.toggle('success', !isError);
+            popup.style.display = 'block';
+            setTimeout(() => popup.style.display = 'none', 4000);
         } else {
-            alert(message); // Fallback for pages without a #popupMessage div
+            alert(message);
         }
     };
 
-    // Close popup on click - This should also use localPopup or be page-specific
-    const generalPopup = document.getElementById('popupMessage');
-    if (generalPopup) {
-        generalPopup.addEventListener('click', function () {
-            generalPopup.classList.remove('active');
-        });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        // ✅ Initialize EmailJS v4
+    // ✅ Initialize EmailJS
+    if (typeof emailjs !== 'undefined') {
         emailjs.init({
             publicKey: "ipHNAODxySu5reLqm",
         });
+    } else {
+        console.error("EmailJS library not loaded.");
+    }
 
-        const certificateForm = document.getElementById('certificateForm');
-        if (certificateForm) {
-            certificateForm.addEventListener('submit', async function (event) {
-                event.preventDefault();
+    // ✅ Form submission
+    const certificateForm = document.getElementById('certificateForm');
+    if (certificateForm) {
+        certificateForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const formData = new FormData(certificateForm);
+            const data = Object.fromEntries(formData.entries());
 
-                const formData = new FormData(certificateForm);
-                const data = Object.fromEntries(formData.entries());
+            try {
+                const response = await fetch(`${API_BASE_URL}/certificate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
 
-                try {
-                    const response = await fetch(`${API_BASE_URL}/certificate`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
-                    });
+                const result = await response.json();
 
-                    const result = await response.json();
-
-                    if (!response.ok) {
-                        showPopup(result.message || `Error: ${response.status}`, true);
-                        return;
-                    }
-
-                    // ✅ Send email
-                    await emailjs.send('service_gu', 'template_gu', {
-                        to_email: data.email,
-                        user_name: data.name,
-                        full_name: data.name,
-                        admission_number: data.admissionNumber,
-                        dob: data.dob
-                    });
-
-                    showPopup(result.message || 'Form submitted successfully. Your certificate will be generated soon.');
-                    certificateForm.reset();
-
-                } catch (error) {
-                    console.error('Form submission error:', error);
-                    showPopup(error.message || 'Error submitting form. Please try again.', true);
+                if (!response.ok) {
+                    showPopup(result.message || `Error: ${response.status}`, true);
+                    return;
                 }
-            });
-        }
-    });
+
+                // ✅ Send email
+                await emailjs.send('service_gu', 'template_gu', {
+                    to_email: data.email,
+                    user_name: data.name,
+                    full_name: data.name,
+                    admission_number: data.admissionNumber,
+                    dob: data.dob
+                }).then(
+                    (response) => {
+                        console.log('✅ EmailJS Success:', response.status, response.text);
+                    },
+                    (error) => {
+                        console.error('❌ EmailJS Error:', error);
+                        showPopup('Form submitted but failed to send email.', true);
+                    }
+                );
+
+                showPopup('Form submitted successfully. Your certificate will be generated soon.');
+                certificateForm.reset();
+
+            } catch (error) {
+                console.error('Form submission error:', error);
+                showPopup(error.message || 'Error submitting form. Please try again.', true);
+            }
+        });
+    }
+
     // Handle Download Form Submission (download_certificate.html)
     const downloadForm = document.getElementById('downloadForm');
     const certificatePreviewDiv = document.getElementById('certificatePreview'); // Renamed for clarity
