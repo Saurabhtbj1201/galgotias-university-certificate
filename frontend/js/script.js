@@ -43,13 +43,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        // Initialization
-        if (typeof emailjs !== 'undefined') {
-            emailjs.init('ipHNAODxySu5reLqm');
-            console.log('EmailJS initialized successfully');
-        } else {
-            console.error('EmailJS not loaded');
-        }
+        // ✅ Initialize EmailJS v4
+        emailjs.init({
+            publicKey: "ipHNAODxySu5reLqm",
+        });
 
         const certificateForm = document.getElementById('certificateForm');
         if (certificateForm) {
@@ -58,8 +55,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const formData = new FormData(certificateForm);
                 const data = Object.fromEntries(formData.entries());
-
-                console.log('Submitting certificate data:', data);
 
                 try {
                     const response = await fetch(`${API_BASE_URL}/certificate`, {
@@ -75,17 +70,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         return;
                     }
 
-                    // ✅ Send confirmation email
-                    emailjs.send('service_gu', 'template_gu', {
+                    // ✅ Send email
+                    await emailjs.send('service_gu', 'template_gu', {
                         to_email: data.email,
                         user_name: data.name,
                         full_name: data.name,
                         admission_number: data.admissionNumber,
                         dob: data.dob
-                    }).then(
-                        emailResponse => console.log('Email sent:', emailResponse),
-                        emailError => console.error('Email failed:', emailError)
-                    );
+                    });
 
                     showPopup(result.message || 'Form submitted successfully. Your certificate will be generated soon.');
                     certificateForm.reset();
@@ -97,7 +89,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     });
-
     // Handle Download Form Submission (download_certificate.html)
     const downloadForm = document.getElementById('downloadForm');
     const certificatePreviewDiv = document.getElementById('certificatePreview'); // Renamed for clarity
