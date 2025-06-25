@@ -42,8 +42,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (certificateForm) {
         certificateForm.addEventListener('submit', async function (event) {
             event.preventDefault();
+            
+            const submitButton = certificateForm.querySelector('button[type="submit"]');
             const formData = new FormData(certificateForm);
             const data = Object.fromEntries(formData.entries());
+
+            // Add loading state to submit button
+            if (submitButton) {
+                submitButton.classList.add('loading');
+                submitButton.disabled = true;
+            }
 
             try {
                 const response = await fetch(`${API_BASE_URL}/certificate`, {
@@ -82,6 +90,12 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) {
                 console.error('Form submission error:', error);
                 showPopup(error.message || 'Error submitting form. Please try again.', true);
+            } finally {
+                // Remove loading state from submit button
+                if (submitButton) {
+                    submitButton.classList.remove('loading');
+                    submitButton.disabled = false;
+                }
             }
         });
     }
@@ -99,15 +113,24 @@ document.addEventListener('DOMContentLoaded', () => {
     if (downloadForm && certificatePreviewDiv && previewContent && downloadButton && shareOptionsDiv) {
         downloadForm.addEventListener('submit', async function (event) {
             event.preventDefault();
+            
+            const submitButton = downloadForm.querySelector('button[type="submit"]');
             const formData = new FormData(downloadForm);
             const data = Object.fromEntries(formData.entries());
+            
             console.log('Fetching certificate with details:', data);
+            
+            // Add loading state to submit button
+            if (submitButton) {
+                submitButton.classList.add('loading');
+                submitButton.disabled = true;
+            }
+            
             previewContent.innerHTML = `<p>Fetching certificate...</p>`; // Loading state
             certificatePreviewDiv.classList.remove('hidden');
             certificatePreviewDiv.style.display = '';
             downloadButton.style.display = 'none'; // Hide initially
             shareOptionsDiv.style.display = 'none'; // Hide initially
-
 
             try {
                 const response = await fetch(`${API_BASE_URL}/certificate/fetch`, {
@@ -125,7 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     shareOptionsDiv.style.display = 'none';
                     return;
                 }
-
 
                 if (certData) {
                     previewContent.innerHTML = `
@@ -168,6 +190,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 downloadButton.style.display = 'none';
                 shareOptionsDiv.style.display = 'none';
                 currentCertificateNumberForDownload = null;
+            } finally {
+                // Remove loading state from submit button
+                if (submitButton) {
+                    submitButton.classList.remove('loading');
+                    submitButton.disabled = false;
+                }
             }
         });
 

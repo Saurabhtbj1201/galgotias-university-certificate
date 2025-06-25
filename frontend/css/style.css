@@ -993,6 +993,58 @@ footer {
     color: white;
 }
 
+/* Loading button state */
+.button.loading,
+button.loading,
+.btn.loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.button.loading::after,
+button.loading::after,
+.btn.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top: 2px solid #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.button.loading::before,
+button.loading::before,
+.btn.loading::before {
+    content: 'Please wait...';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+/* Specific text for different forms */
+#certificateForm button.loading::before {
+    content: 'Registering, please wait...';
+}
+
+#downloadForm button.loading::before {
+    content: 'Fetching, please wait...';
+}
+
+#verifyForm button.loading::before {
+    content: 'Verifying, please wait...';
+}
+
 /* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
     .footer {
