@@ -1013,36 +1013,36 @@ button.loading::after,
     width: 20px;
     height: 20px;
     margin: -10px 0 0 -10px;
-    border: 2px solid transparent;
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-top: 2px solid #ffffff;
     border-radius: 50%;
     animation: spin 1s linear infinite;
+    z-index: 1;
 }
 
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Remove the conflicting ::before pseudo-element */
 .button.loading::before,
 button.loading::before,
 .btn.loading::before {
-    content: 'Please wait...';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #ffffff;
-    font-size: 0.9rem;
-    white-space: nowrap;
+    display: none;
 }
 
-/* Specific text for different forms */
-#certificateForm button.loading::before {
-    content: 'Registering, please wait...';
+/* Specific text for different forms - using a simpler approach */
+#certificateForm button.loading::after {
+    /* Keep the spinner, text will be handled differently if needed */
 }
 
-#downloadForm button.loading::before {
-    content: 'Fetching, please wait...';
+#downloadForm button.loading::after {
+    /* Keep the spinner, text will be handled differently if needed */
 }
 
-#verifyForm button.loading::before {
-    content: 'Verifying, please wait...';
+#verifyForm button.loading::after {
+    /* Keep the spinner, text will be handled differently if needed */
 }
 
 /* Responsive adjustments for smaller screens */
