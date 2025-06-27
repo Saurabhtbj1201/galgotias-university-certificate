@@ -4,7 +4,8 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background: #1a1a1a;  /* dark background */
+    background-color: #1a1a1a;
+    /* Dark background */
     color: #f0f0f0;
     /* Light text */
     display: flex;
@@ -27,14 +28,15 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 header .logo img {
-    width: 250px;
+    width: 300px;
     height: auto;
     transition: transform 0.3s ease;
     display: block;
-    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.7));
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 1));
 }
 
 header .logo img:hover {
@@ -146,15 +148,9 @@ main section {
     left: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    background: url('../images/bg.webp') center center/cover no-repeat; /* Ensure path to image is correct from CSS file location */
+    z-index: 1;
 }
-
-.background-image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
 
 .overlay-left {
     position: relative; /* Keeps it in the flex flow of .background */
@@ -653,13 +649,6 @@ footer {
     margin-bottom: 10px;
 }
 
-.page h1 {
-    color: #cecece; /* Dark Red for main headings */
-    text-align: center;
-    margin-bottom: 1.5rem;
-    font-size: 1.8rem;
-}
-
 /* About Us Section Styles */
 .about-section {
     background-color: #f9f9f9; /* Light background for the section */
@@ -1137,7 +1126,7 @@ button.loading::before,
         flex-direction: row; 
         justify-content: space-between; 
         align-items: center; 
-        padding: 0.5rem 1rem; /* Adjusted padding for responsive header */
+        padding: 0.75rem 1rem; /* Adjusted padding for responsive header */
         position: relative;
         flex-wrap: nowrap; /* Ensure logo and menu toggle stay on the same line */
     }
@@ -1258,12 +1247,6 @@ button.loading::before,
 
     .popup {
         width: 90%;
-    }
-
-    .page h1 {
-        font-size: 1.2rem;
-        margin-left: 5px;
-        margin-right: 5px;
     }
 
     footer {
