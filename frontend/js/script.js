@@ -18,15 +18,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const popup = document.getElementById('popupMessage');
         if (popup) {
             popup.innerHTML = `<p>${message}</p>`;
+            popup.classList.remove('error', 'success', 'active');
+            popup.classList.add(isError ? 'error' : 'success');
             popup.classList.add('active');
-            popup.classList.toggle('error', isError);
-            popup.classList.toggle('success', !isError);
-            popup.style.display = 'block';
-            setTimeout(() => popup.style.display = 'none', 4000);
+
+            // Hide popup after 4 seconds
+            setTimeout(() => {
+                popup.classList.remove('active');
+            }, 4000);
         } else {
             alert(message);
         }
     };
+
 
     // ✅ Initialize EmailJS
     if (typeof emailjs !== 'undefined') {
@@ -42,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (certificateForm) {
         certificateForm.addEventListener('submit', async function (event) {
             event.preventDefault();
-            
+
             const submitButton = certificateForm.querySelector('button[type="submit"]');
             const formData = new FormData(certificateForm);
             const data = Object.fromEntries(formData.entries());
@@ -113,19 +117,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (downloadForm && certificatePreviewDiv && previewContent && downloadButton && shareOptionsDiv) {
         downloadForm.addEventListener('submit', async function (event) {
             event.preventDefault();
-            
+
             const submitButton = downloadForm.querySelector('button[type="submit"]');
             const formData = new FormData(downloadForm);
             const data = Object.fromEntries(formData.entries());
-            
+
             console.log('Fetching certificate with details:', data);
-            
+
             // Add loading state to submit button
             if (submitButton) {
                 submitButton.classList.add('loading');
                 submitButton.disabled = true;
             }
-            
+
             previewContent.innerHTML = `<p>Fetching certificate...</p>`; // Loading state
             certificatePreviewDiv.classList.remove('hidden');
             certificatePreviewDiv.style.display = '';

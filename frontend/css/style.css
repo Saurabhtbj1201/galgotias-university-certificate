@@ -4,7 +4,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #1a1a1a;
+    background-color: #8B0000;
     /* Dark background */
     color: #f0f0f0;
     /* Light text */
@@ -19,7 +19,7 @@ main {
 
 /* Header */
 header {
-    background-color: #8B0000;
+    background-color: #eeeeee;
     /* Dark Red */
     color: white;
     padding: 1rem 2rem;
@@ -28,7 +28,6 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
 }
 
 header .logo img {
@@ -36,11 +35,6 @@ header .logo img {
     height: auto;
     transition: transform 0.3s ease;
     display: block;
-    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 1));
-}
-
-header .logo img:hover {
-    transform: scale(1.1);
 }
 
 header h1 {
@@ -65,7 +59,7 @@ header nav ul li {
 }
 
 header nav ul li a {
-    color: white;
+    color: #8B0000;
     text-decoration: none;
     font-weight: bold;
     padding: 0.5rem 0.8rem;
@@ -75,9 +69,9 @@ header nav ul li a {
 
 header nav ul li a:hover,
 header nav ul li a:focus {
-    background-color: #f0f0f0;
+    background-color: #8B0000;
     /* White background on hover/focus */
-    color: #8B0000;
+    color: #f0f0f0;
     /* Dark Red text on hover/focus */
     outline: none;
 }
@@ -98,10 +92,17 @@ header nav ul li a:focus {
     display: block;
     width: 25px;
     height: 3px;
-    background-color: white;
+    background-color: #f0f0f0;
     margin: 5px 0;
+    border-radius: 2px;
     transition: all 0.3s ease-in-out;
 }
+
+.menu-toggle:hover .hamburger-icon,
+.menu-toggle:focus .hamburger-icon {
+    background-color: #8B0000;
+}
+
 
 /* Main Content & Sections */
 .container,
@@ -131,15 +132,21 @@ main section {
 /* Hero Background Section */
 .background {
     position: relative;
-    min-height: 400px; /* Or your desired height */
+    min-height: 400px;
+    /* Or your desired height */
     display: flex;
     align-items: center;
-    justify-content: center; /* This will center the .overlay-left and .overlay-right if they are the only direct children after the image container is absolutely positioned */
+    justify-content: center;
+    /* This will center the .overlay-left and .overlay-right if they are the only direct children after the image container is absolutely positioned */
     overflow: hidden;
-    width: 100%; /* Ensure it takes full width */
-    padding: 2rem 0; /* Add some padding if needed, adjust as necessary */
-    flex-wrap: wrap; /* Allow overlays to wrap on smaller screens */
-    gap: 10rem; /* Space between overlays */
+    width: 100%;
+    /* Ensure it takes full width */
+    padding: 2rem 0;
+    /* Add some padding if needed, adjust as necessary */
+    flex-wrap: wrap;
+    /* Allow overlays to wrap on smaller screens */
+    gap: 10rem;
+    /* Space between overlays */
 }
 
 .background-image-container {
@@ -148,44 +155,65 @@ main section {
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('../images/bg.webp') center center/cover no-repeat; /* Ensure path to image is correct from CSS file location */
     z-index: 1;
 }
 
+.background-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    /* Optional: center the focus area */
+}
+
 .overlay-left {
-    position: relative; /* Keeps it in the flex flow of .background */
-    z-index: 2; /* Above the background image */
-    background: rgba(0,0,0,0.6);
+    position: relative;
+    /* Keeps it in the flex flow of .background */
+    z-index: 2;
+    /* Above the background image */
+    background: rgba(0, 0, 0, 0.6);
     color: #fff;
-    padding: 3rem; /* Adjusted padding */
-    border-radius: 0; /* As per original inline style, can be changed */
-    margin: 1rem; /* Adjusted margin */
-    max-width: 500px; /* Adjusted max-width */
+    padding: 3rem;
+    /* Adjusted padding */
+    border-radius: 0;
+    /* As per original inline style, can be changed */
+    margin: 1rem;
+    /* Adjusted margin */
+    max-width: 500px;
+    /* Adjusted max-width */
     text-align: left;
 }
 
 .overlay-left h1 {
-    font-size: 3rem; /* Example size */
+    font-size: 3rem;
+    /* Example size */
     margin-bottom: 1rem;
-    color: #fff; /* Ensure h1 color is white */
+    color: #fff;
+    /* Ensure h1 color is white */
 }
 
 .overlay-left p {
-    font-size: 1.2rem; /* Example size */
+    font-size: 1.2rem;
+    /* Example size */
     line-height: 1.6;
 }
 
 .overlay-right {
-    position: relative; /* Keeps it in the flex flow of .background */
-    z-index: 2; /* Above the background image */
-    background: rgba(0,0,0,0.6);
+    position: relative;
+    /* Keeps it in the flex flow of .background */
+    z-index: 2;
+    /* Above the background image */
+    background: rgba(0, 0, 0, 0.6);
     color: #fff;
     padding: 2rem;
-    border-radius: 0; /* As per original inline style, can be changed */
-    margin: 1rem; /* Adjusted margin */
+    border-radius: 0;
+    /* As per original inline style, can be changed */
+    margin: 1rem;
+    /* Adjusted margin */
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* Increased gap */
+    gap: 1.5rem;
+    /* Increased gap */
     max-width: 300px;
 }
 
@@ -194,14 +222,23 @@ main section {
 }
 
 .overlay-right .stat h3 {
-    font-size: 2rem; /* Example size */
+    font-size: 2rem;
+    /* Example size */
     margin-bottom: 0.3rem;
-    color: #fff; /* Ensure h3 color is white */
+    color: #fff;
+    /* Ensure h3 color is white */
 }
 
 .overlay-right .stat p {
     font-size: 0.9rem;
     margin: 0;
+}
+
+.get-certificate-page h1,
+.download-certificate-page h1,
+.verify-certificate-page h1 {
+    color: #eaeaea;
+    text-align: center;
 }
 
 
@@ -259,7 +296,7 @@ button:hover,
 .button:focus,
 button:focus,
 .btn:focus {
-    outline: 2px solid #f0f0f0;
+    outline: 2px solid #272727;
     /* White outline on focus */
     outline-offset: 2px;
     background-color: #a50000;
@@ -346,33 +383,44 @@ form textarea {
 }
 
 footer {
-    background-color: #8B0000; /* Dark Red */
+    background-color: #8B0000;
+    /* Dark Red */
     color: white;
-    padding: 2rem 5rem 1rem 5rem; /* Adjusted padding */
-    margin-top: auto; /* Pushes footer to bottom */
+    padding: 2rem 5rem 1rem 5rem;
+    /* Adjusted padding */
+    margin-top: auto;
+    /* Pushes footer to bottom */
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .footer-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around; /* Distributes space between sections */
-    gap: 2rem; /* Space between sections */
+    justify-content: space-around;
+    /* Distributes space between sections */
+    gap: 2rem;
+    /* Space between sections */
     margin-bottom: 2rem;
-    text-align: left; /* Override general footer text-align for sections */
+    text-align: left;
+    /* Override general footer text-align for sections */
 }
 
 .footer-section {
-    flex: 1; /* Allows sections to grow and shrink */
-    min-width: 250px; /* Minimum width before wrapping */
-    padding: 0 1rem; /* Padding within each section */
+    flex: 1;
+    /* Allows sections to grow and shrink */
+    min-width: 250px;
+    /* Minimum width before wrapping */
+    padding: 0 1rem;
+    /* Padding within each section */
 }
 
 .footer-section h3 {
     font-size: 1.2rem;
     margin-bottom: 1rem;
-    color: #f0f0f0; /* Lighter color for headings */
-    border-bottom: 1px solid #a50000; /* Subtle separator */
+    color: #f0f0f0;
+    /* Lighter color for headings */
+    border-bottom: 1px solid #a50000;
+    /* Subtle separator */
     padding-bottom: 0.5rem;
 }
 
@@ -388,15 +436,18 @@ footer {
 
 .footer-section ul li a,
 .footer-section.reach-us p a {
-    color: #e0e0e0; /* Slightly off-white for links */
+    color: #e0e0e0;
+    /* Slightly off-white for links */
     text-decoration: none;
     transition: color 0.3s ease, padding-left 0.3s ease;
 }
 
 .footer-section ul li a:hover,
 .footer-section.reach-us p a:hover {
-    color: #ffffff; /* Brighter white on hover */
-    padding-left: 5px; /* Slight indent on hover */
+    color: #ffffff;
+    /* Brighter white on hover */
+    padding-left: 5px;
+    /* Slight indent on hover */
 }
 
 .footer-section.reach-us p,
@@ -413,7 +464,8 @@ footer {
 .footer-bottom {
     text-align: center;
     padding-top: 1.5rem;
-    border-top: 1px solid #a50000; /* Separator for copyright */
+    border-top: 1px solid #a50000;
+    /* Separator for copyright */
     margin-top: 1rem;
 }
 
@@ -424,57 +476,40 @@ footer {
 }
 
 /* Popup / Modal */
+/* Styles for popup messages (if not already defined well) */
 .popup {
-    display: none;
-    /* Hidden by default */
     position: fixed;
-    left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%) scale(0.9);
-    background-color: #2c2c2c;
-    /* Dark background for popup */
-    color: #f0f0f0;
-    border: 1px solid #8B0000;
-    /* Dark Red border */
-    padding: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 25px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     z-index: 1000;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.7);
-    border-radius: 8px;
-    width: 80%;
-    max-width: 500px;
-    text-align: center;
     opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    font-size: 16px;
+    text-align: center;
 }
 
 .popup.active {
-    display: block;
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    visibility: visible;
 }
 
-.popup p {
-    margin-bottom: 1.5rem;
+.popup.success {
+    background-color: #01a806;
+    /* Green */
+    color: white;
 }
 
-.overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    /* Darker overlay */
-    z-index: 999;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+.popup.error {
+    background-color: #ce0f02;
+    /* Red */
+    color: white;
 }
 
-.overlay.active {
-    display: block;
-    opacity: 1;
-}
 
 /* Certificate Preview & Results */
 #certificatePreview,
@@ -493,13 +528,15 @@ footer {
 
 /* This rule is for general messages within #previewContent, like "Fetching..." or "Not found"
    It should NOT override specific styles within the .certificate-design itself. */
-#previewContent > p, /* Target only direct children p for general messages */
+#previewContent>p,
+/* Target only direct children p for general messages */
 #verificationResult p {
     margin: 0.5rem 0;
     color: #f0f0f0;
 }
 
-#previewContent strong, /* This might need adjustment if used inside .certificate-design */
+#previewContent strong,
+/* This might need adjustment if used inside .certificate-design */
 #verificationResult strong {
     color: #8B0000;
 }
@@ -523,19 +560,25 @@ footer {
 .certificate-design {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px; /* Inner padding for content, distinct from border padding */
-    background-color: #fdfdfd; /* Off-white for the certificate paper */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* More pronounced shadow */
-    color: #222; /* Darker default text color for better contrast */
+    padding: 20px;
+    /* Inner padding for content, distinct from border padding */
+    background-color: #fdfdfd;
+    /* Off-white for the certificate paper */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    /* More pronounced shadow */
+    color: #222;
+    /* Darker default text color for better contrast */
     position: relative;
 }
 
 .certificate-border {
-    border: 10px double #c0a062; /* Ornate gold-ish double border */
+    border: 10px double #c0a062;
+    /* Ornate gold-ish double border */
     padding: 25px;
     position: relative;
     /* Adding a subtle inner border/shadow for depth */
-    box-shadow: inset 0 0 0 2px #daa520; /* Goldenrod inner line */
+    box-shadow: inset 0 0 0 2px #daa520;
+    /* Goldenrod inner line */
 }
 
 /* Optional: Add a subtle background pattern or texture if desired */
@@ -555,30 +598,37 @@ footer {
 .certificate-body,
 .certificate-footer {
     text-align: center;
-    position: relative; 
+    position: relative;
     z-index: 1;
 }
 
 .certificate-logo {
-    max-width: 300px; /* Adjust as needed */
+    max-width: 300px;
+    /* Adjust as needed */
     margin-bottom: 10px;
 }
 
-.certificate-design .certificate-header h1 { 
-    font-size: 32px; /* Larger for University Name */
-    color: #8B0000; /* Dark Red, matching header theme */
+.certificate-design .certificate-header h1 {
+    font-size: 32px;
+    /* Larger for University Name */
+    color: #8B0000;
+    /* Dark Red, matching header theme */
     margin: 10px 0;
     font-weight: bold;
-    font-family: 'Trajan Pro', 'Times New Roman', serif; /* More formal font if available */
+    font-family: 'Trajan Pro', 'Times New Roman', serif;
+    /* More formal font if available */
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
-.certificate-design .certificate-header h2 { 
-    font-size: 24px; /* Prominent "Certificate of Achievement" */
-    color: #504020; /* Dark brown, complementary to gold */
+.certificate-design .certificate-header h2 {
+    font-size: 24px;
+    /* Prominent "Certificate of Achievement" */
+    color: #504020;
+    /* Dark brown, complementary to gold */
     margin: 5px 0 25px 0;
-    font-style: normal; /* Changed from italic for more formality */
+    font-style: normal;
+    /* Changed from italic for more formality */
     font-weight: 600;
 }
 
@@ -590,48 +640,58 @@ footer {
 .certificate-design .course-text {
     font-size: 16px;
     margin-bottom: 5px;
-    color: #333; /* Explicitly set dark color */
+    color: #333;
+    /* Explicitly set dark color */
 }
 
 .certificate-design .student-name {
-    font-size: 30px; /* More prominent student name */
+    font-size: 30px;
+    /* More prominent student name */
     font-weight: bold;
-    color: #8B0000; /* Dark Red */
+    color: #8B0000;
+    /* Dark Red */
     margin: 15px 0;
-    border-bottom: 2px solid #b8860b; /* Gold underline */
+    border-bottom: 2px solid #b8860b;
+    /* Gold underline */
     display: inline-block;
     padding-bottom: 8px;
-    font-family: 'Brush Script MT', 'cursive'; /* Cursive font for name, ensure fallback */
+    font-family: 'Brush Script MT', 'cursive';
+    /* Cursive font for name, ensure fallback */
 }
 
 .certificate-design .course-name {
-    font-size: 22px; /* Prominent course name */
-    font-weight: 600; /* Semi-bold */
-    color: #333; 
+    font-size: 22px;
+    /* Prominent course name */
+    font-weight: 600;
+    /* Semi-bold */
+    color: #333;
     margin: 15px 0 25px 0;
 }
 
 .certificate-design .details-text {
-    font-size: 15px; /* Clear and readable */
+    font-size: 15px;
+    /* Clear and readable */
     line-height: 1.7;
     margin-top: 20px;
-    color: #444; 
+    color: #444;
 }
 
 .certificate-design .certificate-footer {
     margin-top: 45px;
-    font-size: 14px; /* Slightly larger footer text */
+    font-size: 14px;
+    /* Slightly larger footer text */
     display: flex;
     justify-content: space-between;
-    color: #222; 
+    color: #222;
     padding-top: 15px;
-    border-top: 1px solid #daa520; /* Light gold separator line */
+    border-top: 1px solid #daa520;
+    /* Light gold separator line */
 }
 
 .certificate-design .certificate-number,
 .certificate-design .issue-date {
     margin: 0;
-    color: #222; 
+    color: #222;
 }
 
 #certificatePreview #downloadButton,
@@ -651,22 +711,27 @@ footer {
 
 /* About Us Section Styles */
 .about-section {
-    background-color: #f9f9f9; /* Light background for the section */
-    color: #333; /* Darker text for readability */
+    background-color: #f9f9f9;
+    /* Light background for the section */
+    color: #333;
+    /* Darker text for readability */
     animation: fadeIn 1s ease-out;
 }
 
 .about-section .container {
     width: 85%;
-    margin: 0 auto; /* Center the container */
+    margin: 0 auto;
+    /* Center the container */
     padding: 2rem;
-    background-color: #ffffff; /* White background for content box */
+    background-color: #ffffff;
+    /* White background for content box */
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .about-section h2 {
-    color: #8B0000; /* Dark Red for main heading */
+    color: #8B0000;
+    /* Dark Red for main heading */
     text-align: center;
     margin-bottom: 2rem;
     font-size: 2.2em;
@@ -691,7 +756,8 @@ footer {
 }
 
 .about-section h3 {
-    color: #8B0000; /* Dark Red for subheadings */
+    color: #8B0000;
+    /* Dark Red for subheadings */
     margin-top: 2.5rem;
     margin-bottom: 1.5rem;
     font-size: 1.8em;
@@ -700,7 +766,8 @@ footer {
 }
 
 /* Mission List Styles */
-.mission-container, .core-values-container {
+.mission-container,
+.core-values-container {
     margin-top: 2rem;
 }
 
@@ -710,27 +777,40 @@ footer {
 }
 
 .mission-list li {
-    background-color: #f0f4f8; /* Light blue-grey background */
+    background-color: #f0f4f8;
+    /* Light blue-grey background */
     padding: 1.5rem;
     margin-bottom: 1rem;
     border-radius: 8px;
-    border-left: 5px solid #8B0000; /* Dark Red accent border */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-left: 5px solid #8B0000;
+    /* Dark Red accent border */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     opacity: 0;
     transform: translateY(20px);
     animation: slideInUpList 0.5s ease-out forwards;
 }
 
-.mission-list li:nth-child(1) { animation-delay: 0.1s; }
-.mission-list li:nth-child(2) { animation-delay: 0.2s; }
-.mission-list li:nth-child(3) { animation-delay: 0.3s; }
-.mission-list li:nth-child(4) { animation-delay: 0.4s; }
+.mission-list li:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.mission-list li:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.mission-list li:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.mission-list li:nth-child(4) {
+    animation-delay: 0.4s;
+}
 
 
 .mission-list li:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
 }
 
 .mission-list li strong {
@@ -754,7 +834,7 @@ footer {
     padding: 2rem;
     border-radius: 8px;
     border: 1px solid #e0e0e0;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
     text-align: center;
     font-size: 1.1rem;
     color: #333;
@@ -767,11 +847,25 @@ footer {
     overflow: hidden;
 }
 
-.core-values-list li:nth-child(1) { animation-delay: 0.5s; }
-.core-values-list li:nth-child(2) { animation-delay: 0.6s; }
-.core-values-list li:nth-child(3) { animation-delay: 0.7s; }
-.core-values-list li:nth-child(4) { animation-delay: 0.8s; }
-.core-values-list li:nth-child(5) { animation-delay: 0.9s; }
+.core-values-list li:nth-child(1) {
+    animation-delay: 0.5s;
+}
+
+.core-values-list li:nth-child(2) {
+    animation-delay: 0.6s;
+}
+
+.core-values-list li:nth-child(3) {
+    animation-delay: 0.7s;
+}
+
+.core-values-list li:nth-child(4) {
+    animation-delay: 0.8s;
+}
+
+.core-values-list li:nth-child(5) {
+    animation-delay: 0.9s;
+}
 
 
 .core-values-list li::before {
@@ -804,8 +898,10 @@ footer {
 
 /* Contact Page Specific Styles */
 .contact-section .container {
-    background-color: #ffffff; /* White background for content box */
-    color: #333; /* Darker text for readability */
+    background-color: #ffffff;
+    /* White background for content box */
+    color: #333;
+    /* Darker text for readability */
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -820,8 +916,9 @@ footer {
 }
 
 .contact-section h3 {
-    color: #8B0000; /* Dark Red for subheadings */
-    margin-top: 0; 
+    color: #8B0000;
+    /* Dark Red for subheadings */
+    margin-top: 0;
     margin-bottom: 1.5rem;
     font-size: 1.8em;
     border-bottom: 2px solid #e0e0e0;
@@ -829,7 +926,7 @@ footer {
 }
 
 .contact-section h4 {
-    color: #4a4a4a; 
+    color: #4a4a4a;
     margin-top: 1.5rem;
     margin-bottom: 1rem;
     font-size: 1.4em;
@@ -858,15 +955,15 @@ footer {
 
 .contact-section a:hover,
 .contact-section a:focus {
-    color: #a50000; 
+    color: #a50000;
     text-decoration: underline;
-    outline: none; 
+    outline: none;
 }
 
-.contact-section a:focus-visible { 
+.contact-section a:focus-visible {
     outline: 2px solid #8B0000;
     outline-offset: 2px;
-    border-radius: 2px; 
+    border-radius: 2px;
 }
 
 .contact-section .contact-email-list {
@@ -882,29 +979,29 @@ footer {
 .contact-section .admission-type {
     margin-bottom: 2rem;
     padding: 1.5rem;
-    background-color: #f9f9f9; 
+    background-color: #f9f9f9;
     border-radius: 6px;
-    border-left: 5px solid #8B0000; 
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    border-left: 5px solid #8B0000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .contact-section .direction-method:hover,
 .contact-section .admission-type:hover {
-    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
     transform: translateY(-4px);
 }
 
 .contact-section .direction-method ul {
     list-style: disc;
-    padding-left: 25px; 
+    padding-left: 25px;
     margin-top: 0.75rem;
 }
 
 .contact-section .direction-method ul li {
     color: #555;
     margin-bottom: 0.5rem;
-    font-size: 0.95rem; 
+    font-size: 0.95rem;
 }
 
 /* Responsive adjustments for contact section */
@@ -912,28 +1009,34 @@ footer {
     .contact-section .container {
         padding: 1.5rem;
     }
+
     .contact-section h3 {
-        font-size: 1.6em; 
+        font-size: 1.6em;
         margin-bottom: 1.2rem;
         padding-bottom: 0.6rem;
     }
+
     .contact-section h4 {
-        font-size: 1.25em; 
+        font-size: 1.25em;
         margin-bottom: 0.8rem;
     }
+
     .contact-section p,
     .contact-section ul li {
         font-size: 0.95rem;
         line-height: 1.6;
     }
+
     .contact-section .direction-method,
     .contact-section .admission-type {
         padding: 1.2rem;
         border-left-width: 4px;
     }
+
     .contact-section .direction-method ul {
         padding-left: 20px;
     }
+
     .contact-section .direction-method ul li {
         font-size: 0.9rem;
     }
@@ -941,15 +1044,18 @@ footer {
 
 @media (max-width: 480px) {
     .contact-section h3 {
-        font-size: 1.4em; 
+        font-size: 1.4em;
     }
+
     .contact-section h4 {
-        font-size: 1.15em; 
+        font-size: 1.15em;
     }
+
     .contact-section p,
     .contact-section ul li {
         font-size: 0.9rem;
     }
+
     .contact-section .direction-method,
     .contact-section .admission-type {
         padding: 1rem;
@@ -959,38 +1065,6 @@ footer {
 /* Ensure the preview content is not hidden by default if it has content */
 #certificatePreview:not(.hidden) #previewContent {
     display: block;
-}
-
-/* Styles for popup messages (if not already defined well) */
-.popup {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 15px 25px;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    font-size: 16px;
-    text-align: center;
-}
-
-.popup.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-.popup.success {
-    background-color: #4CAF50; /* Green */
-    color: white;
-}
-
-.popup.error {
-    background-color: #f44336; /* Red */
-    color: white;
 }
 
 /* Loading button state */
@@ -1021,8 +1095,13 @@ button.loading::after,
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Remove the conflicting ::before pseudo-element */
@@ -1050,40 +1129,59 @@ button.loading::before,
     .footer {
         padding: 2rem 1rem 5rem;
     }
+
     .certificate-design {
         padding: 10px;
     }
+
     .certificate-border {
-        padding: 20px; /* Adjusted padding */
-        border-width: 8px; /* Thinner border on mobile */
-        box-shadow: inset 0 0 0 1px #daa520; /* Thinner inner line */
+        padding: 20px;
+        /* Adjusted padding */
+        border-width: 8px;
+        /* Thinner border on mobile */
+        box-shadow: inset 0 0 0 1px #daa520;
+        /* Thinner inner line */
     }
-    .certificate-design .certificate-header h1 { 
-        font-size: 24px; /* Adjusted for mobile */
+
+    .certificate-design .certificate-header h1 {
+        font-size: 24px;
+        /* Adjusted for mobile */
     }
-    .certificate-design .certificate-header h2 { 
-        font-size: 20px; /* Adjusted for mobile */
+
+    .certificate-design .certificate-header h2 {
+        font-size: 20px;
+        /* Adjusted for mobile */
     }
-    .certificate-design .student-name { 
-        font-size: 22px; /* Adjusted for mobile */
+
+    .certificate-design .student-name {
+        font-size: 22px;
+        /* Adjusted for mobile */
     }
-    .certificate-design .course-name { 
-        font-size: 18px; /* Adjusted for mobile */
+
+    .certificate-design .course-name {
+        font-size: 18px;
+        /* Adjusted for mobile */
     }
+
     .certificate-design .certify-text,
     .certificate-design .course-text {
         font-size: 16px;
     }
+
     .certificate-design .details-text {
         font-size: 13px;
     }
-     .certificate-design .certificate-footer {
-        font-size: 12px; /* Adjusted for mobile */
+
+    .certificate-design .certificate-footer {
+        font-size: 12px;
+        /* Adjusted for mobile */
         flex-direction: column;
         align-items: center;
     }
-    .certificate-design .certificate-footer p { 
-        margin-bottom: 8px; /* Spacing for stacked items */
+
+    .certificate-design .certificate-footer p {
+        margin-bottom: 8px;
+        /* Spacing for stacked items */
     }
 
     /* About Section Responsive */
@@ -1110,7 +1208,8 @@ button.loading::before,
     }
 
     .core-values-list {
-        grid-template-columns: 1fr; /* Stack core values on smaller screens */
+        grid-template-columns: 1fr;
+        /* Stack core values on smaller screens */
         gap: 1rem;
     }
 
@@ -1123,41 +1222,61 @@ button.loading::before,
 /* Responsive Design */
 @media (max-width: 768px) {
     header {
-        flex-direction: row; 
-        justify-content: space-between; 
-        align-items: center; 
-        padding: 0.75rem 1rem; /* Adjusted padding for responsive header */
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        /* Adjusted padding for responsive header */
         position: relative;
-        flex-wrap: nowrap; /* Ensure logo and menu toggle stay on the same line */
+        flex-wrap: nowrap;
+        /* Ensure logo and menu toggle stay on the same line */
     }
 
-    header .logo { /* Optional: if div.logo needs specific flex properties */
-        flex-shrink: 0; /* Prevent logo container from shrinking */
+    header .logo {
+        /* Optional: if div.logo needs specific flex properties */
+        flex-shrink: 0;
+        /* Prevent logo container from shrinking */
     }
 
     header .logo img {
         width: 250px;
     }
+
     .menu-toggle {
-        display: block; 
-        order: 2; /* Ensures it's logically after the logo if other items were in flow */
+        display: block;
+        order: 2;
+        /* Ensures it's logically after the logo if other items were in flow */
         /* margin-left: auto; is inherited from the base .menu-toggle style, which pushes it to the right. */
     }
 
+    /* Hamburger animation when active */
+    .menu-toggle .hamburger-icon:nth-child(1),
+    .menu-toggle .hamburger-icon:nth-child(2),
+    .menu-toggle .hamburger-icon:nth-child(3) {
+        background-color: #8B0000;
+    }
+
     header nav {
-        display: none; /* Hide nav by default on mobile */
+        display: none;
+        /* Hide nav by default on mobile */
         width: 100%;
-        background-color: #7a0000; /* Slightly darker red for dropdown */
+        background-color: #f0f0f0;
+        /* Slightly darker red for dropdown */
         position: absolute;
-        top: 100%; /* Position below the header */
+        top: 100%;
+        /* Position below the header */
         left: 0;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        z-index: 100; /* Ensure it's above other content */
-        order: 3; /* After logo and toggle */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        z-index: 100;
+        /* Ensure it's above other content */
+        order: 3;
+        /* After logo and toggle */
     }
 
     header nav.active {
-        display: block; /* Show nav when active */
+        display: block;
+        background-color: #f0f0f0;
+        /* Show nav when active */
     }
 
     header nav ul {
@@ -1175,26 +1294,37 @@ button.loading::before,
 
     header nav ul li a {
         padding: 0.8rem 1rem;
-        display: block; /* Make links take full width */
+        display: block;
+        /* Make links take full width */
         width: 90%;
         margin: 0 auto;
+            transition: background-color 0s ease, color 0s ease;
+
     }
 
-    header nav ul li a:hover,
+    header nav ul li a:hover {
+        background-color: #a50000;
+        /* Lighter red on hover */
+        color: #f0f0f0;
+    }
     header nav ul li a:focus {
-        background-color: #f0f0f0;
-        color: #8B0000;
+        background-color: #8B0000;
+        color: #f0f0f0;
     }
 
     /* Hamburger animation when active */
     .menu-toggle.active .hamburger-icon:nth-child(1) {
         transform: translateY(8px) rotate(45deg);
+        background-color: #ffffff;
     }
+
     .menu-toggle.active .hamburger-icon:nth-child(2) {
         opacity: 0;
     }
+
     .menu-toggle.active .hamburger-icon:nth-child(3) {
         transform: translateY(-8px) rotate(-45deg);
+        background-color: #ffffff;
     }
 
     header h1 {
@@ -1204,18 +1334,22 @@ button.loading::before,
     }
 
     .background {
-        gap: 1rem; /* Adjust gap for vertical stacking */
+        gap: 1rem;
+        /* Adjust gap for vertical stacking */
     }
 
     .overlay-left h1 {
         font-size: 1.8rem;
     }
+
     .overlay-left p {
         font-size: 1rem;
     }
+
     .overlay-right .stat h3 {
         font-size: 1.5rem;
     }
+
     .overlay-right {
         gap: 1rem;
     }
@@ -1250,19 +1384,24 @@ button.loading::before,
     }
 
     footer {
-        padding: 1rem; /* Adjusted padding for smaller screens */
+        padding: 1rem;
+        /* Adjusted padding for smaller screens */
     }
 
     .footer-container {
         flex-direction: column;
-        align-items: center; /* Center sections when stacked */
-        text-align: center; /* Center text within sections on mobile */
-        gap: 0; /* Space between sections */
+        align-items: center;
+        /* Center sections when stacked */
+        text-align: center;
+        /* Center text within sections on mobile */
+        gap: 0;
+        /* Space between sections */
         margin: 0;
     }
 
     .footer-section {
-        min-width: 100%; /* Sections take full width when stacked */
+        min-width: 100%;
+        /* Sections take full width when stacked */
         margin-bottom: 1.5rem;
         padding: 0;
     }
@@ -1276,23 +1415,30 @@ button.loading::before,
     }
 
     .certificate-logo {
-        max-width: 250px; 
+        max-width: 250px;
     }
 }
 
 /* Responsive adjustments for the background section */
-@media (max-width: 992px) { /* Adjust breakpoint as needed */
+@media (max-width: 992px) {
+
+    /* Adjust breakpoint as needed */
     .background {
-        gap: 1rem; /* Adjust gap for vertical stacking */
+        gap: 1rem;
+        /* Adjust gap for vertical stacking */
     }
-    
+
     .certificate-logo {
-        max-width: 250px; 
+        max-width: 250px;
     }
 }
-@media (max-width: 1024px) { /* Adjust breakpoint as needed */
+
+@media (max-width: 1024px) {
+
+    /* Adjust breakpoint as needed */
     .background {
-        gap: 1rem; /* Adjust gap for vertical stacking */
+        gap: 1rem;
+        /* Adjust gap for vertical stacking */
     }
 }
 
@@ -1301,10 +1447,14 @@ button.loading::before,
         width: 200px;
     }
 
-    header h1 { /* If h1 is present in some headers and needs to be smaller */
-        font-size: 1.1rem; /* Adjust h1 size on small screens */
-        margin: 0.5rem 0.25rem; /* Adjust margins */
-        flex-grow: 1; /* Allow it to take space if needed, but ensure it doesn't break layout */
+    header h1 {
+        /* If h1 is present in some headers and needs to be smaller */
+        font-size: 1.1rem;
+        /* Adjust h1 size on small screens */
+        margin: 0.5rem 0.25rem;
+        /* Adjust margins */
+        flex-grow: 1;
+        /* Allow it to take space if needed, but ensure it doesn't break layout */
         text-align: center;
     }
 
@@ -1314,7 +1464,8 @@ button.loading::before,
     }
 
     .background {
-        gap: 1.5rem; /* Adjust gap for vertical stacking */
+        gap: 1.5rem;
+        /* Adjust gap for vertical stacking */
     }
 
     h2 {
@@ -1329,13 +1480,16 @@ button.loading::before,
     form textarea {
         padding: 0.7rem;
     }
+
     .certificate-logo {
-        max-width: 200px; 
+        max-width: 200px;
     }
+
     .overlay-left {
         padding: 1.5rem;
         margin: 0.3rem;
     }
+
     .footer {
         padding: 1rem;
     }
@@ -1344,16 +1498,20 @@ button.loading::before,
     .about-section h2 {
         font-size: 1.6em;
     }
+
     .about-section h3 {
         font-size: 1.3em;
     }
+
     .about-section p {
         font-size: 0.9rem;
     }
+
     .mission-list li {
         padding: 0.8rem;
         font-size: 0.9rem;
     }
+
     .core-values-list li {
         padding: 1rem;
         font-size: 0.95rem;
