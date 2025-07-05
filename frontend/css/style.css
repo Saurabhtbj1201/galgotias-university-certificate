@@ -941,23 +941,16 @@ footer {
     color: #444;
 }
 
-.contact-section p strong {
-    color: #333;
-    font-weight: 600;
-}
-
-.contact-section a {
-    color: #8B0000;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease, text-decoration 0.3s ease;
-}
-
 .contact-section a:hover,
 .contact-section a:focus {
-    color: #a50000;
-    text-decoration: underline;
     outline: none;
+    border: #000000 1px solid;
+}
+
+.contact-section form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
 }
 
 .contact-section a:focus-visible {
@@ -1515,5 +1508,342 @@ button.loading::before,
     .core-values-list li {
         padding: 1rem;
         font-size: 0.95rem;
+    }
+}
+
+/* Developer Info and Social Links Styles */
+.developer-info {
+    background-color: #f0f4f8;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border-left: 5px solid #8B0000;
+}
+
+.developer-info p {
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.developer-info strong {
+    color: #8B0000;
+}
+
+.disclaimer-section {
+    background-color: #fff3cd;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 5px solid #ffc107;
+    margin-bottom: 2rem;
+}
+
+.disclaimer-section h4 {
+    color: #856404;
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.disclaimer-section ul {
+    list-style: disc;
+    padding-left: 20px;
+}
+
+.disclaimer-section ul li {
+    margin-bottom: 0.5rem;
+    color: #856404;
+}
+
+.social-links {
+    margin-bottom: 2rem;
+}
+
+.social-links h4 {
+    margin-bottom: 1rem;
+    color: #8B0000;
+}
+
+.social-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 55px;
+    height: 55px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-size: 1.75rem; /* Make icons larger */
+    color: white;
+}
+
+.social-icon span {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+.social-icon.website {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.social-icon.linkedin {
+    background: linear-gradient(135deg, #0077b5 0%, #00a0dc 100%);
+}
+
+.social-icon.github {
+    background: linear-gradient(135deg, #333 0%, #666 100%);
+}
+
+.social-icon.twitter {
+    background: linear-gradient(135deg, #000 0%, #333 100%);
+}
+
+.social-icon.instagram {
+    background: linear-gradient(135deg, #ff1741 0%, #cd30bb 100%);
+}
+
+.social-icon.facebook {
+    background: linear-gradient(135deg, #2651af 0%, #5e91ff 100%);
+}
+
+.social-icon.threads {
+    background: linear-gradient(135deg, #000 0%, #333 100%);
+}
+
+.social-icon.whatsapp {
+    background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+}
+
+.social-icon:hover {
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+}
+
+.social-icon:hover i {
+    transform: scale(1.1);
+}
+
+.social-icon::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
+}
+
+.social-icon:hover::before {
+    left: 100%;
+}
+
+.feedback-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 2.5rem;
+    border-radius: 12px;
+    border-left: 5px solid #8B0000;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.feedback-section h4 {
+    color: #8B0000;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.feedback-section > p {
+    text-align: center;
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.feedback-form-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.feedback-form {
+    margin: 0;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.feedback-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.feedback-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.feedback-form input,
+.feedback-form textarea {
+    width: 100%;
+    padding: 0.85rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #333;
+    color: #fff;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.feedback-form input:focus,
+.feedback-form textarea:focus {
+    border-color: #8B0000;
+    box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.1);
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.feedback-form textarea {
+    resize: vertical;
+    min-height: 120px;
+    font-family: inherit;
+
+}
+
+.form-actions {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.feedback-btn {
+    background: linear-gradient(135deg, #8B0000 0%, #a50000 100%);
+    color: white;
+    padding: 0.85rem 2.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(139, 0, 0, 0.3);
+}
+
+.feedback-btn:hover {
+    background: linear-gradient(135deg, #a50000 0%, #8B0000 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(139, 0, 0, 0.4);
+}
+
+.feedback-btn:active {
+    transform: translateY(0);
+}
+
+.btn-text {
+    transition: transform 0.3s ease;
+}
+
+.btn-icon {
+    transition: transform 0.3s ease;
+    font-size: 1.2rem;
+}
+
+.feedback-btn:hover .btn-text {
+    transform: translateX(-2px);
+}
+
+.feedback-btn:hover .btn-icon {
+    transform: translateX(3px);
+}
+
+/* Responsive adjustments for social icons and feedback form */
+@media (max-width: 768px) {
+    .social-icons {
+        gap: 0.75rem;
+    }
+    
+    .social-icon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .social-icon span {
+        font-size: 0.7rem;
+    }
+    
+    .developer-info,
+    .disclaimer-section,
+    .feedback-section {
+        padding: 1.5rem;
+    }
+    
+    .feedback-form-container {
+        padding: 1.5rem;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    
+    .feedback-btn {
+        padding: 0.75rem 2rem;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .social-icons {
+        gap: 0.5rem;
+    }
+    
+    .social-icon {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .social-icon span {
+        font-size: 0.65rem;
+    }
+    
+    .feedback-form input,
+    .feedback-form textarea {
+        padding: 0.75rem;
+        font-size: 0.95rem;
+    }
+    
+    .feedback-section {
+        padding: 1.5rem;
+    }
+    
+    .feedback-form-container {
+        padding: 1rem;
+    }
+    
+    .feedback-btn {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.9rem;
     }
 }
