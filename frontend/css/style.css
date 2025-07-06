@@ -1732,16 +1732,16 @@ button.loading::before,
     margin-bottom: 1.8rem;
 }
 
-.contact-section .form-group input, form input[type="text"] {
+.contact-section .form-group input {
     border: 1px solid #000000;
     background-color: #ededed;
     /* Dark input background */
     color: #5f0000;
 }
 
-.feedback-form input,
-.feedback-form textarea,
-.feedback-form select {
+.contact-section .feedback-form input,
+.contact-section .feedback-form textarea,
+.contact-section .feedback-form select {
     width: 100%;
     padding: 0.85rem;
     border: 1px solid #000000;
