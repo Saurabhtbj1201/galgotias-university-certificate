@@ -70,10 +70,19 @@ header nav ul li a {
 header nav ul li a:hover,
 header nav ul li a:focus {
     background-color: #8B0000;
-    /* White background on hover/focus */
     color: #f0f0f0;
-    /* Dark Red text on hover/focus */
     outline: none;
+}
+
+header nav ul li.active a {
+    background-color: #a50000;
+    color: #f0f0f0;
+}
+
+header nav ul li.active a:hover {
+    /* Optional: Keep the active link highlighted on hover */
+    background-color: #8B0000;
+    color: #f0f0f0;
 }
 
 /* Hamburger Menu Styles */
@@ -897,15 +906,15 @@ footer {
 }
 
 /* Contact Page Specific Styles */
-.contact-section .container {
-    background-color: #ffffff;
+.contact-section {
+    background-color: #eeeeee;
     /* White background for content box */
     color: #333;
     /* Darker text for readability */
-    padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
+
 
 .contact-section .contact-block {
     margin-bottom: 2.5rem;
@@ -934,13 +943,12 @@ footer {
     font-weight: 700;
 }
 
-
 .contact-section p,
 .contact-section ul li {
     font-size: 1rem;
     line-height: 1.7;
     margin-bottom: 0.75rem;
-    color: #444;
+    color: #333;
 }
 
 .contact-section a:hover,
@@ -1515,7 +1523,7 @@ button.loading::before,
 
 /* Developer Info and Social Links Styles */
 .developer-info {
-    background-color: #f0f4f8;
+    background-color: #ffe6e6;
     padding: 1.5rem;
     border-radius: 8px;
     margin-bottom: 2rem;
@@ -1529,6 +1537,20 @@ button.loading::before,
 
 .developer-info strong {
     color: #8B0000;
+}
+
+.developer-info a {
+    color: #8B0000;
+    text-decoration: none;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+.developer-info a:hover,
+.developer-info a:focus {
+    color: #a50000;
+    text-decoration: underline;
+    border: none;
+    outline: none;
 }
 
 .disclaimer-section {
@@ -1675,7 +1697,7 @@ button.loading::before,
 }
 
 .feedback-form-container {
-    background: white;
+    background: #fdfdfd;
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
@@ -1704,21 +1726,47 @@ button.loading::before,
     font-size: 0.95rem;
 }
 
+.feedback-form-container p {
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 1.8rem;
+}
+
+.contact-section .form-group input, form input[type="text"] {
+    border: 1px solid #000000;
+    background-color: #ededed;
+    /* Dark input background */
+    color: #5f0000;
+}
+
 .feedback-form input,
-.feedback-form textarea {
+.feedback-form textarea,
+.feedback-form select {
     width: 100%;
     padding: 0.85rem;
-    border: 2px solid #e0e0e0;
+    border: 1px solid #000000;
     border-radius: 8px;
     font-size: 1rem;
     transition: all 0.3s ease;
-    background-color: #333;
-    color: #fff;
+    background-color: #ededed;
+    color: #5f0000;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    -webkit-appearance: none; /* Removes default browser styling */
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.feedback-form select {
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%235f0000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    background-size: 0.65em auto;
+    padding-right: 2.5rem; /* Make space for the arrow */
 }
 
 .feedback-form input:focus,
-.feedback-form textarea:focus {
+.feedback-form textarea:focus,
+.feedback-form select:focus {
     border-color: #8B0000;
     box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.1);
     outline: none;
@@ -1831,7 +1879,8 @@ button.loading::before,
     }
     
     .feedback-form input,
-    .feedback-form textarea {
+    .feedback-form textarea,
+    .feedback-form select {
         padding: 0.75rem;
         font-size: 0.95rem;
     }
