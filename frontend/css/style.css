@@ -926,12 +926,14 @@ footer {
 }
 
 .contact-section h4 {
-    color: #4a4a4a;
+    color: #8B0000;
+    text-align: center;
     margin-top: 1.5rem;
     margin-bottom: 1rem;
-    font-size: 1.4em;
-    font-weight: 600;
+    font-size: 1.5em;
+    font-weight: 700;
 }
+
 
 .contact-section p,
 .contact-section ul li {
