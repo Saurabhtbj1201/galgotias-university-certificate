@@ -907,7 +907,7 @@ footer {
 
 /* Contact Page Specific Styles */
 .contact-section {
-    background-color: #eeeeee;
+    background-color: #ffffff;
     /* White background for content box */
     color: #333;
     /* Darker text for readability */
@@ -1697,11 +1697,11 @@ button.loading::before,
 }
 
 .feedback-form-container {
-    background: #fdfdfd;
+    background: #ffd5d5;
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e0e0e0;
+    border: 1px solid #8B0000;
 }
 
 .feedback-form {
