@@ -2005,7 +2005,7 @@ button.loading::before,
     margin: 10% auto;
     padding: 2rem;
     border: 1px solid #888;
-    width: 90%;
+    width: 80%;
     max-width: 450px;
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
