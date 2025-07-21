@@ -44,6 +44,18 @@ const certificateSchema = new mongoose.Schema({
 
 const Certificate = mongoose.model('Certificate', certificateSchema);
 
+// Mongoose Schema and Model for Feedback
+const feedbackSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    subject: { type: String, required: true },
+    message: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now }
+});
+
+const Feedback = mongoose.model('Feedback', feedbackSchema);
+
+
 // --- API Endpoints ---
 
 // 1. Create/Submit Certificate
@@ -374,6 +386,31 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
             // If headers are sent, we can only end the response. The client might get a corrupted PDF.
             res.end();
         }
+    }
+});
+
+// 5. Submit Feedback
+app.post('/api/feedback', async (req, res) => {
+    try {
+        const { name, email, subject, message } = req.body;
+
+        if (!name || !email || !subject || !message) {
+            return res.status(400).json({ message: 'All fields are required.' });
+        }
+
+        const newFeedback = new Feedback({
+            name,
+            email,
+            subject,
+            message
+        });
+
+        await newFeedback.save();
+        res.status(201).json({ message: 'Feedback submitted successfully!' });
+
+    } catch (error) {
+        console.error('Error submitting feedback:', error);
+        res.status(500).json({ message: 'Server error while submitting feedback.' });
     }
 });
 

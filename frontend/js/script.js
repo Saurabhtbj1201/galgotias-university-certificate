@@ -284,5 +284,51 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    
+    // Handle Feedback Form Submission (contact.html)
+    const feedbackForm = document.getElementById('feedbackForm');
+    if (feedbackForm) {
+        feedbackForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const submitButton = feedbackForm.querySelector('button[type="submit"]');
+            const formData = new FormData(feedbackForm);
+            const data = Object.fromEntries(formData.entries());
+
+            // Add loading state to submit button
+            if (submitButton) {
+                submitButton.classList.add('loading');
+                submitButton.disabled = true;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/feedback`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    showPopup(result.message || `Error: ${response.status}`, true);
+                    return;
+                }
+
+                showPopup('Thank you! Your feedback has been submitted successfully.');
+                feedbackForm.reset();
+
+            } catch (error) {
+                console.error('Feedback submission error:', error);
+                showPopup(error.message || 'Error submitting feedback. Please try again.', true);
+            } finally {
+                // Remove loading state from submit button
+                if (submitButton) {
+                    submitButton.classList.remove('loading');
+                    submitButton.disabled = false;
+                }
+            }
+        });
+    }
 });
 
