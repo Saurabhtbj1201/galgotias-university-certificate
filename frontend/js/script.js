@@ -31,6 +31,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // ✅ Login Modal Logic
+    const loginModal = document.getElementById('loginModal');
+    const loginIcon = document.getElementById('loginIcon');
+    const closeButton = document.querySelector('#loginModal .close-button');
+
+    if (loginModal && loginIcon && closeButton) {
+        // Show modal on icon click
+        loginIcon.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginModal.style.display = 'block';
+        });
+
+        // Hide modal on close button click
+        closeButton.addEventListener('click', () => {
+            loginModal.style.display = 'none';
+        });
+
+        // Hide modal on outside click
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+        });
+    }
+
 
     // ✅ Initialize EmailJS
     if (typeof emailjs !== 'undefined') {
