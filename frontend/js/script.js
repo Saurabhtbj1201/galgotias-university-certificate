@@ -26,7 +26,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 popup.classList.remove('active');
             }, 4000);
         } else {
-            alert(message);
+            // Check for login error message container as fallback
+            const loginErrorMessage = document.getElementById('loginErrorMessage');
+            if (loginErrorMessage && document.getElementById('loginModal').style.display === 'block') {
+                // Only display in login error message if login modal is visible
+                loginErrorMessage.textContent = message;
+                loginErrorMessage.classList.remove('success', 'error');
+                loginErrorMessage.classList.add(isError ? 'error' : 'success');
+                loginErrorMessage.classList.add('active');
+                
+                setTimeout(() => {
+                    loginErrorMessage.classList.remove('active');
+                }, 4000);
+            } else {
+                // Fallback to alert only if necessary
+                alert(message);
+            }
         }
     };
 
