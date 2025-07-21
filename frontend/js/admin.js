@@ -265,6 +265,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
+    // Toggle password visibility
+    document.querySelectorAll('.password-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const passwordInput = document.getElementById(targetId);
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                this.classList.add('visible');
+                // Change icon to show "hide password" icon
+                this.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="eye-icon">
+                        <path d="M12 7c2.8 0 5 2.2 5 5 0 .6-.1 1.2-.3 1.7L19.4 16c1.5-1.2 2.7-2.7 3.6-4.6-1.1-2.8-3.5-5.2-6.4-6.8C15 3.7 13.5 3.2 12 3.2c-1.5 0-3 .5-4.6 1.4-.8.5-1.5 1-2.1 1.6l2.1 2.1c.3-.2.6-.3 1-.4.5-.2 1.1-.3 1.6-.3zM3.5 2.4l2.2 2.2.3.3C4 6.1 2.3 8.3 1 11c1.7 4.4 6 7.5 11 7.5 1.6 0 3.2-.3 4.6-1l.3.3 2.6 2.6 1.4-1.4-16-16-1.4 1.4zm9.2 9.2l2.8 2.8c-.4.1-.9.2-1.3.2-2.8 0-5-2.2-5-5 0-.4.1-.9.2-1.3l2.8 2.8c.1.3.3.5.5.5z"/>
+                    </svg>
+                `;
+            } else {
+                passwordInput.type = 'password';
+                this.classList.remove('visible');
+                // Change back to "show password" icon
+                this.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="eye-icon">
+                        <path d="M12 4.5C7 4.5 2.7 7.6 1 12c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5c-1.7-4.4-6-7.5-11-7.5zm0 12.5c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5zm0-8c-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3-1.3-3-3-3z"/>
+                    </svg>
+                `;
+            }
+        });
+    });
+    
     // ===== Initialize =====
     
     // Fetch admin users when page loads

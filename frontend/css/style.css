@@ -1333,6 +1333,20 @@ button.loading::before,
     .user-actions {
         order: 2;
         margin-left: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .user-email {
+        display: inline-block;
+        /* Ensure visibility */
+        font-size: 0.8rem;
+        /* Smaller text on smaller screens */
+        max-width: 150px;
+        /* Limit width */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     header nav.active {
@@ -1966,6 +1980,9 @@ button.loading::before,
         padding: 0.7rem 1.5rem;
         font-size: 0.9rem;
     }
+    .user-actions .user-email {
+        display: none;
+    }
 }
 
 /* Login Modal Styles */
@@ -2094,6 +2111,41 @@ button.loading::before,
     flex-wrap: wrap;
 }
 
+/* Password Input Container Styles */
+.password-input-container {
+    position: relative;
+    width: 100%;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.password-toggle:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.password-toggle .eye-icon {
+    fill: #666;
+    transition: fill 0.3s ease;
+}
+
+.password-toggle:hover .eye-icon {
+    fill: #8B0000;
+}
+
 /* Dashboard Styles */
 .dashboard-section {
     background-color: #fff;
@@ -2101,7 +2153,7 @@ button.loading::before,
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     padding: 2rem;
     margin: 2rem auto;
-    width: 95%;
+    width: 82%;
     max-width: 1400px;
 }
 
@@ -2153,18 +2205,29 @@ button.loading::before,
 #tableWrapper {
     overflow-x: auto;
     max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scrolling on iOS */
 }
 
-#certificatesTable {
+#certificatesTable, 
+#feedbackTable, 
+#adminUsersTable {
     width: 100%;
     border-collapse: collapse;
     background-color: #fff;
     color: #333;
+    min-width: 650px;
+    /* Ensure tables have minimum width to maintain structure */
 }
 
 #certificatesTable th,
-#certificatesTable td {
-    padding: 12px 15px;
+#feedbackTable th,
+#adminUsersTable th,
+#certificatesTable td,
+#feedbackTable td,
+#adminUsersTable td {
+    padding: 10px 8px;
+    /* Improved cell padding for better touch targets */
     text-align: left;
     border-bottom: 1px solid #e0e0e0;
 }
@@ -2291,31 +2354,6 @@ button.loading::before,
 
 .certificate-details dd {
     margin: 0 0 1rem 0;
-    color: #333;
-}
-
-.modal-actions {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
-
-#updateCertificateForm .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin-bottom: 0.5rem;
-}
-
-#updateCertificateForm .form-group {
-    margin-bottom: 1rem;
-}
-
-#updateCertificateForm input,
-#updateCertificateForm textarea {
-    width: 100%;
-    padding: 0.8rem;
     border: 1px solid #ddd;
     border-radius: 4px;
     background-color: #f9f9f9;

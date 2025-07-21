@@ -724,15 +724,39 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check authentication status and update UI
     function checkAuth() {
         const userInfo = sessionStorage.getItem('user');
-        if (!userInfo) {
+        const isProtectedPage = window.location.pathname.includes('dashboard.html') || 
+                               window.location.pathname.includes('feedback.html') ||
+                               window.location.pathname.includes('admin.html');
+        
+        if (!userInfo && isProtectedPage) {
             // If not logged in and on a protected page, redirect to login
-            if (window.location.pathname.includes('dashboard.html') || 
-                window.location.pathname.includes('feedback.html')) {
-                window.location.href = 'index.html';
-            }
+            window.location.href = 'index.html';
+            return false;
         }
+        return true;
     }
     
     // Run auth check on page load
     checkAuth();
+
+    // Add additional protection against browser back button after logout
+    window.addEventListener('pageshow', function(event) {
+        // Check if the page is being loaded from browser cache (back button)
+        if (event.persisted) {
+            // Run authentication check again
+            checkAuth();
+        }
+    });
+
+    // Ensure protected pages are always checked when accessed
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible') {
+            const isProtectedPage = window.location.pathname.includes('dashboard.html') || 
+                                  window.location.pathname.includes('feedback.html') ||
+                                  window.location.pathname.includes('admin.html');
+            if (isProtectedPage) {
+                checkAuth();
+            }
+        }
+    });
 });
