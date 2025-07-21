@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
-const bcrypt = require('bcryptjs');
 
 const app = express();
 const PORT = process.env.PORT || 3000; // Render will set the PORT environment variable
@@ -16,21 +15,18 @@ const PORT = process.env.PORT || 3000; // Render will set the PORT environment v
 app.use(cors()); // Enable CORS for all routes
 app.use(bodyParser.json()); // Parse JSON request bodies
 
-// MongoDB Connection for Certificates
+// MongoDB Connection
+// IMPORTANT: For production, use environment variables for sensitive data like DB URIs.
 const MONGO_URI = process.env.MONGO_URI; // Ensure this is set in Render's environment variables
 
-const certificateDb = mongoose.createConnection(MONGO_URI);
-certificateDb.on('connected', () => console.log('Certificate MongoDB connected successfully'));
-certificateDb.on('error', (err) => console.error('Certificate MongoDB connection error:', err));
+mongoose.connect(MONGO_URI)
+    .then(() => console.log('MongoDB connected successfully'))
+    .catch(err => {
+        console.error('MongoDB connection error:', err);
+        process.exit(1); // Exit if DB connection fails
+    });
 
-// MongoDB Connection for Admin Users
-const ADMIN_MONGO_URI = MONGO_URI.replace(/\/[^/]+$/, '/admin'); // Assumes DB name is at the end of the URI
-const adminDb = mongoose.createConnection(ADMIN_MONGO_URI);
-adminDb.on('connected', () => console.log('Admin MongoDB connected successfully'));
-adminDb.on('error', (err) => console.error('Admin MongoDB connection error:', err));
-
-
-// Mongoose Schema and Model for Certificate (using certificateDb)
+// Mongoose Schema and Model for Certificate
 const certificateSchema = new mongoose.Schema({
     fullName: { type: String, required: true },
     mobile: { type: String, required: true },
@@ -46,19 +42,7 @@ const certificateSchema = new mongoose.Schema({
     issueDate: { type: Date, default: Date.now }
 });
 
-const Certificate = certificateDb.model('Certificate', certificateSchema);
-
-// Mongoose Schema and Model for User (using adminDb)
-const userSchema = new mongoose.Schema({
-    fullName: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    dob: { type: Date, required: true },
-    idNumber: { type: String, required: true, unique: true }, // Aadhar/PAN
-    password: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now }
-});
-
-const User = adminDb.model('User', userSchema);
+const Certificate = mongoose.model('Certificate', certificateSchema);
 
 // Mongoose Schema and Model for Feedback
 const feedbackSchema = new mongoose.Schema({
@@ -69,73 +53,10 @@ const feedbackSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
-const Feedback = certificateDb.model('Feedback', feedbackSchema);
+const Feedback = mongoose.model('Feedback', feedbackSchema);
 
 
 // --- API Endpoints ---
-
-// --- Auth Endpoints ---
-
-// Signup
-app.post('/api/auth/signup', async (req, res) => {
-    try {
-        const { fullName, email, dob, idNumber, password } = req.body;
-
-        if (!fullName || !email || !dob || !idNumber || !password) {
-            return res.status(400).json({ message: 'All fields are required.' });
-        }
-
-        const existingUser = await User.findOne({ $or: [{ email }, { idNumber }] });
-        if (existingUser) {
-            return res.status(409).json({ message: 'User with this email or ID number already exists.' });
-        }
-
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        const newUser = new User({
-            fullName,
-            email,
-            dob: new Date(dob),
-            idNumber,
-            password: hashedPassword
-        });
-
-        await newUser.save();
-        res.status(201).json({ message: 'User created successfully!' });
-
-    } catch (error) {
-        console.error('Error during signup:', error);
-        res.status(500).json({ message: 'Server error during signup.' });
-    }
-});
-
-// Login
-app.post('/api/auth/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        if (!email || !password) {
-            return res.status(400).json({ message: 'Email and password are required.' });
-        }
-
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(404).json({ message: 'Invalid credentials.' });
-        }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid credentials.' });
-        }
-
-        res.status(200).json({ message: 'Login successful!' });
-
-    } catch (error) {
-        console.error('Error during login:', error);
-        res.status(500).json({ message: 'Server error during login.' });
-    }
-});
 
 // 1. Create/Submit Certificate
 app.post('/api/certificate', async (req, res) => {
