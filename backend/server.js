@@ -460,6 +460,62 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
+// Verify account for password reset
+app.post('/api/auth/verify-reset', async (req, res) => {
+    try {
+        const { email, aadhar } = req.body;
+
+        if (!email || !aadhar) {
+            return res.status(400).json({ message: 'Email and Aadhar number are required.' });
+        }
+
+        // Find user by email and aadhar
+        const user = await User.findOne({ email, aadhar });
+
+        if (!user) {
+            return res.status(404).json({ message: 'No account found with these credentials. Please check your email and Aadhar number.' });
+        }
+
+        // Account found and verified
+        res.status(200).json({ 
+            message: 'Account verified successfully', 
+            email: user.email 
+        });
+
+    } catch (error) {
+        console.error('Account verification error:', error);
+        res.status(500).json({ message: 'Server error during account verification.' });
+    }
+});
+
+// Reset password
+app.post('/api/auth/reset-password', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Email and new password are required.' });
+        }
+
+        // Find and update user's password
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        // Update password (in a real app, you would hash the password)
+        user.password = password;
+        await user.save();
+
+        res.status(200).json({ message: 'Password reset successful.' });
+
+    } catch (error) {
+        console.error('Password reset error:', error);
+        res.status(500).json({ message: 'Server error during password reset.' });
+    }
+});
+
 // Global error handler (optional, for unhandled routes or other errors)
 app.use((err, req, res, next) => {
     console.error(err.stack);

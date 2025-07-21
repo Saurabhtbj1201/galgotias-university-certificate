@@ -49,6 +49,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginModal = document.getElementById('loginModal');
     const loginIcon = document.getElementById('loginIcon');
     const closeButton = document.querySelector('#loginModal .close-button');
+    const loginFormContainer = document.getElementById('loginFormContainer');
+    const resetFormContainer = document.getElementById('resetFormContainer');
+    const resetStepOne = document.getElementById('resetStepOne');
+    const resetStepTwo = document.getElementById('resetStepTwo');
+    const forgotPasswordLink = document.querySelector('.forgot-password');
+    const backToLoginLink = document.getElementById('backToLogin');
+
+    // Function to show error message
+    const showErrorMessage = (elementId, message) => {
+        const errorElement = document.getElementById(elementId);
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.classList.add('active', 'error');
+        }
+    };
+
+    // Function to show success message
+    const showSuccessMessage = (elementId, message) => {
+        const errorElement = document.getElementById(elementId);
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.classList.remove('error');
+            errorElement.classList.add('active', 'success');
+        }
+    };
+
+    // Function to clear message
+    const clearMessage = (elementId) => {
+        const errorElement = document.getElementById(elementId);
+        if (errorElement) {
+            errorElement.textContent = '';
+            errorElement.classList.remove('active', 'error', 'success');
+        }
+    };
 
     if (loginModal && loginIcon && closeButton) {
         loginIcon.addEventListener('click', (e) => {
@@ -63,6 +97,178 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('click', (e) => {
             if (e.target === loginModal) {
                 loginModal.style.display = 'none';
+            }
+        });
+
+        // Toggle between login and reset password forms
+        if (forgotPasswordLink) {
+            forgotPasswordLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginFormContainer.style.display = 'none';
+                resetFormContainer.style.display = 'block';
+                resetStepOne.style.display = 'block';
+                resetStepTwo.style.display = 'none';
+                clearMessage('resetVerifyErrorMessage');
+                clearMessage('resetPasswordErrorMessage');
+                
+                // Reset the forms
+                if (document.getElementById('resetVerifyForm')) {
+                    document.getElementById('resetVerifyForm').reset();
+                }
+                if (document.getElementById('resetPasswordForm')) {
+                    document.getElementById('resetPasswordForm').reset();
+                }
+            });
+        }
+
+        if (backToLoginLink) {
+            backToLoginLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                resetFormContainer.style.display = 'none';
+                loginFormContainer.style.display = 'block';
+                clearMessage('loginErrorMessage');
+            });
+        }
+    }
+
+    // ✅ Reset Password Step 1: Verify Account
+    const resetVerifyForm = document.getElementById('resetVerifyForm');
+    if (resetVerifyForm) {
+        resetVerifyForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            
+            clearMessage('resetVerifyErrorMessage');
+            
+            const submitButton = resetVerifyForm.querySelector('button[type="submit"]');
+            const emailInput = document.getElementById('resetEmail');
+            const aadharInput = document.getElementById('resetAadhar');
+
+            // Basic validation
+            if (!emailInput.value || !aadharInput.value) {
+                showErrorMessage('resetVerifyErrorMessage', 'Please enter both email and Aadhar number.');
+                return;
+            }
+
+            const data = {
+                email: emailInput.value,
+                aadhar: aadharInput.value
+            };
+
+            if (submitButton) {
+                submitButton.classList.add('loading');
+                submitButton.disabled = true;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/verify-reset`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    showErrorMessage('resetVerifyErrorMessage', result.message || `Verification failed: ${response.status}`);
+                    return;
+                }
+
+                // Store the email for step 2
+                sessionStorage.setItem('resetEmail', emailInput.value);
+                
+                // Show step 2
+                resetStepOne.style.display = 'none';
+                resetStepTwo.style.display = 'block';
+                clearMessage('resetPasswordErrorMessage');
+                
+            } catch (error) {
+                console.error('Verification error:', error);
+                showErrorMessage('resetVerifyErrorMessage', 'Unable to connect to the server. Please try again.');
+            } finally {
+                if (submitButton) {
+                    submitButton.classList.remove('loading');
+                    submitButton.disabled = false;
+                }
+            }
+        });
+    }
+
+    // ✅ Reset Password Step 2: Set New Password
+    const resetPasswordForm = document.getElementById('resetPasswordForm');
+    if (resetPasswordForm) {
+        resetPasswordForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            
+            clearMessage('resetPasswordErrorMessage');
+            
+            const submitButton = resetPasswordForm.querySelector('button[type="submit"]');
+            const newPasswordInput = document.getElementById('newPassword');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const email = sessionStorage.getItem('resetEmail');
+
+            // Basic validation
+            if (!newPasswordInput.value || !confirmPasswordInput.value) {
+                showErrorMessage('resetPasswordErrorMessage', 'Please enter and confirm your new password.');
+                return;
+            }
+
+            if (newPasswordInput.value !== confirmPasswordInput.value) {
+                showErrorMessage('resetPasswordErrorMessage', 'Passwords do not match.');
+                return;
+            }
+
+            if (!email) {
+                showErrorMessage('resetPasswordErrorMessage', 'Session expired. Please start over.');
+                return;
+            }
+
+            const data = {
+                email: email,
+                password: newPasswordInput.value
+            };
+
+            if (submitButton) {
+                submitButton.classList.add('loading');
+                submitButton.disabled = true;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    showErrorMessage('resetPasswordErrorMessage', result.message || `Password reset failed: ${response.status}`);
+                    return;
+                }
+
+                // Show success message
+                showSuccessMessage('resetPasswordErrorMessage', 'Password reset successful! You can now login with your new password.');
+                
+                // Clear session storage
+                sessionStorage.removeItem('resetEmail');
+                
+                // Return to login form after a delay
+                setTimeout(() => {
+                    resetFormContainer.style.display = 'none';
+                    loginFormContainer.style.display = 'block';
+                    clearMessage('loginErrorMessage');
+                    showSuccessMessage('loginErrorMessage', 'Password reset successful! Please login with your new password.');
+                    resetPasswordForm.reset();
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Password reset error:', error);
+                showErrorMessage('resetPasswordErrorMessage', 'Unable to connect to the server. Please try again.');
+            } finally {
+                if (submitButton) {
+                    submitButton.classList.remove('loading');
+                    submitButton.disabled = false;
+                }
             }
         });
     }
