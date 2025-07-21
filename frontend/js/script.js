@@ -35,6 +35,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginModal = document.getElementById('loginModal');
     const loginIcon = document.getElementById('loginIcon');
     const closeButton = document.querySelector('#loginModal .close-button');
+    const loginFormContainer = document.getElementById('loginFormContainer');
+    const signupFormContainer = document.getElementById('signupFormContainer');
+    const showSignup = document.getElementById('showSignup');
+    const showLogin = document.getElementById('showLogin');
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
 
     if (loginModal && loginIcon && closeButton) {
         // Show modal on icon click
@@ -54,7 +60,102 @@ document.addEventListener('DOMContentLoaded', () => {
                 loginModal.style.display = 'none';
             }
         });
+
+        // Toggle between login and signup forms
+        if (showSignup && showLogin && loginFormContainer && signupFormContainer) {
+            showSignup.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginFormContainer.style.display = 'none';
+                signupFormContainer.style.display = 'block';
+            });
+
+            showLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                signupFormContainer.style.display = 'none';
+                loginFormContainer.style.display = 'block';
+            });
+        }
     }
+
+    // Handle Login Form Submission
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(loginForm);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+
+                if (!response.ok) {
+                    showPopup(result.message || 'Login failed', true);
+                } else {
+                    showPopup('Login successful! Redirecting...');
+                    window.location.href = 'dashboard.html'; // Redirect on success
+                }
+            } catch (error) {
+                showPopup('Error during login. Please try again.', true);
+            }
+        });
+    }
+
+    // Handle Signup Form Submission
+    if (signupForm) {
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(signupForm);
+            const data = Object.fromEntries(formData.entries());
+
+            if (data.password !== data.confirmPassword) {
+                showPopup('Passwords do not match!', true);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+
+                if (!response.ok) {
+                    showPopup(result.message || 'Signup failed', true);
+                } else {
+                    showPopup('Signup successful! Please log in.');
+                    signupForm.reset();
+                    // Switch to login form
+                    if (signupFormContainer && loginFormContainer) {
+                        signupFormContainer.style.display = 'none';
+                        loginFormContainer.style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                showPopup('Error during signup. Please try again.', true);
+            }
+        });
+    }
+
+    // Password visibility toggle
+    document.querySelectorAll('.toggle-password').forEach(icon => {
+        icon.addEventListener('click', () => {
+            const passwordInput = icon.previousElementSibling;
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        });
+    });
 
 
     // ✅ Initialize EmailJS

@@ -1982,6 +1982,19 @@ button.loading::before,
     cursor: pointer;
 }
 
+.password-group {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 70%;
+    right: 15px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+}
+
 .modal-content h2 {
     text-align: center;
     margin-bottom: 1.5rem;
