@@ -55,15 +55,61 @@ document.addEventListener('DOMContentLoaded', () => {
     // ✅ Login form submission
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
+        const loginErrorMessage = document.getElementById('loginErrorMessage');
+        
+        // Function to display login form errors
+        const showLoginError = (message) => {
+            if (loginErrorMessage) {
+                loginErrorMessage.textContent = message;
+                loginErrorMessage.classList.remove('success');
+                loginErrorMessage.classList.add('active', 'error');
+            }
+        };
+        
+        // Function to display login form success
+        const showLoginSuccess = (message) => {
+            if (loginErrorMessage) {
+                loginErrorMessage.textContent = message;
+                loginErrorMessage.classList.remove('error');
+                loginErrorMessage.classList.add('active', 'success');
+            }
+        };
+        
+        // Function to clear login form messages
+        const clearLoginMessage = () => {
+            if (loginErrorMessage) {
+                loginErrorMessage.textContent = '';
+                loginErrorMessage.classList.remove('active', 'error', 'success');
+            }
+        };
+        
         loginForm.addEventListener('submit', async function (event) {
             event.preventDefault();
-
+            console.log('Login form submitted'); // Debug log
+            
+            // Clear any previous messages
+            clearLoginMessage();
+            
             const submitButton = loginForm.querySelector('button[type="submit"]');
             const emailInput = document.getElementById('loginEmail');
             const passwordInput = document.getElementById('loginPassword');
+            const captchaInput = document.getElementById('loginCaptcha');
+            const captchaText = document.getElementById('captchaText');
 
+            // Basic client-side validation
             if (!emailInput.value || !passwordInput.value) {
-                showPopup('Please enter both email and password.', true);
+                showLoginError('Please enter both email and password.');
+                return;
+            }
+
+            // Validate captcha (case-sensitive check)
+            if (!captchaInput.value) {
+                showLoginError('Please enter the captcha code.');
+                return;
+            }
+            
+            if (captchaInput.value !== captchaText.textContent) {
+                showLoginError('The captcha code you entered is incorrect. Please try again.');
                 return;
             }
 
@@ -78,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
+                console.log('Sending login request to:', `${API_BASE_URL}/auth/login`);
                 const response = await fetch(`${API_BASE_URL}/auth/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -85,23 +132,59 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 const result = await response.json();
+                console.log('Login response:', result);
 
                 if (!response.ok) {
-                    showPopup(result.message || `Error: ${response.status}`, true);
+                    // Handle different error scenarios with specific messages in the form
+                    if (response.status === 401) {
+                        showLoginError('Invalid email or password. Please check your credentials and try again.');
+                    } else if (response.status === 404) {
+                        showLoginError('Email not found. Please check if you have registered with this email.');
+                    } else {
+                        showLoginError(result.message || `Login failed: ${response.status}`);
+                    }
                     return;
                 }
 
-                showPopup('Login successful!');
-                loginForm.reset();
-                loginModal.style.display = 'none';
+                // Store user info in session storage
+                sessionStorage.setItem('user', JSON.stringify({
+                    email: result.user.email,
+                    isLoggedIn: true
+                }));
+
+                // Show success message in form
+                showLoginSuccess('Login successful! Redirecting to dashboard...');
+                
+                // Also use popup for success message
+                showPopup('Login successful! Redirecting to dashboard...');
+                
+                // Redirect to dashboard after short delay
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+                
             } catch (error) {
                 console.error('Login error:', error);
-                showPopup(error.message || 'Error logging in. Please try again.', true);
+                // Use popup for network errors
+                showPopup('Unable to connect to the server. Please check your internet connection and try again.', true);
             } finally {
                 if (submitButton) {
                     submitButton.classList.remove('loading');
                     submitButton.disabled = false;
                 }
+            }
+        });
+        
+        // Clear messages when user starts typing
+        const loginInputs = [
+            document.getElementById('loginEmail'),
+            document.getElementById('loginPassword'),
+            document.getElementById('loginCaptcha')
+        ];
+        
+        loginInputs.forEach(input => {
+            if (input) {
+                input.addEventListener('input', clearLoginMessage);
             }
         });
     }

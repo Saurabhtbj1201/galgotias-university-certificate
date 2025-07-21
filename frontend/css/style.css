@@ -542,6 +542,27 @@ footer {
     color: white;
 }
 
+/* Error message styling for login form */
+.error-message {
+    color: #ce0f02;
+    background-color: rgba(255, 200, 200, 0.3);
+    border-left: 3px solid #ce0f02;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 14px;
+    border-radius: 3px;
+    display: none;
+}
+
+.error-message.active {
+    display: block;
+}
+
+.error-message.success {
+    color: #01a806;
+    background-color: rgba(200, 255, 200, 0.3);
+    border-left: 3px solid #01a806;
+}
 
 /* Certificate Preview & Results */
 #certificatePreview,

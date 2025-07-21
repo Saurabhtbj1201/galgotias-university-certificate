@@ -434,10 +434,15 @@ app.post('/api/auth/login', async (req, res) => {
         // Find user by email
         const user = await User.findOne({ email });
 
-        // Check if user exists and password matches
+        // Check if user exists
+        if (!user) {
+            return res.status(404).json({ message: 'Email not found. Please check if you have registered with this email.' });
+        }
+
+        // Check if password matches
         // Note: In a production app, passwords should be hashed
-        if (!user || user.password !== password) {
-            return res.status(401).json({ message: 'Invalid email or password.' });
+        if (user.password !== password) {
+            return res.status(401).json({ message: 'Invalid password. Please try again.' });
         }
 
         // Authentication successful
