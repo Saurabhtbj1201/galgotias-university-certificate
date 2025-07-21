@@ -516,6 +516,101 @@ app.post('/api/auth/reset-password', async (req, res) => {
     }
 });
 
+// New endpoint: Get all certificates
+app.get('/api/certificate/all', async (req, res) => {
+    try {
+        const certificates = await Certificate.find().sort({ issueDate: -1 });
+        res.status(200).json(certificates);
+    } catch (error) {
+        console.error('Error fetching all certificates:', error);
+        res.status(500).json({ message: 'Server error while fetching certificates.' });
+    }
+});
+
+// New endpoint: Update a certificate
+app.put('/api/certificate/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const {
+            fullName, mobile, email, dob, college, course,
+            admissionNumber, section, semester, address
+        } = req.body;
+
+        // Validate required fields
+        if (!fullName || !mobile || !email || !dob || !college || !course || 
+            !admissionNumber || !section || !semester || !address) {
+            return res.status(400).json({ message: 'All fields are required.' });
+        }
+
+        // Check if certificate exists
+        const certificate = await Certificate.findById(id);
+        if (!certificate) {
+            return res.status(404).json({ message: 'Certificate not found.' });
+        }
+
+        // Check if trying to change the admission number to one that already exists
+        if (certificate.admissionNumber !== admissionNumber) {
+            const existingCert = await Certificate.findOne({ 
+                admissionNumber, 
+                _id: { $ne: id } // Exclude current certificate from check
+            });
+            
+            if (existingCert) {
+                return res.status(409).json({ 
+                    message: 'A certificate with this admission number already exists.' 
+                });
+            }
+        }
+
+        // Update certificate
+        const updatedCertificate = await Certificate.findByIdAndUpdate(
+            id,
+            {
+                fullName, mobile, email, dob, college, course,
+                admissionNumber, section, semester, address
+            },
+            { new: true } // Return the updated document
+        );
+
+        res.status(200).json({ 
+            message: 'Certificate updated successfully',
+            certificate: updatedCertificate
+        });
+
+    } catch (error) {
+        console.error('Error updating certificate:', error);
+        if (error.name === 'CastError') {
+            return res.status(400).json({ message: 'Invalid certificate ID.' });
+        }
+        res.status(500).json({ message: 'Server error while updating certificate.' });
+    }
+});
+
+// New endpoint: Delete a certificate
+app.delete('/api/certificate/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Check if certificate exists
+        const certificate = await Certificate.findById(id);
+        if (!certificate) {
+            return res.status(404).json({ message: 'Certificate not found.' });
+        }
+
+        // Delete certificate
+        await Certificate.findByIdAndDelete(id);
+
+        res.status(200).json({ message: 'Certificate deleted successfully' });
+
+    } catch (error) {
+        console.error('Error deleting certificate:', error);
+        if (error.name === 'CastError') {
+            return res.status(400).json({ message: 'Invalid certificate ID.' });
+        }
+        res.status(500).json({ message: 'Server error while deleting certificate.' });
+    }
+});
+
 // Global error handler (optional, for unhandled routes or other errors)
 app.use((err, req, res, next) => {
     console.error(err.stack);

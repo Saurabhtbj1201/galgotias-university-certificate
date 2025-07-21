@@ -683,4 +683,56 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // ✅ Logout functionality
+    const logoutIcon = document.getElementById('logoutIcon');
+    if (logoutIcon) {
+        logoutIcon.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Clear the user session
+            sessionStorage.removeItem('user');
+            
+            // Show success message
+            if (typeof showPopup === 'function') {
+                showPopup('You have been successfully logged out.');
+            } else {
+                alert('You have been successfully logged out.');
+            }
+            
+            // Redirect to index/home page after a short delay
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        });
+    }
+
+    // ✅ Update user information in the header
+    function updateUserInfo() {
+        const userEmailElement = document.getElementById('userEmail');
+        const userInfo = sessionStorage.getItem('user');
+        
+        if (userInfo && userEmailElement) {
+            const user = JSON.parse(userInfo);
+            userEmailElement.textContent = user.email || '';
+        }
+    }
+    
+    // Run user info update on page load
+    updateUserInfo();
+
+    // Check authentication status and update UI
+    function checkAuth() {
+        const userInfo = sessionStorage.getItem('user');
+        if (!userInfo) {
+            // If not logged in and on a protected page, redirect to login
+            if (window.location.pathname.includes('dashboard.html') || 
+                window.location.pathname.includes('feedback.html')) {
+                window.location.href = 'index.html';
+            }
+        }
+    }
+    
+    // Run auth check on page load
+    checkAuth();
 });

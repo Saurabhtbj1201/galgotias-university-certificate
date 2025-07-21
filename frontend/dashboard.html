@@ -50,77 +50,158 @@
                 <li><a href="feedback.html">Feedback</a></li>
             </ul>
         </nav>
+        <div class="user-actions">
+            <span id="userEmail" class="user-email"></span>
+            <a href="#" id="logoutIcon" class="logout-icon" aria-label="Logout">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                    <path d="M16 13v-2H7V8l-5 4 5 4v-3h9zm-1-8h4v14h-4v2h6V3h-6v2z" fill="currentColor"/>
+                </svg>
+            </a>
+        </div>
     </header>
 
     <main>
-       
+        <section class="dashboard-section">
+            <h2>Certificate Management</h2>
+            <div class="table-container">
+                <div class="table-actions">
+                    <input type="text" id="searchInput" placeholder="Search by name or admission number...">
+                    <button id="refreshButton" class="btn refresh-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                        </svg>
+                        Refresh
+                    </button>
+                </div>
+                <div id="tableWrapper">
+                    <table id="certificatesTable">
+                        <thead>
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Course</th>
+                                <th>Admission Number</th>
+                                <th>Section</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="certificatesTableBody">
+                            <!-- Table rows will be populated by JavaScript -->
+                            <tr class="loading-row">
+                                <td colspan="5" class="loading-message">Loading certificates...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="paginationControls" class="pagination-controls">
+                    <!-- Pagination will be added by JavaScript -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Popup for showing message feedback -->
+        <div id="popupMessage" class="popup"></div>
     </main>
 
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            
-            <!-- Login Form -->
-            <div id="loginFormContainer">
-                <h2>Sign In</h2>
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label for="loginEmail">Email</label>
-                        <input type="email" id="loginEmail" name="email" required>
-                    </div>
-                    <div class="form-group password-group">
-                        <label for="loginPassword">Password</label>
-                        <input type="password" id="loginPassword" name="password" required>
-                        <i class="fa-solid fa-eye-slash toggle-password"></i>
-                    </div>
-                    <div class="form-group captcha-group">
-                        <label for="loginCaptcha">Captcha</label>
-                        <div class="captcha-wrapper">
-                            <input type="text" id="loginCaptcha" name="captcha" required>
-                            <span id="captchaText">A3T24H</span>
-                        </div>
-                    </div>
-                    <div id="loginErrorMessage" class="error-message"></div>
-                    <button type="submit" class="btn">Sign In</button>
-                    <div class="password-options">
-                        <p class="form-toggle-link">Forgot your password? <a href="#" class="forgot-password">Reset now</a></p>
-                    </div>
-                </form>
+    <!-- Certificate Details Modal -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content certificate-details-modal">
+            <span class="close-button" id="detailsCloseButton">&times;</span>
+            <h2>Certificate Details</h2>
+            <div id="certificateDetails" class="certificate-details">
+                <!-- Details will be populated by JavaScript -->
             </div>
+            <div class="modal-actions">
+                <button id="updateCertificateBtn" class="btn">Update</button>
+                <button id="deleteCertificateBtn" class="btn delete-btn">Delete</button>
+            </div>
+        </div>
+    </div>
 
-            <!-- Signup Form -->
-            <div id="signupFormContainer" style="display: none;">
-                <h2>Sign Up</h2>
-                <form id="signupForm">
+    <!-- Certificate Update Modal -->
+    <div id="updateModal" class="modal">
+        <div class="modal-content certificate-update-modal">
+            <span class="close-button" id="updateCloseButton">&times;</span>
+            <h2>Update Certificate</h2>
+            <form id="updateCertificateForm">
+                <input type="hidden" id="updateCertificateId">
+                
+                <div class="form-row">
                     <div class="form-group">
-                        <label for="signupFullName">Full Name</label>
-                        <input type="text" id="signupFullName" name="fullName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="signupEmail">Email</label>
-                        <input type="email" id="signupEmail" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="signupDob">Date of Birth</label>
-                        <input type="date" id="signupDob" name="dob" required>
+                        <label for="updateFullName">Full Name</label>
+                        <input type="text" id="updateFullName" name="fullName" required>
                     </div>
                     <div class="form-group">
-                        <label for="signupIdNumber">Aadhar/PAN Number</label>
-                        <input type="text" id="signupIdNumber" name="idNumber" required>
+                        <label for="updateMobile">Mobile</label>
+                        <input type="tel" id="updateMobile" name="mobile" required>
                     </div>
-                    <div class="form-group password-group">
-                        <label for="signupPassword">Create Password</label>
-                        <input type="password" id="signupPassword" name="password" required>
-                        <i class="fa-solid fa-eye-slash toggle-password"></i>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="updateEmail">Email</label>
+                        <input type="email" id="updateEmail" name="email" required>
                     </div>
-                    <div class="form-group password-group">
-                        <label for="signupConfirmPassword">Confirm Password</label>
-                        <input type="password" id="signupConfirmPassword" name="confirmPassword" required>
-                        <i class="fa-solid fa-eye-slash toggle-password"></i>
+                    <div class="form-group">
+                        <label for="updateDob">Date of Birth</label>
+                        <input type="date" id="updateDob" name="dob" required>
                     </div>
-                    <button type="submit" class="btn">Sign Up</button>
-                    <p class="form-toggle-link">Already have an account? <a href="#" id="showLogin">Sign In</a></p>
-                </form>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="updateCollege">College</label>
+                        <input type="text" id="updateCollege" name="college" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateCourse">Course</label>
+                        <input type="text" id="updateCourse" name="course" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="updateAdmissionNumber">Admission Number</label>
+                        <input type="text" id="updateAdmissionNumber" name="admissionNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateSection">Section</label>
+                        <input type="text" id="updateSection" name="section" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="updateSemester">Semester</label>
+                        <input type="text" id="updateSemester" name="semester" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateCertificateNumber">Certificate Number</label>
+                        <input type="text" id="updateCertificateNumber" name="certificateNumber" readonly>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="updateAddress">Address</label>
+                    <textarea id="updateAddress" name="address" required></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn">Save Changes</button>
+                    <button type="button" class="btn cancel-btn" id="updateCancelBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteConfirmModal" class="modal">
+        <div class="modal-content delete-confirm-modal">
+            <span class="close-button" id="deleteCloseButton">&times;</span>
+            <h2>Confirm Deletion</h2>
+            <p>Are you sure you want to delete this certificate? This action cannot be undone.</p>
+            <div class="form-actions">
+                <button id="confirmDeleteBtn" class="btn delete-btn">Yes, Delete</button>
+                <button id="cancelDeleteBtn" class="btn cancel-btn">Cancel</button>
             </div>
         </div>
     </div>
@@ -152,6 +233,7 @@
     </footer>
 
     <script src="js/script.js"></script>
+    <script src="js/dashboard.js"></script>
 </body>
 
 </html>
