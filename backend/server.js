@@ -55,6 +55,14 @@ const feedbackSchema = new mongoose.Schema({
 
 const Feedback = mongoose.model('Feedback', feedbackSchema);
 
+// Mongoose Schema and Model for Users
+const userSchema = new mongoose.Schema({
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    aadhar: { type: String, required: true }
+});
+
+const User = mongoose.model('User', userSchema);
 
 // --- API Endpoints ---
 
@@ -414,6 +422,38 @@ app.post('/api/feedback', async (req, res) => {
     }
 });
 
+// Authentication endpoint
+app.post('/api/auth/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Email and password are required.' });
+        }
+
+        // Find user by email
+        const user = await User.findOne({ email });
+
+        // Check if user exists and password matches
+        // Note: In a production app, passwords should be hashed
+        if (!user || user.password !== password) {
+            return res.status(401).json({ message: 'Invalid email or password.' });
+        }
+
+        // Authentication successful
+        res.status(200).json({ 
+            message: 'Login successful',
+            user: {
+                email: user.email,
+                aadhar: user.aadhar
+            }
+        });
+
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ message: 'Server error during authentication.' });
+    }
+});
 
 // Global error handler (optional, for unhandled routes or other errors)
 app.use((err, req, res, next) => {

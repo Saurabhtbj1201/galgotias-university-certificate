@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
             popup.classList.add(isError ? 'error' : 'success');
             popup.classList.add('active');
 
-            // Hide popup after 4 seconds
             setTimeout(() => {
                 popup.classList.remove('active');
             }, 4000);
@@ -37,18 +36,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeButton = document.querySelector('#loginModal .close-button');
 
     if (loginModal && loginIcon && closeButton) {
-        // Show modal on icon click
         loginIcon.addEventListener('click', (e) => {
             e.preventDefault();
             loginModal.style.display = 'block';
         });
 
-        // Hide modal on close button click
         closeButton.addEventListener('click', () => {
             loginModal.style.display = 'none';
         });
 
-        // Hide modal on outside click
         window.addEventListener('click', (e) => {
             if (e.target === loginModal) {
                 loginModal.style.display = 'none';
@@ -56,6 +52,59 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ✅ Login form submission
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const submitButton = loginForm.querySelector('button[type="submit"]');
+            const emailInput = document.getElementById('loginEmail');
+            const passwordInput = document.getElementById('loginPassword');
+
+            if (!emailInput.value || !passwordInput.value) {
+                showPopup('Please enter both email and password.', true);
+                return;
+            }
+
+            const data = {
+                email: emailInput.value,
+                password: passwordInput.value
+            };
+
+            if (submitButton) {
+                submitButton.classList.add('loading');
+                submitButton.disabled = true;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    showPopup(result.message || `Error: ${response.status}`, true);
+                    return;
+                }
+
+                showPopup('Login successful!');
+                loginForm.reset();
+                loginModal.style.display = 'none';
+            } catch (error) {
+                console.error('Login error:', error);
+                showPopup(error.message || 'Error logging in. Please try again.', true);
+            } finally {
+                if (submitButton) {
+                    submitButton.classList.remove('loading');
+                    submitButton.disabled = false;
+                }
+            }
+        });
+    }
 
     // ✅ Initialize EmailJS
     if (typeof emailjs !== 'undefined') {
@@ -66,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("EmailJS library not loaded.");
     }
 
-    // ✅ Form submission
+    // ✅ Certificate Form Submission
     const certificateForm = document.getElementById('certificateForm');
     if (certificateForm) {
         certificateForm.addEventListener('submit', async function (event) {
@@ -76,7 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData(certificateForm);
             const data = Object.fromEntries(formData.entries());
 
-            // Add loading state to submit button
             if (submitButton) {
                 submitButton.classList.add('loading');
                 submitButton.disabled = true;
@@ -96,7 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                // ✅ Send email
                 await emailjs.send('service_gu', 'template_gu', {
                     to_email: data.email,
                     user_name: data.name,
@@ -120,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Form submission error:', error);
                 showPopup(error.message || 'Error submitting form. Please try again.', true);
             } finally {
-                // Remove loading state from submit button
                 if (submitButton) {
                     submitButton.classList.remove('loading');
                     submitButton.disabled = false;
@@ -129,15 +175,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Handle Download Form Submission (download_certificate.html)
+    // ✅ Certificate Download Logic
     const downloadForm = document.getElementById('downloadForm');
-    const certificatePreviewDiv = document.getElementById('certificatePreview'); // Renamed for clarity
+    const certificatePreviewDiv = document.getElementById('certificatePreview');
     const previewContent = document.getElementById('previewContent');
-    const downloadButton = document.getElementById('downloadButton'); // Get the download button
+    const downloadButton = document.getElementById('downloadButton');
     const shareOptionsDiv = document.querySelector('#certificatePreview .share-options');
 
-
-    let currentCertificateNumberForDownload = null; // Store certificate number for download
+    let currentCertificateNumberForDownload = null;
 
     if (downloadForm && certificatePreviewDiv && previewContent && downloadButton && shareOptionsDiv) {
         downloadForm.addEventListener('submit', async function (event) {
@@ -147,23 +192,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData(downloadForm);
             const data = Object.fromEntries(formData.entries());
 
-            console.log('Fetching certificate with details:', data);
-
-            // Add loading state to submit button
             if (submitButton) {
                 submitButton.classList.add('loading');
                 submitButton.disabled = true;
             }
 
-            previewContent.innerHTML = `<p>Fetching certificate...</p>`; // Loading state
+            previewContent.innerHTML = `<p>Fetching certificate...</p>`;
             certificatePreviewDiv.classList.remove('hidden');
-            certificatePreviewDiv.style.display = '';
-            downloadButton.style.display = 'none'; // Hide initially
-            shareOptionsDiv.style.display = 'none'; // Hide initially
+            downloadButton.style.display = 'none';
+            shareOptionsDiv.style.display = 'none';
 
             try {
                 const response = await fetch(`${API_BASE_URL}/certificate/fetch`, {
-                    method: 'POST', // Using POST to send multiple criteria
+                    method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
@@ -172,9 +213,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (!response.ok) {
                     previewContent.innerHTML = `<p style="color: red;">${certData.message || `Error: ${response.status}`}</p>`;
-                    currentCertificateNumberForDownload = null;
-                    downloadButton.style.display = 'none';
-                    shareOptionsDiv.style.display = 'none';
                     return;
                 }
 
@@ -202,25 +240,16 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <p class="issue-date">Date of Issue: ${new Date(certData.issueDate).toLocaleDateString()}</p>
                                 </div>
                             </div>
-                        </div>
-                    `;
-                    currentCertificateNumberForDownload = certData.certificateNumber; // Store for download
-                    downloadButton.style.display = 'inline-block'; // Show download button
-                    shareOptionsDiv.style.display = 'block'; // Show share options
-                } else {
-                    previewContent.innerHTML = `<p>Certificate not found for the provided details.</p>`;
-                    downloadButton.style.display = 'none';
-                    shareOptionsDiv.style.display = 'none';
-                    currentCertificateNumberForDownload = null;
+                        </div>`;
+                    currentCertificateNumberForDownload = certData.certificateNumber;
+                    downloadButton.style.display = 'inline-block';
+                    shareOptionsDiv.style.display = 'block';
                 }
+
             } catch (error) {
                 console.error('Error fetching certificate:', error);
-                previewContent.innerHTML = `<p style="color: red;">Error fetching certificate: ${error.message}</p>`;
-                downloadButton.style.display = 'none';
-                shareOptionsDiv.style.display = 'none';
-                currentCertificateNumberForDownload = null;
+                previewContent.innerHTML = `<p style="color: red;">${error.message}</p>`;
             } finally {
-                // Remove loading state from submit button
                 if (submitButton) {
                     submitButton.classList.remove('loading');
                     submitButton.disabled = false;
@@ -228,11 +257,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Add event listener for the actual PDF download button
         downloadButton.addEventListener('click', function () {
             if (currentCertificateNumberForDownload) {
                 const pdfUrl = `${API_BASE_URL}/certificate/download-pdf/${currentCertificateNumberForDownload}`;
-                // Open in new tab to trigger download or display
                 window.open(pdfUrl, '_blank');
             } else {
                 showPopup('Please fetch certificate details first.', true);
@@ -240,9 +267,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Share functions for download_certificate.html
+    // ✅ Share Options
     window.shareOn = function (platform) {
-        const certificateURL = window.location.href; // Or a specific certificate link
+        const certificateURL = window.location.href;
         const certificateText = "Check out my new certificate from Galgotias University!";
         let shareURL = '';
 
@@ -257,11 +284,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (shareURL) {
             window.open(shareURL, '_blank');
         } else {
-            alert(`Sharing on ${platform} (URL: ${certificateURL})`);
+            alert(`Sharing on ${platform} not supported.`);
         }
     };
 
-    // Handle Verification Form Submission (verify_certificate.html)
+    // ✅ Certificate Verification
     const verifyForm = document.getElementById('verifyForm');
     const verificationResultDiv = document.getElementById('verificationResult');
 
@@ -270,8 +297,8 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
             const formData = new FormData(verifyForm);
             const data = Object.fromEntries(formData.entries());
-            console.log('Verifying certificate with details:', data);
-            verificationResultDiv.innerHTML = `<p>Verifying...</p>`; // Loading state
+
+            verificationResultDiv.innerHTML = `<p>Verifying...</p>`;
 
             try {
                 const response = await fetch(`${API_BASE_URL}/certificate/verify`, {
@@ -283,12 +310,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const certData = await response.json();
 
                 if (!response.ok) {
-                    // throw new Error(certData.message || 'Verification failed or certificate not found.');
-                    verificationResultDiv.innerHTML = `<p style="color: red; font-weight: bold;">${certData.message || `Error: ${response.status}`}</p>`;
+                    verificationResultDiv.innerHTML = `<p style="color: red; font-weight: bold;">${certData.message || 'Verification failed.'}</p>`;
                     return;
                 }
 
-                if (certData && certData.status === "Verified") {
+                if (certData.status === "Verified") {
                     verificationResultDiv.innerHTML = `
                         <h3>Verification Successful</h3>
                         <table>
@@ -298,19 +324,19 @@ document.addEventListener('DOMContentLoaded', () => {
                             <tr><td>Course</td><td>${certData.course}</td></tr>
                             <tr><td>Issue Date</td><td>${new Date(certData.issueDate).toLocaleDateString()}</td></tr>
                             <tr><td>Status</td><td style="color: green; font-weight: bold;">${certData.status}</td></tr>
-                        </table>
-                    `;
-                } else { // Should be handled by !response.ok now
-                    verificationResultDiv.innerHTML = `<p style="color: red; font-weight: bold;">Certificate not found or details do not match.</p>`;
+                        </table>`;
+                } else {
+                    verificationResultDiv.innerHTML = `<p style="color: red;">Certificate not found or invalid details.</p>`;
                 }
+
             } catch (error) {
-                console.error('Error verifying certificate:', error);
-                verificationResultDiv.innerHTML = `<p style="color: red;">Error verifying certificate: ${error.message}</p>`;
+                console.error('Verification error:', error);
+                verificationResultDiv.innerHTML = `<p style="color: red;">${error.message}</p>`;
             }
         });
     }
-    
-    // Handle Feedback Form Submission (contact.html)
+
+    // ✅ Feedback Submission
     const feedbackForm = document.getElementById('feedbackForm');
     if (feedbackForm) {
         feedbackForm.addEventListener('submit', async function (event) {
@@ -320,7 +346,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData(feedbackForm);
             const data = Object.fromEntries(formData.entries());
 
-            // Add loading state to submit button
             if (submitButton) {
                 submitButton.classList.add('loading');
                 submitButton.disabled = true;
@@ -347,7 +372,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Feedback submission error:', error);
                 showPopup(error.message || 'Error submitting feedback. Please try again.', true);
             } finally {
-                // Remove loading state from submit button
                 if (submitButton) {
                     submitButton.classList.remove('loading');
                     submitButton.disabled = false;
@@ -356,4 +380,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
