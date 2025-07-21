@@ -61,8 +61,63 @@
     </header>
 
     <main>
-       
-    </main>    
+        <section class="dashboard-section">
+            <h2>Feedback Management</h2>
+            <div class="table-container">
+                <div class="table-actions">
+                    <input type="text" id="searchInput" placeholder="Search by name or email...">
+                    <button id="refreshButton" class="btn refresh-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                        </svg>
+                        Refresh
+                    </button>
+                </div>
+                <div id="tableWrapper">
+                    <table id="feedbackTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Subject</th>
+                                <th>Message</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="feedbackTableBody">
+                            <!-- Table rows will be populated by JavaScript -->
+                            <tr class="loading-row">
+                                <td colspan="7" class="loading-message">Loading feedback entries...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="paginationControls" class="pagination-controls">
+                    <!-- Pagination will be added by JavaScript -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Popup for showing message feedback -->
+        <div id="popupMessage" class="popup"></div>
+    </main>
+
+    <!-- Feedback Details Modal -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content feedback-details-modal">
+            <span class="close-button" id="detailsCloseButton">&times;</span>
+            <h2>Feedback Details</h2>
+            <div id="feedbackDetails" class="feedback-details">
+                <!-- Details will be populated by JavaScript -->
+            </div>
+            <div class="modal-actions">
+                <button id="markReviewedBtn" class="btn">Mark as Reviewed</button>
+                <button id="closeDetailsBtn" class="btn cancel-btn">Close</button>
+            </div>
+        </div>
+    </div>
 
     <footer>
         <div class="footer-container">
@@ -91,6 +146,7 @@
     </footer>
 
     <script src="js/script.js"></script>
+    <script src="js/feedback.js"></script>
 </body>
 
 </html>

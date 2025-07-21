@@ -50,6 +50,7 @@ const feedbackSchema = new mongoose.Schema({
     email: { type: String, required: true },
     subject: { type: String, required: true },
     message: { type: String, required: true },
+    status: { type: String, default: 'pending' }, // Added status field
     createdAt: { type: Date, default: Date.now }
 });
 
@@ -608,6 +609,51 @@ app.delete('/api/certificate/:id', async (req, res) => {
             return res.status(400).json({ message: 'Invalid certificate ID.' });
         }
         res.status(500).json({ message: 'Server error while deleting certificate.' });
+    }
+});
+
+// New endpoint: Get all feedbacks
+app.get('/api/feedback/all', async (req, res) => {
+    try {
+        const feedbacks = await Feedback.find().sort({ createdAt: -1 });
+        res.status(200).json(feedbacks);
+    } catch (error) {
+        console.error('Error fetching all feedbacks:', error);
+        res.status(500).json({ message: 'Server error while fetching feedbacks.' });
+    }
+});
+
+// Update feedback status
+app.put('/api/feedback/:id/status', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        if (!status) {
+            return res.status(400).json({ message: 'Status is required.' });
+        }
+
+        // Check if feedback exists
+        const feedback = await Feedback.findById(id);
+        if (!feedback) {
+            return res.status(404).json({ message: 'Feedback not found.' });
+        }
+
+        // Update status
+        feedback.status = status;
+        await feedback.save();
+
+        res.status(200).json({ 
+            message: 'Feedback status updated successfully',
+            feedback
+        });
+
+    } catch (error) {
+        console.error('Error updating feedback status:', error);
+        if (error.name === 'CastError') {
+            return res.status(400).json({ message: 'Invalid feedback ID.' });
+        }
+        res.status(500).json({ message: 'Server error while updating feedback status.' });
     }
 });
 

@@ -2354,36 +2354,83 @@ button.loading::before,
     background-color: #6c7a7d;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .dashboard-section {
-        padding: 1.5rem;
-    }
-    
-    .table-actions {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    #searchInput {
-        width: 100%;
-    }
-    
-    #certificatesTable th,
-    #certificatesTable td {
-        padding: 10px;
-    }
-    
-    .action-buttons {
-        flex-direction: column;
-        gap: 0.3rem;
-    }
-    
-    #updateCertificateForm .form-row {
-        grid-template-columns: 1fr;
-    }
-    
-    .certificate-details dl {
-        grid-template-columns: 1fr;
-    }
+/* Feedback Management Styles */
+.feedback-details {
+    margin: 1.5rem 0;
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #8B0000;
+}
+
+.feedback-details dl {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.feedback-details dt {
+    font-weight: bold;
+    color: #8B0000;
+    margin-bottom: 0.3rem;
+}
+
+.feedback-details dd {
+    margin: 0 0 1rem 0;
+    color: #333;
+    line-height: 1.5;
+}
+
+.feedback-details dd.message {
+    background-color: #f0f0f0;
+    padding: 1rem;
+    border-radius: 4px;
+    border-left: 3px solid #8B0000;
+    white-space: pre-line;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.status-pending {
+    background-color: #f39c12;
+    color: #fff;
+}
+
+.status-reviewed {
+    background-color: #27ae60;
+    color: #fff;
+}
+
+.review-btn {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.review-btn:hover {
+    background-color: #27ae60;
+}
+
+.feedback-details-modal {
+    max-width: 800px;
+}
+
+#feedbackTable th,
+#feedbackTable td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+#feedbackTable td.message-cell {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
