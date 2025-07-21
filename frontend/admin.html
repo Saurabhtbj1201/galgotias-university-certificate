@@ -46,9 +46,9 @@
         </button>
         <nav id="mainNav">
             <ul>
-                <li class="active"><a href="dashboard.html">Candidate</a></li>
+                <li><a href="dashboard.html">Candidate</a></li>
                 <li><a href="feedback.html">Feedback</a></li>
-                <li><a href="admin.html">Admin</a></li>
+                <li class="active"><a href="admin.html">Admin</a></li>
             </ul>
         </nav>
         <div class="user-actions">
@@ -63,11 +63,47 @@
 
     <main>
         <section class="dashboard-section">
-            <h2>Certificate Management</h2>
+            <h2>Admin User Management</h2>
+            
+            <!-- Add New Admin User Form -->
+            <div class="admin-form-container">
+                <h3>Add New Admin User</h3>
+                <form id="addAdminForm" class="admin-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="adminEmail">Email</label>
+                            <input type="email" id="adminEmail" name="email" required placeholder="Enter admin email">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminAadhar">Aadhar Number</label>
+                            <input type="text" id="adminAadhar" name="aadhar" required placeholder="Enter 12-digit Aadhar number" 
+                                   pattern="[0-9]{12}" title="Please enter a valid 12-digit Aadhar number">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="adminPassword">Password</label>
+                            <input type="password" id="adminPassword" name="password" required placeholder="Enter password">
+                        </div>
+                        <div class="form-group">
+                            <label for="adminConfirmPassword">Confirm Password</label>
+                            <input type="password" id="adminConfirmPassword" name="confirmPassword" required placeholder="Confirm password">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn">Add Admin User</button>
+                    </div>
+                </form>
+                <div id="adminFormMessage" class="error-message"></div>
+            </div>
+            
+            <!-- Admin Users Table -->
             <div class="table-container">
                 <div class="table-actions">
-                    <input type="text" id="searchInput" placeholder="Search by name or admission number...">
-                    <button id="refreshButton" class="btn refresh-btn">
+                    <h3>Existing Admin Users</h3>
+                    <button id="refreshAdminUsersButton" class="btn refresh-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
                         </svg>
@@ -75,135 +111,67 @@
                     </button>
                 </div>
                 <div id="tableWrapper">
-                    <table id="certificatesTable">
+                    <table id="adminUsersTable">
                         <thead>
                             <tr>
-                                <th>Full Name</th>
-                                <th>Course</th>
-                                <th>Admission Number</th>
-                                <th>Section</th>
+                                <th>ID</th>
+                                <th>Email</th>
+                                <th>Aadhar</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="certificatesTableBody">
+                        <tbody id="adminUsersTableBody">
                             <!-- Table rows will be populated by JavaScript -->
                             <tr class="loading-row">
-                                <td colspan="5" class="loading-message">Loading certificates...</td>
+                                <td colspan="4" class="loading-message">Loading admin users...</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <div id="paginationControls" class="pagination-controls">
-                    <!-- Pagination will be added by JavaScript -->
-                </div>
             </div>
         </section>
         
-        <!-- Popup for showing message feedback -->
+        <!-- Popup for showing messages -->
         <div id="popupMessage" class="popup"></div>
     </main>
 
-    <!-- Certificate Details Modal -->
-    <div id="detailsModal" class="modal">
-        <div class="modal-content certificate-details-modal">
-            <span class="close-button" id="detailsCloseButton">&times;</span>
-            <h2>Certificate Details</h2>
-            <div id="certificateDetails" class="certificate-details">
-                <!-- Details will be populated by JavaScript -->
-            </div>
-            <div class="modal-actions">
-                <button id="updateCertificateBtn" class="btn">Update</button>
-                <button id="deleteCertificateBtn" class="btn delete-btn">Delete</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Certificate Update Modal -->
-    <div id="updateModal" class="modal">
-        <div class="modal-content certificate-update-modal">
-            <span class="close-button" id="updateCloseButton">&times;</span>
-            <h2>Update Certificate</h2>
-            <form id="updateCertificateForm">
-                <input type="hidden" id="updateCertificateId">
+    <!-- Admin User Update Modal -->
+    <div id="updateUserModal" class="modal">
+        <div class="modal-content user-update-modal">
+            <span class="close-button" id="updateUserCloseButton">&times;</span>
+            <h2>Update Admin User</h2>
+            <form id="updateUserForm">
+                <input type="hidden" id="updateUserId">
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="updateFullName">Full Name</label>
-                        <input type="text" id="updateFullName" name="fullName" required>
+                        <label for="updateUserEmail">Email</label>
+                        <input type="email" id="updateUserEmail" name="email" required>
                     </div>
                     <div class="form-group">
-                        <label for="updateMobile">Mobile</label>
-                        <input type="tel" id="updateMobile" name="mobile" required>
+                        <label for="updateUserAadhar">Aadhar Number</label>
+                        <input type="text" id="updateUserAadhar" name="aadhar" required 
+                               pattern="[0-9]{12}" title="Please enter a valid 12-digit Aadhar number">
                     </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="updateEmail">Email</label>
-                        <input type="email" id="updateEmail" name="email" required>
+                        <label for="updateUserPassword">New Password (leave blank to keep current)</label>
+                        <input type="password" id="updateUserPassword" name="password" placeholder="Enter new password">
                     </div>
                     <div class="form-group">
-                        <label for="updateDob">Date of Birth</label>
-                        <input type="date" id="updateDob" name="dob" required>
+                        <label for="updateUserConfirmPassword">Confirm New Password</label>
+                        <input type="password" id="updateUserConfirmPassword" name="confirmPassword" placeholder="Confirm new password">
                     </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="updateCollege">College</label>
-                        <input type="text" id="updateCollege" name="college" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="updateCourse">Course</label>
-                        <input type="text" id="updateCourse" name="course" required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="updateAdmissionNumber">Admission Number</label>
-                        <input type="text" id="updateAdmissionNumber" name="admissionNumber" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="updateSection">Section</label>
-                        <input type="text" id="updateSection" name="section" required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="updateSemester">Semester</label>
-                        <input type="text" id="updateSemester" name="semester" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="updateCertificateNumber">Certificate Number</label>
-                        <input type="text" id="updateCertificateNumber" name="certificateNumber" readonly>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="updateAddress">Address</label>
-                    <textarea id="updateAddress" name="address" required></textarea>
                 </div>
                 
                 <div class="form-actions">
-                    <button type="submit" class="btn">Save Changes</button>
-                    <button type="button" class="btn cancel-btn" id="updateCancelBtn">Cancel</button>
+                    <button type="submit" class="btn">Update User</button>
+                    <button type="button" class="btn cancel-btn" id="updateUserCancelBtn">Cancel</button>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <!-- Delete Confirmation Modal -->
-    <div id="deleteConfirmModal" class="modal">
-        <div class="modal-content delete-confirm-modal">
-            <span class="close-button" id="deleteCloseButton">&times;</span>
-            <h2>Confirm Deletion</h2>
-            <p>Are you sure you want to delete this certificate? This action cannot be undone.</p>
-            <div class="form-actions">
-                <button id="confirmDeleteBtn" class="btn delete-btn">Yes, Delete</button>
-                <button id="cancelDeleteBtn" class="btn cancel-btn">Cancel</button>
-            </div>
+            <div id="updateUserMessage" class="error-message"></div>
         </div>
     </div>
 
@@ -235,7 +203,7 @@
     </footer>
 
     <script src="js/script.js"></script>
-    <script src="js/dashboard.js"></script>
+    <script src="js/admin.js"></script>
 </body>
 
 </html>

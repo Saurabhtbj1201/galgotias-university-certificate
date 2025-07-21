@@ -657,6 +657,119 @@ app.put('/api/feedback/:id/status', async (req, res) => {
     }
 });
 
+// Admin user management endpoints
+app.get('/api/admin/users', async (req, res) => {
+    try {
+        const users = await User.find().select('-password'); // Exclude password from response
+        res.status(200).json(users);
+    } catch (error) {
+        console.error('Error fetching admin users:', error);
+        res.status(500).json({ message: 'Server error while fetching admin users.' });
+    }
+});
+
+app.post('/api/admin/users', async (req, res) => {
+    try {
+        const { email, password, aadhar } = req.body;
+
+        if (!email || !password || !aadhar) {
+            return res.status(400).json({ message: 'Email, password and Aadhar number are required.' });
+        }
+
+        // Check if user with this email already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(409).json({ message: 'A user with this email already exists.' });
+        }
+
+        // Create new user
+        const newUser = new User({
+            email,
+            password, // In a production app, you should hash the password
+            aadhar
+        });
+
+        await newUser.save();
+        
+        // Return user without password
+        const userResponse = {
+            _id: newUser._id,
+            email: newUser.email,
+            aadhar: newUser.aadhar
+        };
+
+        res.status(201).json({ 
+            message: 'Admin user created successfully',
+            user: userResponse
+        });
+
+    } catch (error) {
+        console.error('Error creating admin user:', error);
+        res.status(500).json({ message: 'Server error while creating admin user.' });
+    }
+});
+
+app.put('/api/admin/users/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { email, password, aadhar } = req.body;
+
+        if (!email || !aadhar) {
+            return res.status(400).json({ message: 'Email and Aadhar number are required.' });
+        }
+
+        // Check if user exists
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        // Check if trying to update to an email that's already in use by another user
+        if (email !== user.email) {
+            const existingUser = await User.findOne({ 
+                email, 
+                _id: { $ne: id } // Exclude current user from check
+            });
+            
+            if (existingUser) {
+                return res.status(409).json({ 
+                    message: 'A user with this email already exists.' 
+                });
+            }
+        }
+
+        // Update user fields
+        user.email = email;
+        user.aadhar = aadhar;
+        
+        // Only update password if provided
+        if (password) {
+            user.password = password; // In a production app, you should hash the password
+        }
+
+        await user.save();
+
+        // Return user without password
+        const userResponse = {
+            _id: user._id,
+            email: user.email,
+            aadhar: user.aadhar
+        };
+
+        res.status(200).json({ 
+            message: 'Admin user updated successfully',
+            user: userResponse
+        });
+
+    } catch (error) {
+        console.error('Error updating admin user:', error);
+        if (error.name === 'CastError') {
+            return res.status(400).json({ message: 'Invalid user ID.' });
+        }
+        res.status(500).json({ message: 'Server error while updating admin user.' });
+    }
+});
+
 // Global error handler (optional, for unhandled routes or other errors)
 app.use((err, req, res, next) => {
     console.error(err.stack);

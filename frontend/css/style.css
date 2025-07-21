@@ -2421,16 +2421,160 @@ button.loading::before,
     max-width: 800px;
 }
 
-#feedbackTable th,
-#feedbackTable td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #e0e0e0;
+/* Feedback Table Specific Styles */
+#feedbackTable {
+    width: 100%;
+    border-collapse: collapse;
 }
 
+#feedbackTable th {
+    background-color: #8B0000;
+    color: #fff;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+}
+
+#feedbackTable td {
+    background-color: #fff;
+    color: #333;
+    padding: 7px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0
+}
+
+#feedbackTable tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+#feedbackTable tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Make message column more readable */
 #feedbackTable td.message-cell {
     max-width: 300px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    background-color: #fff;
+    color: #333;
+}
+
+/* Improve status badge visibility */
+.status-badge {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.status-pending {
+    background-color: #f39c12;
+    color: #fff;
+}
+
+.status-reviewed {
+    background-color: #27ae60;
+    color: #fff;
+}
+
+/* Improved feedback details modal */
+.feedback-details {
+    margin: 1.5rem 0;
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #8B0000;
+    color: #333;
+}
+
+/* Admin Page Styles */
+.admin-form-container {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.admin-form-container h3 {
+    color: #8B0000;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+}
+
+.admin-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.admin-form input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.admin-form input:focus {
+    border-color: #8B0000;
+    box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.1);
+    outline: none;
+}
+
+#adminUsersTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    color: #333;
+}
+
+#adminUsersTable th {
+    background-color: #8B0000;
+    color: #fff;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+}
+
+#adminUsersTable td, 
+#adminUsersTable th {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+#adminUsersTable tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+#adminUsersTable tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.user-update-modal {
+    max-width: 700px;
+}
+
+/* Responsive styles for admin page */
+@media (max-width: 768px) {
+    .admin-form .form-row {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    #adminUsersTable td, 
+    #adminUsersTable th {
+        padding: 10px;
+    }
 }
