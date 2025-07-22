@@ -2478,7 +2478,11 @@ button.loading::before,
     color: #333;
     padding: 7px 15px;
     text-align: left;
-    border-bottom: 1px solid #e0e0e0
+    border-bottom: 1px solid #e0e0e0;
+    max-width: 175px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #feedbackTable tbody tr:hover {
@@ -2575,6 +2579,13 @@ button.loading::before,
     border-collapse: collapse;
     background-color: #fff;
     color: #333;
+}
+
+.table-actions h3 {
+    color: #8B0000;
+    margin: 0;
+    font-size: 1.4rem;
+    text-align: center;
 }
 
 #adminUsersTable th {
