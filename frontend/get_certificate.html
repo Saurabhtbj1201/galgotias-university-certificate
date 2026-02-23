@@ -73,36 +73,68 @@
         <section class="form-section">
             <h2>Register for Your Certificate</h2>
             <form id="certificateForm">
-                <label for="name">Full Name:</label>
-                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                <div class="field">
+                    <label for="name">Full Name:</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                </div>
 
-                <label for="mobile">Mobile:</label>
-                <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number" required>
+                <div class="field">
+                    <label for="mobile">Mobile:</label>
+                    <input type="tel" id="mobile" name="mobile" placeholder="Enter 10-digit mobile number"
+                        maxlength="10" minlength="10" pattern="[0-9]{10}"
+                        title="Please enter a valid 10-digit mobile number" required>
+                </div>
 
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                <div class="field">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                </div>
 
-                <label for="dob">Date of Birth:</label>
-                <input type="date" id="dob" name="dob" required>
+                <div class="field">
+                    <label for="dob">Date of Birth:</label>
+                    <input type="date" id="dob" name="dob" required>
+                </div>
 
-                <label for="college">College Name:</label>
-                <input type="text" id="college" name="college" placeholder="Enter your college name" required>
+                <div class="field">
+                    <label for="college">College Name:</label>
+                    <input type="text" id="college" name="college" placeholder="Enter your college name" required>
+                </div>
 
-                <label for="course">Course:</label>
-                <input type="text" id="course" name="course" placeholder="Enter your course name" required>
+                <div class="field">
+                    <label for="course">Course:</label>
+                    <input type="text" id="course" name="course" placeholder="Enter your course name" required>
+                </div>
 
-                <label for="admissionNumber">Admission Number:</label>
-                <input type="text" id="admissionNumber" name="admissionNumber" placeholder="Enter your admission number"
-                    required>
+                <div class="field">
+                    <label for="admissionNumber">Admission Number:</label>
+                    <input type="text" id="admissionNumber" name="admissionNumber"
+                        placeholder="Enter your admission number" required>
+                </div>
 
-                <label for="section">Section:</label>
-                <input type="text" id="section" name="section" placeholder="Enter your section" required>
+                <div class="field">
+                    <label for="section">Section:</label>
+                    <input type="text" id="section" name="section" placeholder="Enter your section" required>
+                </div>
 
-                <label for="semester">Semester:</label>
-                <input type="text" id="semester" name="semester" placeholder="Enter your semester" required>
+                <div class="field">
+                    <label for="semester">Semester:</label>
+                    <select id="semester" name="semester" required>
+                        <option value="" disabled selected>Select your semester</option>
+                        <option value="Semester 1">Semester 1</option>
+                        <option value="Semester 2">Semester 2</option>
+                        <option value="Semester 3">Semester 3</option>
+                        <option value="Semester 4">Semester 4</option>
+                        <option value="Semester 5">Semester 5</option>
+                        <option value="Semester 6">Semester 6</option>
+                        <option value="Semester 7">Semester 7</option>
+                        <option value="Semester 8">Semester 8</option>
+                    </select>
+                </div>
 
-                <label for="address">Address:</label>
-                <textarea id="address" name="address" placeholder="Enter your full address" required></textarea>
+                <div class="field full-width">
+                    <label for="address">Address / Location:</label>
+                    <textarea id="address" name="address" placeholder="📍 Enter your full address" required></textarea>
+                </div>
 
                 <button type="submit">Submit</button>
             </form>
@@ -113,10 +145,31 @@
         </section>
     </main>
 
+    <!-- Certificate Preview Modal -->
+    <div id="certPreviewModal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); z-index:9999; overflow-y:auto;">
+        <div
+            style="background:#fff; max-width:860px; margin:40px auto; border-radius:12px; padding:32px; position:relative; box-shadow:0 8px 40px rgba(0,0,0,0.4);">
+            <button id="closeCertModal"
+                style="position:absolute; top:14px; right:18px; background:none; border:none; font-size:28px; cursor:pointer; color:#555;">&times;</button>
+            <h2 style="text-align:center; color:#8B0000; margin-bottom:20px;">🎓 Your Certificate is Ready!</h2>
+            <div id="certModalPreviewContent"></div>
+            <div
+                style="text-align:center; margin-top:24px; display:flex; flex-wrap:wrap; gap:12px; justify-content:center;">
+                <button id="certModalDownloadBtn"
+                    style="background:#8B0000; color:#fff; padding:12px 28px; border:none; border-radius:8px; font-size:1rem; cursor:pointer; font-weight:600;">⬇
+                    Download Certificate (PDF)</button>
+                <button onclick="window.location.href='download_certificate.html'"
+                    style="background:transparent; color:#8B0000; padding:12px 28px; border:2px solid #8B0000; border-radius:8px; font-size:1rem; cursor:pointer; font-weight:600;">Go
+                    to Download Page</button>
+            </div>
+        </div>
+    </div>
+
     <div id="loginModal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
-            
+
             <!-- Login Form -->
             <div id="loginFormContainer">
                 <h2>Sign In</h2>
@@ -140,11 +193,12 @@
                     <div id="loginErrorMessage" class="error-message"></div>
                     <button type="submit" class="btn">Sign In</button>
                     <div class="password-options">
-                        <p class="form-toggle-link">Forgot your password? <a href="#" class="forgot-password">Reset now</a></p>
+                        <p class="form-toggle-link">Forgot your password? <a href="#" class="forgot-password">Reset
+                                now</a></p>
                     </div>
                 </form>
             </div>
-            
+
             <!-- Reset Password Form -->
             <div id="resetFormContainer" style="display: none;">
                 <h2>Reset Password</h2>
@@ -161,7 +215,8 @@
                         <div id="resetVerifyErrorMessage" class="error-message"></div>
                         <button type="submit" class="btn">Verify Account</button>
                         <div class="password-options">
-                            <p class="form-toggle-link">Remember your password? <a href="#" id="backToLogin">Back to Login</a></p>
+                            <p class="form-toggle-link">Remember your password? <a href="#" id="backToLogin">Back to
+                                    Login</a></p>
                         </div>
                     </form>
                 </div>
@@ -217,7 +272,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script src="js/script.js"></script>
+    <script src="js/config.js"></script><script src="js/script.js"></script>
     </script>
     <script type="text/javascript">
         (function () {

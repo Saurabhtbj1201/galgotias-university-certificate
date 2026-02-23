@@ -73,16 +73,21 @@
         <section class="verification-form">
             <h2>Enter your certificate details below to verify.</h2>
             <form id="verifyForm">
-                <label for="certificateNumber">Certificate Number:</label>
-                <input type="text" id="certificateNumber" name="certificateNumber"
-                    placeholder="Enter certificate number" required>
+                <div class="field">
+                    <label for="certificateNumber">Certificate Number:</label>
+                    <input type="text" id="certificateNumber" name="certificateNumber"
+                        placeholder="Enter certificate number" required>
+                </div>
 
-                <label for="fullName">Full Name:</label>
-                <input type="text" id="fullName" name="fullName" placeholder="Enter full name on certificate" required>
+                <div class="field">
+                    <label for="admissionNumber">Admission Number:</label>
+                    <input type="text" id="admissionNumber" name="admissionNumber"
+                        placeholder="Enter your admission number" required>
+                </div>
 
                 <button type="submit">Verify</button>
             </form>
-            <div id="verificationResult" class="result"></div>
+            <div id="verificationResult" class="result" style="display:none;"></div>
         </section>
     </main>
 
@@ -112,7 +117,8 @@
                     <div id="loginErrorMessage" class="error-message"></div>
                     <button type="submit" class="btn">Sign In</button>
                     <div class="password-options">
-                        <p class="form-toggle-link">Forgot your password? <a href="#" class="forgot-password">Reset now</a>
+                        <p class="form-toggle-link">Forgot your password? <a href="#" class="forgot-password">Reset
+                                now</a>
                         </p>
                     </div>
                 </form>
@@ -134,7 +140,8 @@
                         <div id="resetVerifyErrorMessage" class="error-message"></div>
                         <button type="submit" class="btn">Verify Account</button>
                         <div class="password-options">
-                            <p class="form-toggle-link">Remember your password? <a href="#" id="backToLogin">Back to Login</a>
+                            <p class="form-toggle-link">Remember your password? <a href="#" id="backToLogin">Back to
+                                    Login</a>
                             </p>
                         </div>
                     </form>
@@ -189,7 +196,7 @@
             <p>&copy; 2023 Galgotias University. All rights reserved.</p>
         </div>
     </footer>
-    <script src="js/script.js"></script>
+    <script src="js/config.js"></script><script src="js/script.js"></script>
 </body>
 
 </html>

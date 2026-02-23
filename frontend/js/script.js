@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 loginErrorMessage.classList.remove('success', 'error');
                 loginErrorMessage.classList.add(isError ? 'error' : 'success');
                 loginErrorMessage.classList.add('active');
-                
+
                 setTimeout(() => {
                     loginErrorMessage.classList.remove('active');
                 }, 4000);
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 resetStepTwo.style.display = 'none';
                 clearMessage('resetVerifyErrorMessage');
                 clearMessage('resetPasswordErrorMessage');
-                
+
                 // Reset the forms
                 if (document.getElementById('resetVerifyForm')) {
                     document.getElementById('resetVerifyForm').reset();
@@ -136,9 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (resetVerifyForm) {
         resetVerifyForm.addEventListener('submit', async function (event) {
             event.preventDefault();
-            
+
             clearMessage('resetVerifyErrorMessage');
-            
+
             const submitButton = resetVerifyForm.querySelector('button[type="submit"]');
             const emailInput = document.getElementById('resetEmail');
             const aadharInput = document.getElementById('resetAadhar');
@@ -175,12 +175,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Store the email for step 2
                 sessionStorage.setItem('resetEmail', emailInput.value);
-                
+
                 // Show step 2
                 resetStepOne.style.display = 'none';
                 resetStepTwo.style.display = 'block';
                 clearMessage('resetPasswordErrorMessage');
-                
+
             } catch (error) {
                 console.error('Verification error:', error);
                 showErrorMessage('resetVerifyErrorMessage', 'Unable to connect to the server. Please try again.');
@@ -198,9 +198,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (resetPasswordForm) {
         resetPasswordForm.addEventListener('submit', async function (event) {
             event.preventDefault();
-            
+
             clearMessage('resetPasswordErrorMessage');
-            
+
             const submitButton = resetPasswordForm.querySelector('button[type="submit"]');
             const newPasswordInput = document.getElementById('newPassword');
             const confirmPasswordInput = document.getElementById('confirmPassword');
@@ -248,10 +248,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Show success message
                 showSuccessMessage('resetPasswordErrorMessage', 'Password reset successful! You can now login with your new password.');
-                
+
                 // Clear session storage
                 sessionStorage.removeItem('resetEmail');
-                
+
                 // Return to login form after a delay
                 setTimeout(() => {
                     resetFormContainer.style.display = 'none';
@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     showSuccessMessage('loginErrorMessage', 'Password reset successful! Please login with your new password.');
                     resetPasswordForm.reset();
                 }, 2000);
-                
+
             } catch (error) {
                 console.error('Password reset error:', error);
                 showErrorMessage('resetPasswordErrorMessage', 'Unable to connect to the server. Please try again.');
@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         const loginErrorMessage = document.getElementById('loginErrorMessage');
-        
+
         // Function to display login form errors
         const showLoginError = (message) => {
             if (loginErrorMessage) {
@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 loginErrorMessage.classList.add('active', 'error');
             }
         };
-        
+
         // Function to display login form success
         const showLoginSuccess = (message) => {
             if (loginErrorMessage) {
@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 loginErrorMessage.classList.add('active', 'success');
             }
         };
-        
+
         // Function to clear login form messages
         const clearLoginMessage = () => {
             if (loginErrorMessage) {
@@ -303,14 +303,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 loginErrorMessage.classList.remove('active', 'error', 'success');
             }
         };
-        
+
         loginForm.addEventListener('submit', async function (event) {
             event.preventDefault();
             console.log('Login form submitted'); // Debug log
-            
+
             // Clear any previous messages
             clearLoginMessage();
-            
+
             const submitButton = loginForm.querySelector('button[type="submit"]');
             const emailInput = document.getElementById('loginEmail');
             const passwordInput = document.getElementById('loginPassword');
@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showLoginError('Please enter the captcha code.');
                 return;
             }
-            
+
             if (captchaInput.value !== captchaText.textContent) {
                 showLoginError('The captcha code you entered is incorrect. Please try again.');
                 return;
@@ -375,15 +375,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Show success message in form
                 showLoginSuccess('Login successful! Redirecting to dashboard...');
-                
+
                 // Also use popup for success message
                 showPopup('Login successful! Redirecting to dashboard...');
-                
+
                 // Redirect to dashboard after short delay
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
                 }, 1500);
-                
+
             } catch (error) {
                 console.error('Login error:', error);
                 // Use popup for network errors
@@ -395,14 +395,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-        
+
         // Clear messages when user starts typing
         const loginInputs = [
             document.getElementById('loginEmail'),
             document.getElementById('loginPassword'),
             document.getElementById('loginCaptcha')
         ];
-        
+
         loginInputs.forEach(input => {
             if (input) {
                 input.addEventListener('input', clearLoginMessage);
@@ -422,12 +422,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // ✅ Certificate Form Submission
     const certificateForm = document.getElementById('certificateForm');
     if (certificateForm) {
+        // Restrict mobile field to digits only
+        const mobileInput = document.getElementById('mobile');
+        if (mobileInput) {
+            mobileInput.addEventListener('input', function () {
+                this.value = this.value.replace(/\D/g, '').slice(0, 10);
+            });
+        }
+
         certificateForm.addEventListener('submit', async function (event) {
             event.preventDefault();
 
             const submitButton = certificateForm.querySelector('button[type="submit"]');
             const formData = new FormData(certificateForm);
             const data = Object.fromEntries(formData.entries());
+
+            // Validate mobile is exactly 10 digits
+            if (!/^[0-9]{10}$/.test(data.mobile)) {
+                showPopup('Please enter a valid 10-digit mobile number.', true);
+                if (submitButton) { submitButton.classList.remove('loading'); submitButton.disabled = false; }
+                return;
+            }
 
             if (submitButton) {
                 submitButton.classList.add('loading');
@@ -448,6 +463,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
+                // Send confirmation email
                 await emailjs.send('service_gu', 'template_gu', {
                     to_email: data.email,
                     user_name: data.name,
@@ -460,12 +476,75 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     (error) => {
                         console.error('❌ EmailJS Error:', error);
-                        showPopup('Form submitted but failed to send email.', true);
                     }
                 );
 
-                showPopup('Form submitted successfully. Your certificate will be generated soon.');
-                certificateForm.reset();
+                // ✅ Fetch the newly created certificate and show preview modal
+                const certNumber = result.certificateNumber;
+                const certPreviewModal = document.getElementById('certPreviewModal');
+                const certModalPreviewContent = document.getElementById('certModalPreviewContent');
+                const certModalDownloadBtn = document.getElementById('certModalDownloadBtn');
+                const closeCertModal = document.getElementById('closeCertModal');
+
+                if (certPreviewModal && certModalPreviewContent) {
+                    // Fetch full certificate data
+                    const fetchResp = await fetch(`${API_BASE_URL}/certificate/fetch`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ admissionNumber: data.admissionNumber, dob: data.dob })
+                    });
+                    const certData = await fetchResp.json();
+
+                    if (fetchResp.ok && certData) {
+                        certModalPreviewContent.innerHTML = `
+                            <div class="certificate-design">
+                                <div class="certificate-border">
+                                    <div class="certificate-header">
+                                        <img src="images/logo.png" alt="Galgotias University Logo" class="certificate-logo">
+                                        <h1>Galgotias University</h1>
+                                        <h2>Certificate of Achievement</h2>
+                                    </div>
+                                    <div class="certificate-body">
+                                        <p class="certify-text">This is to certify that</p>
+                                        <p class="student-name">${certData.fullName}</p>
+                                        <p class="course-text">has successfully completed the course</p>
+                                        <p class="course-name">${certData.course}</p>
+                                        <p class="details-text">
+                                            Admission Number: ${certData.admissionNumber}<br>
+                                            Date of Birth: ${new Date(certData.dob).toLocaleDateString()}
+                                        </p>
+                                    </div>
+                                    <div class="certificate-footer">
+                                        <p class="certificate-number">Certificate No: ${certData.certificateNumber}</p>
+                                        <p class="issue-date">Date of Issue: ${new Date(certData.issueDate).toLocaleDateString()}</p>
+                                    </div>
+                                </div>
+                            </div>`;
+
+                        // Wire up download button
+                        if (certModalDownloadBtn) {
+                            certModalDownloadBtn.onclick = () => {
+                                const pdfUrl = `${API_BASE_URL}/certificate/download-pdf/${certData.certificateNumber}`;
+                                window.open(pdfUrl, '_blank');
+                            };
+                        }
+
+                        // Wire up close button
+                        if (closeCertModal) {
+                            closeCertModal.onclick = () => { certPreviewModal.style.display = 'none'; };
+                        }
+                        window.addEventListener('click', (e) => {
+                            if (e.target === certPreviewModal) certPreviewModal.style.display = 'none';
+                        });
+
+                        // Show modal
+                        certPreviewModal.style.display = 'block';
+                        certificateForm.reset();
+                    } else {
+                        showPopup('Certificate saved! You can download it from the Download page.', false);
+                        certificateForm.reset();
+                    }
+                }
 
             } catch (error) {
                 console.error('Form submission error:', error);
@@ -495,6 +574,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const submitButton = downloadForm.querySelector('button[type="submit"]');
             const formData = new FormData(downloadForm);
             const data = Object.fromEntries(formData.entries());
+
+
 
             if (submitButton) {
                 submitButton.classList.add('loading');
@@ -602,6 +683,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData(verifyForm);
             const data = Object.fromEntries(formData.entries());
 
+            verificationResultDiv.style.display = 'block';
             verificationResultDiv.innerHTML = `<p>Verifying...</p>`;
 
             try {
@@ -624,6 +706,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <table>
                             <tr><th>Field</th><th>Detail</th></tr>
                             <tr><td>Full Name</td><td>${certData.fullName}</td></tr>
+                            <tr><td>Admission Number</td><td>${certData.admissionNumber}</td></tr>
                             <tr><td>Certificate Number</td><td>${certData.certificateNumber}</td></tr>
                             <tr><td>Course</td><td>${certData.course}</td></tr>
                             <tr><td>Issue Date</td><td>${new Date(certData.issueDate).toLocaleDateString()}</td></tr>
@@ -687,19 +770,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // ✅ Logout functionality
     const logoutIcon = document.getElementById('logoutIcon');
     if (logoutIcon) {
-        logoutIcon.addEventListener('click', function(e) {
+        logoutIcon.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             // Clear the user session
             sessionStorage.removeItem('user');
-            
+
             // Show success message
             if (typeof showPopup === 'function') {
                 showPopup('You have been successfully logged out.');
             } else {
                 alert('You have been successfully logged out.');
             }
-            
+
             // Redirect to index/home page after a short delay
             setTimeout(() => {
                 window.location.href = 'index.html';
@@ -711,23 +794,23 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateUserInfo() {
         const userEmailElement = document.getElementById('userEmail');
         const userInfo = sessionStorage.getItem('user');
-        
+
         if (userInfo && userEmailElement) {
             const user = JSON.parse(userInfo);
             userEmailElement.textContent = user.email || '';
         }
     }
-    
+
     // Run user info update on page load
     updateUserInfo();
 
     // Check authentication status and update UI
     function checkAuth() {
         const userInfo = sessionStorage.getItem('user');
-        const isProtectedPage = window.location.pathname.includes('dashboard.html') || 
-                               window.location.pathname.includes('feedback.html') ||
-                               window.location.pathname.includes('admin.html');
-        
+        const isProtectedPage = window.location.pathname.includes('dashboard.html') ||
+            window.location.pathname.includes('feedback.html') ||
+            window.location.pathname.includes('admin.html');
+
         if (!userInfo && isProtectedPage) {
             // If not logged in and on a protected page, redirect to login
             window.location.href = 'index.html';
@@ -735,12 +818,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return true;
     }
-    
+
     // Run auth check on page load
     checkAuth();
 
     // Add additional protection against browser back button after logout
-    window.addEventListener('pageshow', function(event) {
+    window.addEventListener('pageshow', function (event) {
         // Check if the page is being loaded from browser cache (back button)
         if (event.persisted) {
             // Run authentication check again
@@ -749,11 +832,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Ensure protected pages are always checked when accessed
-    document.addEventListener('visibilitychange', function() {
+    document.addEventListener('visibilitychange', function () {
         if (document.visibilityState === 'visible') {
-            const isProtectedPage = window.location.pathname.includes('dashboard.html') || 
-                                  window.location.pathname.includes('feedback.html') ||
-                                  window.location.pathname.includes('admin.html');
+            const isProtectedPage = window.location.pathname.includes('dashboard.html') ||
+                window.location.pathname.includes('feedback.html') ||
+                window.location.pathname.includes('admin.html');
             if (isProtectedPage) {
                 checkAuth();
             }

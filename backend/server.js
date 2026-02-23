@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -11,7 +12,6 @@ const PORT = process.env.PORT || 3000; // Render will set the PORT environment v
 
 // Middleware
 // For production, you should restrict CORS to your specific frontend domain
-// Example: app.use(cors({ origin: 'https://your-frontend-name.onrender.com' }));
 app.use(cors()); // Enable CORS for all routes
 app.use(bodyParser.json()); // Parse JSON request bodies
 
@@ -80,7 +80,7 @@ app.post('/api/certificate', async (req, res) => {
         if (!name || !mobile || !email || !dob || !college || !course || !admissionNumber || !section || !semester || !address) {
             return res.status(400).json({ message: 'All fields are required.' });
         }
-        
+
         // Check if a certificate with this admission number already exists
         const existingCertificateByAdmissionNo = await Certificate.findOne({ admissionNumber });
         if (existingCertificateByAdmissionNo) {
@@ -105,16 +105,16 @@ app.post('/api/certificate', async (req, res) => {
         });
 
         await newCertificate.save();
-        res.status(201).json({ 
-            message: 'Certificate created successfully!', 
+        res.status(201).json({
+            message: 'Certificate created successfully!',
             certificateNumber: newCertificate.certificateNumber,
-            id: newCertificate._id 
+            id: newCertificate._id
         });
 
     } catch (error) {
         console.error('Error creating certificate:', error);
         if (error.code === 11000) { // Duplicate key error (e.g. for certificateNumber if somehow not unique)
-             return res.status(409).json({ message: 'Duplicate entry. This certificate might already exist or there was a conflict.' });
+            return res.status(409).json({ message: 'Duplicate entry. This certificate might already exist or there was a conflict.' });
         }
         res.status(500).json({ message: 'Server error while creating certificate.' });
     }
@@ -123,20 +123,19 @@ app.post('/api/certificate', async (req, res) => {
 // 2. Fetch Certificate for Download
 app.post('/api/certificate/fetch', async (req, res) => {
     try {
-        const { fullName, admissionNumber, dob } = req.body;
+        const { admissionNumber, dob } = req.body;
 
-        if (!fullName || !admissionNumber || !dob) {
-            return res.status(400).json({ message: 'Full name, admission number, and date of birth are required.' });
+        if (!admissionNumber || !dob) {
+            return res.status(400).json({ message: 'Admission number and date of birth are required.' });
         }
 
         const certificate = await Certificate.findOne({
-            fullName: new RegExp(`^${fullName}$`, 'i'), // Case-insensitive match
-            admissionNumber,
+            admissionNumber: new RegExp(`^${admissionNumber}$`, 'i'), // Case-insensitive match
             dob: new Date(dob)
         });
 
         if (!certificate) {
-            return res.status(404).json({ message: 'Certificate not found with the provided details.' });
+            return res.status(404).json({ message: 'Certificate not found. Please check your Admission Number and Date of Birth.' });
         }
 
         res.status(200).json(certificate);
@@ -150,15 +149,15 @@ app.post('/api/certificate/fetch', async (req, res) => {
 // 3. Verify Certificate
 app.post('/api/certificate/verify', async (req, res) => {
     try {
-        const { certificateNumber, fullName } = req.body;
+        const { certificateNumber, admissionNumber } = req.body;
 
-        if (!certificateNumber || !fullName) {
-            return res.status(400).json({ message: 'Certificate number and full name are required for verification.' });
+        if (!certificateNumber || !admissionNumber) {
+            return res.status(400).json({ message: 'Certificate number and admission number are required for verification.' });
         }
 
         const certificate = await Certificate.findOne({
             certificateNumber,
-            fullName: new RegExp(`^${fullName}$`, 'i') // Case-insensitive match
+            admissionNumber: new RegExp(`^${admissionNumber}$`, 'i') // Case-insensitive match
         });
 
         if (!certificate) {
@@ -229,18 +228,18 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
 
         // Outer Border
         doc.lineWidth(borderThickness)
-           .rect(outerMargin, outerMargin, pageW - 2 * outerMargin, pageH - 2 * outerMargin)
-           .stroke(borderColor);
+            .rect(outerMargin, outerMargin, pageW - 2 * outerMargin, pageH - 2 * outerMargin)
+            .stroke(borderColor);
 
         // Inner Border
         const innerRectX = outerMargin + borderThickness / 2 + innerMargin;
         const innerRectY = outerMargin + borderThickness / 2 + innerMargin;
         const innerRectW = pageW - 2 * (outerMargin + borderThickness / 2 + innerMargin);
         const innerRectH = pageH - 2 * (outerMargin + borderThickness / 2 + innerMargin);
-        
+
         doc.lineWidth(innerBorderThickness)
-           .rect(innerRectX, innerRectY, innerRectW, innerRectH)
-           .stroke(innerBorderColor);
+            .rect(innerRectX, innerRectY, innerRectW, innerRectH)
+            .stroke(innerBorderColor);
 
         // Content Area Margins (inside the borders)
         const contentMargin = outerMargin + borderThickness + innerMargin + innerBorderThickness + 20; // Further margin for content
@@ -255,7 +254,7 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
         } else {
             console.warn('Logo not found at:', logoPath);
             doc.font('Helvetica-Bold').fontSize(12).fillColor(textColor)
-               .text('Galgotias University Logo Placeholder', pageW / 2 - 100, contentMargin + 20, { width: 200, align: 'center' });
+                .text('Galgotias University Logo Placeholder', pageW / 2 - 100, contentMargin + 20, { width: 200, align: 'center' });
         }
         doc.moveDown(10); // Spacing after logo
 
@@ -263,50 +262,50 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
 
         // "Certificate of Achievement"
         doc.font('Helvetica-Bold').fontSize(22).fillColor(achievementTitleColor)
-           .text('Certificate of Achievement', contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
+            .text('Certificate of Achievement', contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
         doc.moveDown(1);
 
         // "This is to certify that"
         doc.font('Helvetica').fontSize(16).fillColor(textColor)
-           .text('This is to certify that', contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
+            .text('This is to certify that', contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
         doc.moveDown(0.5);
 
         // Student Name
         doc.font('Times-BoldItalic').fontSize(28).fillColor(studentNameColor)
-           .text(certificate.fullName, contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
-        
+            .text(certificate.fullName, contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
+
         // Underline for student name (manual line drawing)
-        const studentNameTextActualWidth = doc.widthOfString(certificate.fullName); 
-        const studentNameContainingBlockWidth = pageW - 2 * contentMargin; 
+        const studentNameTextActualWidth = doc.widthOfString(certificate.fullName);
+        const studentNameContainingBlockWidth = pageW - 2 * contentMargin;
         const studentNameUnderlineStartX = contentMargin + (studentNameContainingBlockWidth - studentNameTextActualWidth) / 2;
-        const studentNameY = doc.y - (doc.currentLineHeight() * 0.2); 
-        
+        const studentNameY = doc.y - (doc.currentLineHeight() * 0.2);
+
         doc.lineWidth(1.5).moveTo(studentNameUnderlineStartX, studentNameY)
-           .lineTo(studentNameUnderlineStartX + studentNameTextActualWidth, studentNameY)
-           .stroke(borderColor);
+            .lineTo(studentNameUnderlineStartX + studentNameTextActualWidth, studentNameY)
+            .stroke(borderColor);
         doc.moveDown(0.5);
 
         // "has successfully completed the course [Course Name] - demonstrating dedication, academic excellence, and commitment to learning."
         doc.font('Helvetica').fontSize(16).fillColor(textColor)
-           .text(
-               `has successfully completed the course ${certificate.course} - demonstrating dedication, academic excellence, and commitment to learning.`,
-               contentMargin,
-               doc.y,
-               { align: 'center', width: pageW - 2 * contentMargin }
-           );
+            .text(
+                `has successfully completed the course ${certificate.course} - demonstrating dedication, academic excellence, and commitment to learning.`,
+                contentMargin,
+                doc.y,
+                { align: 'center', width: pageW - 2 * contentMargin }
+            );
         doc.moveDown(0.5);
 
         // "fulfilled all academic requirements"
         doc.font('Helvetica').fontSize(16).fillColor(textColor)
-           .text('Throughout the duration of the course, he has fulfilled all academic requirements, completed assigned coursework, and participated in relevant academic activities as per the standards prescribed by Galgotias University.', contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
+            .text('Throughout the duration of the course, he has fulfilled all academic requirements, completed assigned coursework, and participated in relevant academic activities as per the standards prescribed by Galgotias University.', contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
         doc.moveDown(1);
-        
+
         // Other Details
         const detailsTextContainerWidth = pageW - 2 * contentMargin;
         doc.font('Helvetica-Bold').fontSize(12).fillColor(textColor);
-        doc.text(`Admission Number: ${certificate.admissionNumber}`, contentMargin, doc.y, { 
-            align: 'center', 
-            width: detailsTextContainerWidth 
+        doc.text(`Admission Number: ${certificate.admissionNumber}`, contentMargin, doc.y, {
+            align: 'center',
+            width: detailsTextContainerWidth
         });
         doc.moveDown(2); // Increased spacing before signatures
 
@@ -330,13 +329,13 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
         } else {
             console.warn('Dean.png not found at:', deanSignPath);
             doc.font('Helvetica').fontSize(10).fillColor(textColor)
-               .text('[Dean Sign Placeholder]', deanSignatureX, signatureY + signatureImageHeight / 2 - 5, { width: signatureBlockWidth, align: 'center' });
+                .text('[Dean Sign Placeholder]', deanSignatureX, signatureY + signatureImageHeight / 2 - 5, { width: signatureBlockWidth, align: 'center' });
         }
         doc.font('Helvetica').fontSize(11).fillColor(textColor)
-           .text('Signature of Dean', deanSignatureX, signatureY + signatureImageHeight + signatureTextOffsetY, {
-               width: signatureBlockWidth,
-               align: 'center'
-           });
+            .text('Signature of Dean', deanSignatureX, signatureY + signatureImageHeight + signatureTextOffsetY, {
+                width: signatureBlockWidth,
+                align: 'center'
+            });
 
         // HOD's Signature
         // Note: We use the same 'signatureY' so they are on the same line.
@@ -353,14 +352,14 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
         } else {
             console.warn('HOD.png not found at:', hodSignPath);
             doc.font('Helvetica').fontSize(10).fillColor(textColor)
-               .text('[HOD Sign Placeholder]', hodSignatureX, signatureY + signatureImageHeight / 2 - 5, { width: signatureBlockWidth, align: 'center' });
+                .text('[HOD Sign Placeholder]', hodSignatureX, signatureY + signatureImageHeight / 2 - 5, { width: signatureBlockWidth, align: 'center' });
         }
         doc.font('Helvetica').fontSize(11).fillColor(textColor)
-           .text('Signature of HOD', hodSignatureX, signatureY + signatureImageHeight + signatureTextOffsetY, {
-               width: signatureBlockWidth,
-               align: 'center'
-           });
-        
+            .text('Signature of HOD', hodSignatureX, signatureY + signatureImageHeight + signatureTextOffsetY, {
+                width: signatureBlockWidth,
+                align: 'center'
+            });
+
         // Move down significantly after signatures before the footer line
         doc.y = signatureY + signatureImageHeight + signatureTextOffsetY + 30; // Ensure enough space before footer line
 
@@ -368,14 +367,14 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
         // Footer section for Certificate Number and Issue Date
         const footerY = pageH - contentMargin - 10; // Position from bottom
         doc.font('Helvetica').fontSize(11).fillColor(footerTextColor);
-        
+
         // Draw a line above footer text
         doc.lineWidth(0.5).moveTo(contentMargin, footerY - 10)
-           .lineTo(pageW - contentMargin, footerY - 10)
-           .stroke(innerBorderColor);
+            .lineTo(pageW - contentMargin, footerY - 10)
+            .stroke(innerBorderColor);
 
-        doc.text(`Certificate No: ${certificate.certificateNumber}`, contentMargin, footerY, { 
-            align: 'left', 
+        doc.text(`Certificate No: ${certificate.certificateNumber}`, contentMargin, footerY, {
+            align: 'left',
             width: (pageW - 2 * contentMargin) / 2 - 10 // Half width minus some padding
         });
         doc.text(`Date of Issue: ${new Date(certificate.issueDate).toLocaleDateString()}`, pageW / 2 + 10, footerY, {
@@ -447,7 +446,7 @@ app.post('/api/auth/login', async (req, res) => {
         }
 
         // Authentication successful
-        res.status(200).json({ 
+        res.status(200).json({
             message: 'Login successful',
             user: {
                 email: user.email,
@@ -478,9 +477,9 @@ app.post('/api/auth/verify-reset', async (req, res) => {
         }
 
         // Account found and verified
-        res.status(200).json({ 
-            message: 'Account verified successfully', 
-            email: user.email 
+        res.status(200).json({
+            message: 'Account verified successfully',
+            email: user.email
         });
 
     } catch (error) {
@@ -538,7 +537,7 @@ app.put('/api/certificate/:id', async (req, res) => {
         } = req.body;
 
         // Validate required fields
-        if (!fullName || !mobile || !email || !dob || !college || !course || 
+        if (!fullName || !mobile || !email || !dob || !college || !course ||
             !admissionNumber || !section || !semester || !address) {
             return res.status(400).json({ message: 'All fields are required.' });
         }
@@ -551,14 +550,14 @@ app.put('/api/certificate/:id', async (req, res) => {
 
         // Check if trying to change the admission number to one that already exists
         if (certificate.admissionNumber !== admissionNumber) {
-            const existingCert = await Certificate.findOne({ 
-                admissionNumber, 
+            const existingCert = await Certificate.findOne({
+                admissionNumber,
                 _id: { $ne: id } // Exclude current certificate from check
             });
-            
+
             if (existingCert) {
-                return res.status(409).json({ 
-                    message: 'A certificate with this admission number already exists.' 
+                return res.status(409).json({
+                    message: 'A certificate with this admission number already exists.'
                 });
             }
         }
@@ -573,7 +572,7 @@ app.put('/api/certificate/:id', async (req, res) => {
             { new: true } // Return the updated document
         );
 
-        res.status(200).json({ 
+        res.status(200).json({
             message: 'Certificate updated successfully',
             certificate: updatedCertificate
         });
@@ -643,7 +642,7 @@ app.put('/api/feedback/:id/status', async (req, res) => {
         feedback.status = status;
         await feedback.save();
 
-        res.status(200).json({ 
+        res.status(200).json({
             message: 'Feedback status updated successfully',
             feedback
         });
@@ -690,7 +689,7 @@ app.post('/api/admin/users', async (req, res) => {
         });
 
         await newUser.save();
-        
+
         // Return user without password
         const userResponse = {
             _id: newUser._id,
@@ -698,7 +697,7 @@ app.post('/api/admin/users', async (req, res) => {
             aadhar: newUser.aadhar
         };
 
-        res.status(201).json({ 
+        res.status(201).json({
             message: 'Admin user created successfully',
             user: userResponse
         });
@@ -726,14 +725,14 @@ app.put('/api/admin/users/:id', async (req, res) => {
 
         // Check if trying to update to an email that's already in use by another user
         if (email !== user.email) {
-            const existingUser = await User.findOne({ 
-                email, 
+            const existingUser = await User.findOne({
+                email,
                 _id: { $ne: id } // Exclude current user from check
             });
-            
+
             if (existingUser) {
-                return res.status(409).json({ 
-                    message: 'A user with this email already exists.' 
+                return res.status(409).json({
+                    message: 'A user with this email already exists.'
                 });
             }
         }
@@ -741,7 +740,7 @@ app.put('/api/admin/users/:id', async (req, res) => {
         // Update user fields
         user.email = email;
         user.aadhar = aadhar;
-        
+
         // Only update password if provided
         if (password) {
             user.password = password; // In a production app, you should hash the password
@@ -756,7 +755,7 @@ app.put('/api/admin/users/:id', async (req, res) => {
             aadhar: user.aadhar
         };
 
-        res.status(200).json({ 
+        res.status(200).json({
             message: 'Admin user updated successfully',
             user: userResponse
         });
