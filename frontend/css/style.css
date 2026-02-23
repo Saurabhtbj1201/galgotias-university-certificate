@@ -1058,6 +1058,7 @@ footer {
     display: flex;
     flex-direction: column;
     gap: 0;
+    align-items: stretch;
 }
 
 .contact-section a:focus-visible {
