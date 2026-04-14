@@ -304,7 +304,8 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
         doc.moveDown(0.5);
 
         // "fulfilled all academic requirements"
-        const pronoun = certificate.gender === 'female' ? 'she' : certificate.gender === 'male' ? 'he' : 'he/she';
+        const normalizedGender = String(certificate.gender || '').toLowerCase();
+        const pronoun = normalizedGender === 'female' ? 'she' : 'he';
         doc.font('Helvetica').fontSize(16).fillColor(textColor)
             .text(`Throughout the duration of the course, ${pronoun} has fulfilled all academic requirements, completed assigned coursework, and participated in relevant academic activities as per the standards prescribed by Galgotias University.`, contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
         doc.moveDown(1);

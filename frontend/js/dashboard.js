@@ -197,6 +197,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Format the date of birth and issue date
         const dobDate = new Date(currentCertificate.dob).toLocaleDateString();
         const issueDateFormatted = new Date(currentCertificate.issueDate).toLocaleDateString();
+        const formattedGender = currentCertificate.gender
+            ? currentCertificate.gender.charAt(0).toUpperCase() + currentCertificate.gender.slice(1).toLowerCase()
+            : 'Not specified';
         
         certificateDetails.innerHTML = `
             <dl>
@@ -205,6 +208,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 <dt>Full Name</dt>
                 <dd>${currentCertificate.fullName}</dd>
+
+                <dt>Gender</dt>
+                <dd>${formattedGender}</dd>
                 
                 <dt>Mobile</dt>
                 <dd>${currentCertificate.mobile}</dd>
@@ -271,6 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('updateSemester').value = currentCertificate.semester;
         document.getElementById('updateAddress').value = currentCertificate.address;
         document.getElementById('updateCertificateNumber').value = currentCertificate.certificateNumber;
+        document.getElementById('updateGender').value = (currentCertificate.gender || '').toLowerCase();
         
         // Close the details modal if it's open
         detailsModal.style.display = 'none';
@@ -299,6 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const data = {
                 fullName: formData.get('fullName'),
+                gender: formData.get('gender'),
                 mobile: formData.get('mobile'),
                 email: formData.get('email'),
                 dob: formData.get('dob'),
