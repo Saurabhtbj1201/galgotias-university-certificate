@@ -29,6 +29,7 @@ mongoose.connect(MONGO_URI)
 // Mongoose Schema and Model for Certificate
 const certificateSchema = new mongoose.Schema({
     fullName: { type: String, required: true },
+    gender: { type: String, required: true, enum: ['male', 'female'] },
     mobile: { type: String, required: true },
     email: { type: String, required: true },
     dob: { type: Date, required: true },
@@ -72,13 +73,19 @@ app.post('/api/certificate', async (req, res) => {
     try {
         const {
             name, // from get_certificate.html form
+            gender,
             mobile, email, dob, college, course,
             admissionNumber, section, semester, address
         } = req.body;
 
         // Validate required fields (basic validation)
-        if (!name || !mobile || !email || !dob || !college || !course || !admissionNumber || !section || !semester || !address) {
+        if (!name || !gender || !mobile || !email || !dob || !college || !course || !admissionNumber || !section || !semester || !address) {
             return res.status(400).json({ message: 'All fields are required.' });
+        }
+
+        const normalizedGender = String(gender).toLowerCase();
+        if (!['male', 'female'].includes(normalizedGender)) {
+            return res.status(400).json({ message: 'Gender must be either male or female.' });
         }
 
         // Check if a certificate with this admission number already exists
@@ -92,6 +99,7 @@ app.post('/api/certificate', async (req, res) => {
 
         const newCertificate = new Certificate({
             fullName: name, // Map 'name' from form to 'fullName' in schema
+            gender: normalizedGender,
             mobile,
             email,
             dob: new Date(dob), // Ensure DOB is stored as Date
@@ -296,8 +304,9 @@ app.get('/api/certificate/download-pdf/:certificateNumber', async (req, res) => 
         doc.moveDown(0.5);
 
         // "fulfilled all academic requirements"
+        const pronoun = certificate.gender === 'female' ? 'she' : certificate.gender === 'male' ? 'he' : 'he/she';
         doc.font('Helvetica').fontSize(16).fillColor(textColor)
-            .text('Throughout the duration of the course, he has fulfilled all academic requirements, completed assigned coursework, and participated in relevant academic activities as per the standards prescribed by Galgotias University.', contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
+            .text(`Throughout the duration of the course, ${pronoun} has fulfilled all academic requirements, completed assigned coursework, and participated in relevant academic activities as per the standards prescribed by Galgotias University.`, contentMargin, doc.y, { align: 'center', width: pageW - 2 * contentMargin });
         doc.moveDown(1);
 
         // Other Details
@@ -532,6 +541,7 @@ app.put('/api/certificate/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const {
+            gender,
             fullName, mobile, email, dob, college, course,
             admissionNumber, section, semester, address
         } = req.body;
@@ -563,12 +573,22 @@ app.put('/api/certificate/:id', async (req, res) => {
         }
 
         // Update certificate
+        const updatePayload = {
+            fullName, mobile, email, dob, college, course,
+            admissionNumber, section, semester, address
+        };
+
+        if (typeof gender !== 'undefined' && gender !== null && String(gender).trim() !== '') {
+            const normalizedGender = String(gender).toLowerCase();
+            if (!['male', 'female'].includes(normalizedGender)) {
+                return res.status(400).json({ message: 'Gender must be either male or female.' });
+            }
+            updatePayload.gender = normalizedGender;
+        }
+
         const updatedCertificate = await Certificate.findByIdAndUpdate(
             id,
-            {
-                fullName, mobile, email, dob, college, course,
-                admissionNumber, section, semester, address
-            },
+            updatePayload,
             { new: true } // Return the updated document
         );
 
