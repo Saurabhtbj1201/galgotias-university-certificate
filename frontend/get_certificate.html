@@ -69,34 +69,30 @@
     </header>
 
     <main>
-        <h1>Welcome to the Certificate Generator</h1>
         <section class="form-section">
-            <h2>Register for Your Certificate</h2>
-            <form id="certificateForm">
+            <form id="certificateForm" novalidate>
+                <div class="registration-title">
+                    <div class="registration-title-icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+                    </div>
+                    <div>
+                        <h2>Register for Your Certificate</h2>
+                        <p>Please fill in the required details to generate your certificate.</p>
+                    </div>
+                </div>
+                <div class="registration-section-title">
+                    <span aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></span>
+                    <strong>Personal Information</strong>
+                </div>
                 <div class="field">
-                    <label for="name">Full Name:</label>
+                    <label for="name">Full Name <span aria-hidden="true">*</span></label>
+                    <small class="field-error" id="nameError" role="alert"></small>
                     <input type="text" id="name" name="name" placeholder="Enter your full name" required>
                 </div>
 
                 <div class="field">
-                    <label for="mobile">Mobile:</label>
-                    <input type="tel" id="mobile" name="mobile" placeholder="Enter 10-digit mobile number"
-                        maxlength="10" minlength="10" pattern="[0-9]{10}"
-                        title="Please enter a valid 10-digit mobile number" required>
-                </div>
-
-                <div class="field">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" placeholder="Enter your email address" required>
-                </div>
-
-                <div class="field">
-                    <label for="dob">Date of Birth:</label>
-                    <input type="date" id="dob" name="dob" required>
-                </div>
-
-                <div class="field">
-                    <label for="gender">Gender:</label>
+                    <label for="gender">Gender <span aria-hidden="true">*</span></label>
+                    <small class="field-error" id="genderError" role="alert"></small>
                     <select id="gender" name="gender" required>
                         <option value="" disabled selected>Select your gender</option>
                         <option value="male">Male</option>
@@ -105,28 +101,57 @@
                 </div>
 
                 <div class="field">
-                    <label for="college">College Name:</label>
+                    <label for="mobile">Mobile <span aria-hidden="true">*</span></label>
+                    <small class="field-error" id="mobileError" role="alert"></small>
+                    <input type="tel" id="mobile" name="mobile" placeholder="Enter 10-digit mobile number"
+                        maxlength="10" minlength="10" pattern="[0-9]{10}"
+                        title="Please enter a valid 10-digit mobile number" required>
+                </div>
+
+                <div class="field">
+                    <label for="email">Email <span aria-hidden="true">*</span></label>
+                    <small class="field-error" id="emailError" role="alert"></small>
+                    <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                </div>
+
+                <div class="field">
+                    <label for="dob">Date of Birth <span aria-hidden="true">*</span></label>
+                    <small class="field-error" id="dobError" role="alert"></small>
+                    <input type="date" id="dob" name="dob" required>
+                </div>
+
+                <div class="registration-section-title">
+                    <span aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/><path d="M22 10v6"/></svg></span>
+                    <strong>Academic Information</strong>
+                </div>
+                <div class="field">
+                    <label for="college">College Name <span aria-hidden="true">*</span></label>
+                    <small class="field-error" id="collegeError" role="alert"></small>
                     <input type="text" id="college" name="college" placeholder="Enter your college name" required>
                 </div>
 
                 <div class="field">
-                    <label for="course">Course:</label>
+                    <label for="course">Course <span aria-hidden="true">*</span></label>
+                    <small class="field-error" id="courseError" role="alert"></small>
                     <input type="text" id="course" name="course" placeholder="Enter your course name" required>
                 </div>
 
                 <div class="field">
-                    <label for="admissionNumber">Admission Number:</label>
+                    <label for="admissionNumber">Admission Number <span aria-hidden="true">*</span></label>
+                    <small class="field-error" id="admissionNumberError" role="alert"></small>
                     <input type="text" id="admissionNumber" name="admissionNumber"
-                        placeholder="Enter your admission number" required>
+                        placeholder="Enter your admission number" required maxlength="30">
                 </div>
 
                 <div class="field">
-                    <label for="section">Section:</label>
-                    <input type="text" id="section" name="section" placeholder="Enter your section" required>
+                    <label for="section">Section <span aria-hidden="true">*</span></label>
+                    <small class="field-error" id="sectionError" role="alert"></small>
+                    <input type="text" id="section" name="section" placeholder="Enter your section (1-99 or A-Z)" maxlength="2" required>
                 </div>
 
                 <div class="field">
-                    <label for="semester">Semester:</label>
+                    <label for="semester">Semester <span aria-hidden="true">*</span></label>
+                    <small class="field-error" id="semesterError" role="alert"></small>
                     <select id="semester" name="semester" required>
                         <option value="" disabled selected>Select your semester</option>
                         <option value="Semester 1">Semester 1</option>
@@ -140,12 +165,20 @@
                     </select>
                 </div>
 
+                <div class="registration-section-title full-width">
+                    <span aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+                    <strong>Address / Location</strong>
+                </div>
                 <div class="field full-width">
-                    <label for="address">Address / Location:</label>
-                    <textarea id="address" name="address" placeholder="📍 Enter your full address" required></textarea>
+                    <label for="address">Address / Location <span aria-hidden="true">*</span></label>
+                    <small class="field-error" id="addressError" role="alert"></small>
+                    <textarea id="address" name="address" placeholder="Enter your complete address" required></textarea>
                 </div>
 
-                <button type="submit">Submit</button>
+                <button type="submit" class="registration-submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+                    Submit
+                </button>
             </form>
             <div id="popupMessage" class="popup">
                 <p>Congratulations! Form submitted successfully. Your certificate will be generated soon.
@@ -264,8 +297,10 @@
             </div>
             <div class="footer-section reach-us">
                 <h3>REACH US</h3>
-                <p><a href="tel:9798024301">9798024301</a></p>
                 <p><a href="mailto:galgotiasuniversity.ac.in@gmail.com">galgotiasuniversity.ac.in@gmail.com</a></p>
+                <p><a href="https://www.gu-saurabh.tech/portfolio" target="_blank" rel="noopener noreferrer">Portfolio</a></p>
+                <p><a href="https://www.gu-saurabh.tech/blog" target="_blank" rel="noopener noreferrer">Blogs</a></p>
+                <p><a href="https://www.gu-saurabh.tech/project/fc974097-5f62-4074-878e-042492ba4232" target="_blank" rel="noopener noreferrer">About it</a></p>
             </div>
             <div class="footer-section locate-us">
                 <h3>LOCATE US</h3>
