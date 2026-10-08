@@ -422,27 +422,67 @@ document.addEventListener('DOMContentLoaded', () => {
     // ✅ Certificate Form Submission
     const certificateForm = document.getElementById('certificateForm');
     if (certificateForm) {
-        // Restrict mobile field to digits only
-        const mobileInput = document.getElementById('mobile');
-        if (mobileInput) {
-            mobileInput.addEventListener('input', function () {
-                this.value = this.value.replace(/\D/g, '').slice(0, 10);
-            });
+        const validationRules = {
+            name: value => value.trim() ? '' : 'Full name is required.',
+            gender: value => value ? '' : 'Please select your gender.',
+            mobile: value => /^\d{10}$/.test(value) ? '' : 'Enter exactly 10 digits without a country code.',
+            email: value => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value) ? '' : 'Enter a valid email address, for example name@example.com.',
+            dob: value => value ? '' : 'Date of birth is required.',
+            college: value => value.trim() ? '' : 'College name is required.',
+            course: value => value.trim() ? '' : 'Course is required.',
+            admissionNumber: value => /^[A-Z0-9]+$/.test(value) ? '' : 'Use capital letters and numbers only.',
+            section: value => /^(?:[1-9]|[1-9][0-9]|[A-Z])$/.test(value) ? '' : 'Use a number from 1 to 99 or one letter from A to Z.',
+            semester: value => value ? '' : 'Please select your semester.',
+            address: value => value.trim() ? '' : 'Address is required.'
+        };
+
+        function setFieldError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            const error = document.getElementById(`${fieldId}Error`);
+            if (!field || !error) return Boolean(message);
+
+            field.classList.toggle('has-error', Boolean(message));
+            field.setAttribute('aria-invalid', String(Boolean(message)));
+            error.textContent = message;
+            error.hidden = !message;
+            return Boolean(message);
         }
+
+        function validateField(fieldId) {
+            const field = document.getElementById(fieldId);
+            const rule = validationRules[fieldId];
+            return field && rule ? !setFieldError(fieldId, rule(field.value)) : true;
+        }
+
+        const validationFields = Object.keys(validationRules);
+        validationFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (!field) return;
+
+            field.addEventListener('input', () => {
+                if (fieldId === 'mobile') field.value = field.value.replace(/\D/g, '').slice(0, 10);
+                if (fieldId === 'admissionNumber') field.value = field.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+                if (fieldId === 'section') field.value = field.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 2);
+                validateField(fieldId);
+            });
+            field.addEventListener('blur', () => validateField(fieldId));
+        });
 
         certificateForm.addEventListener('submit', async function (event) {
             event.preventDefault();
 
             const submitButton = certificateForm.querySelector('button[type="submit"]');
-            const formData = new FormData(certificateForm);
-            const data = Object.fromEntries(formData.entries());
-
-            // Validate mobile is exactly 10 digits
-            if (!/^[0-9]{10}$/.test(data.mobile)) {
-                showPopup('Please enter a valid 10-digit mobile number.', true);
-                if (submitButton) { submitButton.classList.remove('loading'); submitButton.disabled = false; }
+            const hasValidationErrors = validationFields
+                .map(fieldId => validateField(fieldId))
+                .some(isValid => !isValid);
+            if (hasValidationErrors) {
+                const firstError = certificateForm.querySelector('.has-error');
+                if (firstError) firstError.focus();
                 return;
             }
+
+            const formData = new FormData(certificateForm);
+            const data = Object.fromEntries(formData.entries());
 
             if (submitButton) {
                 submitButton.classList.add('loading');
@@ -563,11 +603,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const certificatePreviewDiv = document.getElementById('certificatePreview');
     const previewContent = document.getElementById('previewContent');
     const downloadButton = document.getElementById('downloadButton');
-    const shareOptionsDiv = document.querySelector('#certificatePreview .share-options');
 
     let currentCertificateNumberForDownload = null;
 
-    if (downloadForm && certificatePreviewDiv && previewContent && downloadButton && shareOptionsDiv) {
+    if (downloadForm && certificatePreviewDiv && previewContent && downloadButton) {
+        const escapePreviewValue = value => String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+        const formatPreviewDate = value => value ? new Date(value).toLocaleDateString(undefined, {
+            month: 'short',
+            day: '2-digit',
+            year: 'numeric'
+        }) : 'Not available';
+        const maskMobile = value => {
+            const mobile = String(value ?? '');
+            return mobile.length > 5 ? `${'*'.repeat(mobile.length - 5)}${mobile.slice(-5)}` : mobile;
+        };
+        const maskEmail = value => {
+            const [username, domain] = String(value ?? '').split('@');
+            if (!username || !domain) return 'Not available';
+            return `${username.slice(0, 2)}*****${username.slice(-2)}@${domain}`;
+        };
+
         downloadForm.addEventListener('submit', async function (event) {
             event.preventDefault();
 
@@ -585,7 +645,6 @@ document.addEventListener('DOMContentLoaded', () => {
             previewContent.innerHTML = `<p>Fetching certificate...</p>`;
             certificatePreviewDiv.classList.remove('hidden');
             downloadButton.style.display = 'none';
-            shareOptionsDiv.style.display = 'none';
 
             try {
                 const response = await fetch(`${API_BASE_URL}/certificate/fetch`, {
@@ -603,32 +662,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (certData) {
                     previewContent.innerHTML = `
-                        <div class="certificate-design">
-                            <div class="certificate-border">
-                                <div class="certificate-header">
-                                    <img src="images/logo.png" alt="Galgotias University Logo" class="certificate-logo">
-                                    <h1>Galgotias University</h1>
-                                    <h2>Certificate of Achievement</h2>
-                                </div>
-                                <div class="certificate-body">
-                                    <p class="certify-text">This is to certify that</p>
-                                    <p class="student-name">${certData.fullName}</p>
-                                    <p class="course-text">has successfully completed the course</p>
-                                    <p class="course-name">${certData.course}</p>
-                                    <p class="details-text">
-                                        Admission Number: ${certData.admissionNumber}<br>
-                                        Date of Birth: ${new Date(certData.dob).toLocaleDateString()}
-                                    </p>
-                                </div>
-                                <div class="certificate-footer">
-                                    <p class="certificate-number">Certificate No: ${certData.certificateNumber}</p>
-                                    <p class="issue-date">Date of Issue: ${new Date(certData.issueDate).toLocaleDateString()}</p>
+                        <div class="download-result-layout">
+                            <div class="download-result-certificate">
+                                <div class="certificate-design">
+                                    <div class="certificate-border">
+                                        <div class="certificate-header">
+                                            <img src="images/logo.png" alt="Galgotias University Logo" class="certificate-logo">
+                                            <h1>Galgotias University</h1>
+                                            <h2>Certificate of Achievement</h2>
+                                        </div>
+                                        <div class="certificate-body">
+                                            <p class="certify-text">This is to certify that</p>
+                                            <p class="student-name">${escapePreviewValue(certData.fullName)}</p>
+                                            <p class="course-text">has successfully completed the course</p>
+                                            <p class="course-name">${escapePreviewValue(certData.course)}</p>
+                                            <p class="details-text">
+                                                Admission Number: ${escapePreviewValue(certData.admissionNumber)}<br>
+                                                Date of Birth: ${formatPreviewDate(certData.dob)}
+                                            </p>
+                                        </div>
+                                        <div class="certificate-footer">
+                                            <p class="certificate-number">Certificate No: ${escapePreviewValue(certData.certificateNumber)}</p>
+                                            <p class="issue-date">Date of Issue: ${formatPreviewDate(certData.issueDate)}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>`;
+                            <aside class="download-candidate-information">
+                                <h3>Candidate &amp; Certificate Information</h3>
+                                <dl>
+                                    <div><dt>Name</dt><dd>${escapePreviewValue(certData.fullName)}</dd></div>
+                                    <div><dt>Gender</dt><dd>${escapePreviewValue(certData.gender || 'Not available')}</dd></div>
+                                    <div><dt>Date of Birth</dt><dd>${formatPreviewDate(certData.dob)}</dd></div>
+                                    <div><dt>Mobile</dt><dd>${escapePreviewValue(maskMobile(certData.mobile))}</dd></div>
+                                    <div><dt>Email</dt><dd>${escapePreviewValue(maskEmail(certData.email))}</dd></div>
+                                    <div><dt>College</dt><dd>${escapePreviewValue(certData.college)}</dd></div>
+                                    <div><dt>Course</dt><dd>${escapePreviewValue(certData.course)}</dd></div>
+                                    <div><dt>Admission Number</dt><dd>${escapePreviewValue(certData.admissionNumber)}</dd></div>
+                                    <div><dt>Section</dt><dd>${escapePreviewValue(certData.section)}</dd></div>
+                                    <div><dt>Semester</dt><dd>${escapePreviewValue(certData.semester)}</dd></div>
+                                    <div><dt>Address</dt><dd>${escapePreviewValue(certData.address)}</dd></div>
+                                    <div><dt>Certificate Number</dt><dd>${escapePreviewValue(certData.certificateNumber)}</dd></div>
+                                    <div><dt>Issue Date</dt><dd>${formatPreviewDate(certData.issueDate)}</dd></div>
+                                </dl>
+                            </aside>
+                            <p class="download-admin-note">If you notice any incorrect or inaccurate information, please contact the administrator through the <a href="/contact.html">Contact Us</a> page.</p>
+                        </div>
+                    `;
                     currentCertificateNumberForDownload = certData.certificateNumber;
                     downloadButton.style.display = 'inline-block';
-                    shareOptionsDiv.style.display = 'block';
                 }
 
             } catch (error) {
@@ -678,6 +760,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const verificationResultDiv = document.getElementById('verificationResult');
 
     if (verifyForm && verificationResultDiv) {
+        const escapeVerificationValue = value => String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+        const formatVerificationDate = value => value ? new Date(value).toLocaleDateString(undefined, {
+            month: 'short',
+            day: '2-digit',
+            year: 'numeric'
+        }) : 'Not available';
+
         verifyForm.addEventListener('submit', async function (event) {
             event.preventDefault();
             const formData = new FormData(verifyForm);
@@ -702,16 +796,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (certData.status === "Verified") {
                     verificationResultDiv.innerHTML = `
-                        <h3>Verification Successful</h3>
-                        <table>
-                            <tr><th>Field</th><th>Detail</th></tr>
-                            <tr><td>Full Name</td><td>${certData.fullName}</td></tr>
-                            <tr><td>Admission Number</td><td>${certData.admissionNumber}</td></tr>
-                            <tr><td>Certificate Number</td><td>${certData.certificateNumber}</td></tr>
-                            <tr><td>Course</td><td>${certData.course}</td></tr>
-                            <tr><td>Issue Date</td><td>${new Date(certData.issueDate).toLocaleDateString()}</td></tr>
-                            <tr><td>Status</td><td style="color: green; font-weight: bold;">${certData.status}</td></tr>
-                        </table>`;
+                        <div class="verification-result-layout">
+                            <div class="verification-result-certificate">
+                                <div class="certificate-design">
+                                    <div class="certificate-border">
+                                        <div class="certificate-header">
+                                            <img src="images/logo.png" alt="Galgotias University Logo" class="certificate-logo">
+                                            <h1>Galgotias University</h1>
+                                            <h2>Certificate of Achievement</h2>
+                                        </div>
+                                        <div class="certificate-body">
+                                            <p class="certify-text">This is to certify that</p>
+                                            <p class="student-name">${escapeVerificationValue(certData.fullName)}</p>
+                                            <p class="course-text">has successfully completed the course</p>
+                                            <p class="course-name">${escapeVerificationValue(certData.course)}</p>
+                                            <p class="details-text">
+                                                Admission Number: ${escapeVerificationValue(certData.admissionNumber)}<br>
+                                                Section: ${escapeVerificationValue(certData.section)}
+                                            </p>
+                                        </div>
+                                        <div class="certificate-footer">
+                                            <p class="certificate-number">Certificate No: ${escapeVerificationValue(certData.certificateNumber)}</p>
+                                            <p class="issue-date">Date of Issue: ${formatVerificationDate(certData.issueDate)}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <aside class="verification-candidate-information">
+                                <div class="verification-status"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Verified</div>
+                                <h3>Candidate &amp; Certificate Information</h3>
+                                <dl>
+                                    <div><dt>Name</dt><dd>${escapeVerificationValue(certData.fullName)}</dd></div>
+                                    <div><dt>Gender</dt><dd>${escapeVerificationValue(certData.gender || 'Not available')}</dd></div>
+                                    <div><dt>College</dt><dd>${escapeVerificationValue(certData.college)}</dd></div>
+                                    <div><dt>Course</dt><dd>${escapeVerificationValue(certData.course)}</dd></div>
+                                    <div><dt>Admission Number</dt><dd>${escapeVerificationValue(certData.admissionNumber)}</dd></div>
+                                    <div><dt>Section</dt><dd>${escapeVerificationValue(certData.section)}</dd></div>
+                                    <div><dt>Semester</dt><dd>${escapeVerificationValue(certData.semester)}</dd></div>
+                                    <div><dt>Certificate Number</dt><dd>${escapeVerificationValue(certData.certificateNumber)}</dd></div>
+                                    <div><dt>Issue Date</dt><dd>${formatVerificationDate(certData.issueDate)}</dd></div>
+                                </dl>
+                            </aside>
+                            <p class="verification-admin-note">If you find any incorrect information, please contact the administrator through the <a href="/contact.html">Contact Us</a> page.</p>
+                        </div>`;
                 } else {
                     verificationResultDiv.innerHTML = `<p style="color: red;">Certificate not found or invalid details.</p>`;
                 }
