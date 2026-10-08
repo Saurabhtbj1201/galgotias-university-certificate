@@ -13,8 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const detailsCloseButton = document.getElementById('detailsCloseButton');
     const updateCloseButton = document.getElementById('updateCloseButton');
     const deleteCloseButton = document.getElementById('deleteCloseButton');
-    const updateCertificateBtn = document.getElementById('updateCertificateBtn');
-    const deleteCertificateBtn = document.getElementById('deleteCertificateBtn');
     const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
     const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
     const updateCancelBtn = document.getElementById('updateCancelBtn');
@@ -26,18 +24,37 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentCertificates = [];
     let currentCertificate = null;
     
-    // Pagination variables
+    // Incremental loading state
     const certificatesPerPage = 10;
-    let currentPage = 1;
+    let visibleCertificateCount = certificatesPerPage;
     
     // ===== Functions =====
+
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function formatDate(value) {
+        if (!value) return 'Not available';
+        const date = new Date(value);
+        return Number.isNaN(date.getTime()) ? 'Not available' : date.toLocaleDateString(undefined, {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        });
+    }
     
     // Fetch all certificates
     async function fetchCertificates() {
         try {
             certificatesTableBody.innerHTML = `
                 <tr class="loading-row">
-                    <td colspan="5" class="loading-message">Loading certificates...</td>
+                    <td colspan="6" class="loading-message">Loading certificates...</td>
                 </tr>
             `;
             
@@ -49,13 +66,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             currentCertificates = result;
+            visibleCertificateCount = certificatesPerPage;
             renderCertificates();
             
         } catch (error) {
             console.error('Error fetching certificates:', error);
             certificatesTableBody.innerHTML = `
                 <tr class="error-row">
-                    <td colspan="5" class="error-message">Error loading certificates. ${error.message}</td>
+                    <td colspan="6" class="error-message">Error loading certificates. ${escapeHtml(error.message)}</td>
                 </tr>
             `;
         }
@@ -66,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!currentCertificates || currentCertificates.length === 0) {
             certificatesTableBody.innerHTML = `
                 <tr class="empty-row">
-                    <td colspan="5" class="empty-message">No certificates found.</td>
+                    <td colspan="6" class="empty-message">No certificates found.</td>
                 </tr>
             `;
             return;
@@ -75,30 +93,46 @@ document.addEventListener('DOMContentLoaded', () => {
         // Filter certificates based on search term
         const searchTerm = searchInput.value.toLowerCase();
         const filteredCertificates = currentCertificates.filter(cert => 
-            cert.fullName.toLowerCase().includes(searchTerm) || 
-            cert.admissionNumber.toLowerCase().includes(searchTerm)
+            String(cert.fullName || '').toLowerCase().includes(searchTerm) ||
+            String(cert.admissionNumber || '').toLowerCase().includes(searchTerm)
         );
+
+        if (filteredCertificates.length === 0) {
+            certificatesTableBody.innerHTML = `
+                <tr class="empty-row">
+                    <td colspan="6" class="empty-message">No certificates match your search.</td>
+                </tr>
+            `;
+            renderLoadMore(0);
+            return;
+        }
         
-        // Calculate pagination
-        const totalPages = Math.ceil(filteredCertificates.length / certificatesPerPage);
-        const startIndex = (currentPage - 1) * certificatesPerPage;
-        const endIndex = startIndex + certificatesPerPage;
-        const paginatedCertificates = filteredCertificates.slice(startIndex, endIndex);
+        const visibleCertificates = filteredCertificates.slice(0, visibleCertificateCount);
         
         // Generate table rows
         let tableHtml = '';
-        paginatedCertificates.forEach(cert => {
+        visibleCertificates.forEach(cert => {
             tableHtml += `
                 <tr data-id="${cert._id}">
-                    <td>${cert.fullName}</td>
-                    <td>${cert.course}</td>
-                    <td>${cert.admissionNumber}</td>
-                    <td>${cert.section}</td>
+                    <td>${formatDate(cert.issueDate)}</td>
+                    <td>${escapeHtml(cert.fullName)}</td>
+                    <td>${escapeHtml(cert.course)}</td>
+                    <td>${escapeHtml(cert.admissionNumber)}</td>
+                    <td>${escapeHtml(cert.section)}</td>
                     <td>
                         <div class="action-buttons">
-                            <button class="action-btn details-btn" data-id="${cert._id}">Details</button>
-                            <button class="action-btn update-btn" data-id="${cert._id}">Update</button>
-                            <button class="action-btn delete-btn" data-id="${cert._id}">Delete</button>
+                            <button class="action-btn details-btn" data-id="${cert._id}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></svg>
+                                Details
+                            </button>
+                            <button class="action-btn update-btn" data-id="${cert._id}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg>
+                                Update
+                            </button>
+                            <button class="action-btn delete-btn" data-id="${cert._id}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 10v6M14 10v6"/></svg>
+                                Delete
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -107,8 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         certificatesTableBody.innerHTML = tableHtml;
         
-        // Generate pagination controls
-        renderPagination(totalPages);
+        renderLoadMore(filteredCertificates.length);
         
         // Add event listeners to the buttons
         document.querySelectorAll('.details-btn').forEach(btn => {
@@ -124,66 +157,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Render pagination controls
-    function renderPagination(totalPages) {
+    // Render a load-more control while keeping all records in the same table.
+    function renderLoadMore(totalResults) {
         const paginationControls = document.getElementById('paginationControls');
         if (!paginationControls) return;
         
-        if (totalPages <= 1) {
+        if (totalResults <= certificatesPerPage && visibleCertificateCount >= totalResults) {
             paginationControls.innerHTML = '';
             return;
         }
-        
-        let paginationHtml = '';
-        
-        // Previous button
-        paginationHtml += `
-            <button class="page-btn prev-btn" ${currentPage === 1 ? 'disabled' : ''}>
-                &laquo; Prev
+
+        const remaining = totalResults - visibleCertificateCount;
+        paginationControls.innerHTML = `
+            <span class="result-count">Showing ${Math.min(visibleCertificateCount, totalResults)} of ${totalResults}</span>
+            <button class="load-more-btn" type="button" aria-label="Load more certificates" ${remaining <= 0 ? 'hidden' : ''}>
+                Load more <span aria-hidden="true">(${Math.min(certificatesPerPage, remaining)})</span>
             </button>
         `;
-        
-        // Page buttons
-        for (let i = 1; i <= totalPages; i++) {
-            paginationHtml += `
-                <button class="page-btn ${currentPage === i ? 'active' : ''}" data-page="${i}">
-                    ${i}
-                </button>
-            `;
+
+        const loadMoreButton = paginationControls.querySelector('.load-more-btn');
+        if (loadMoreButton) {
+            loadMoreButton.addEventListener('click', () => {
+                visibleCertificateCount += certificatesPerPage;
+                renderCertificates();
+            });
         }
-        
-        // Next button
-        paginationHtml += `
-            <button class="page-btn next-btn" ${currentPage === totalPages ? 'disabled' : ''}>
-                Next &raquo;
-            </button>
-        `;
-        
-        paginationControls.innerHTML = paginationHtml;
-        
-        // Add event listeners to pagination buttons
-        document.querySelectorAll('.page-btn').forEach(btn => {
-            if (btn.classList.contains('prev-btn')) {
-                btn.addEventListener('click', () => {
-                    if (currentPage > 1) {
-                        currentPage--;
-                        renderCertificates();
-                    }
-                });
-            } else if (btn.classList.contains('next-btn')) {
-                btn.addEventListener('click', () => {
-                    if (currentPage < totalPages) {
-                        currentPage++;
-                        renderCertificates();
-                    }
-                });
-            } else {
-                btn.addEventListener('click', () => {
-                    currentPage = parseInt(btn.getAttribute('data-page'));
-                    renderCertificates();
-                });
-            }
-        });
     }
     
     // Show certificate details in modal
@@ -195,60 +193,128 @@ document.addEventListener('DOMContentLoaded', () => {
         const certificateDetails = document.getElementById('certificateDetails');
         
         // Format the date of birth and issue date
-        const dobDate = new Date(currentCertificate.dob).toLocaleDateString();
-        const issueDateFormatted = new Date(currentCertificate.issueDate).toLocaleDateString();
+        const dobDate = formatDate(currentCertificate.dob);
+        const issueDateFormatted = formatDate(currentCertificate.issueDate);
         const formattedGender = currentCertificate.gender
             ? currentCertificate.gender.charAt(0).toUpperCase() + currentCertificate.gender.slice(1).toLowerCase()
             : 'Not specified';
         
         certificateDetails.innerHTML = `
-            <dl>
+            <div class="certificate-preview">
+                <div class="certificate-design">
+                    <div class="certificate-border">
+                        <div class="certificate-header">
+                            <img src="images/logo.png" alt="Galgotias University Logo" class="certificate-logo">
+                            <h1>Galgotias University</h1>
+                            <h2>Certificate of Achievement</h2>
+                        </div>
+                        <div class="certificate-body">
+                            <p class="certify-text">This is to certify that</p>
+                            <p class="student-name">${escapeHtml(currentCertificate.fullName)}</p>
+                            <p class="course-text">has successfully completed the course</p>
+                            <p class="course-name">${escapeHtml(currentCertificate.course)}</p>
+                            <p class="details-text">
+                                Admission Number: ${escapeHtml(currentCertificate.admissionNumber)}<br>
+                                Date of Birth: ${formatDate(currentCertificate.dob)}
+                            </p>
+                        </div>
+                        <div class="certificate-footer">
+                            <p class="certificate-number">Certificate No: ${escapeHtml(currentCertificate.certificateNumber)}</p>
+                            <p class="issue-date">Date of Issue: ${formatDate(currentCertificate.issueDate)}</p>
+                        </div>
+                    </div>
+                </div>
+                <button id="detailsDownloadBtn" class="btn download-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>
+                    </svg>
+                    Download Certificate
+                </button>
+            </div>
+            <div class="certificate-information">
+                <h3>Candidate &amp; Certificate Information</h3>
+                <dl>
                 <dt>ID</dt>
-                <dd>${currentCertificate._id}</dd>
+                <dd>${escapeHtml(currentCertificate._id)}</dd>
                 
                 <dt>Full Name</dt>
-                <dd>${currentCertificate.fullName}</dd>
+                <dd>${escapeHtml(currentCertificate.fullName)}</dd>
 
                 <dt>Gender</dt>
                 <dd>${formattedGender}</dd>
                 
                 <dt>Mobile</dt>
-                <dd>${currentCertificate.mobile}</dd>
+                <dd>${escapeHtml(currentCertificate.mobile)}</dd>
                 
                 <dt>Email</dt>
-                <dd>${currentCertificate.email}</dd>
+                <dd>${escapeHtml(currentCertificate.email)}</dd>
                 
                 <dt>Date of Birth</dt>
                 <dd>${dobDate}</dd>
                 
                 <dt>College</dt>
-                <dd>${currentCertificate.college}</dd>
+                <dd>${escapeHtml(currentCertificate.college)}</dd>
                 
                 <dt>Course</dt>
-                <dd>${currentCertificate.course}</dd>
+                <dd>${escapeHtml(currentCertificate.course)}</dd>
                 
                 <dt>Admission Number</dt>
-                <dd>${currentCertificate.admissionNumber}</dd>
+                <dd>${escapeHtml(currentCertificate.admissionNumber)}</dd>
                 
                 <dt>Section</dt>
-                <dd>${currentCertificate.section}</dd>
+                <dd>${escapeHtml(currentCertificate.section)}</dd>
                 
                 <dt>Semester</dt>
-                <dd>${currentCertificate.semester}</dd>
+                <dd>${escapeHtml(currentCertificate.semester)}</dd>
                 
                 <dt>Address</dt>
-                <dd>${currentCertificate.address}</dd>
+                <dd>${escapeHtml(currentCertificate.address)}</dd>
                 
                 <dt>Certificate Number</dt>
-                <dd>${currentCertificate.certificateNumber}</dd>
+                <dd>${escapeHtml(currentCertificate.certificateNumber)}</dd>
                 
                 <dt>Issue Date</dt>
                 <dd>${issueDateFormatted}</dd>
                 
                 <dt>Version</dt>
-                <dd>${currentCertificate.__v}</dd>
-            </dl>
+                <dd>${escapeHtml(currentCertificate.__v)}</dd>
+                </dl>
+                <div class="certificate-information-actions">
+                    <button id="deleteCertificateBtn" class="btn delete-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 10v6M14 10v6"/></svg>
+                        Delete
+                    </button>
+                    <button id="updateCertificateBtn" class="btn update-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1-1 4Z"/></svg>
+                        Update
+                    </button>
+                    <button id="detailsCloseAction" class="btn cancel-btn">
+                        <span aria-hidden="true">&times;</span>
+                        Close
+                    </button>
+                </div>
+            </div>
         `;
+
+        certificateDetails.querySelector('#detailsDownloadBtn').addEventListener('click', () => {
+            if (currentCertificate.certificateNumber) {
+                window.open(`${API_BASE_URL}/certificate/download-pdf/${encodeURIComponent(currentCertificate.certificateNumber)}`, '_blank');
+            }
+        });
+
+        certificateDetails.querySelector('#updateCertificateBtn').addEventListener('click', () => {
+            detailsModal.style.display = 'none';
+            showUpdateForm(currentCertificate._id);
+        });
+
+        certificateDetails.querySelector('#deleteCertificateBtn').addEventListener('click', () => {
+            detailsModal.style.display = 'none';
+            showDeleteConfirmation(currentCertificate._id);
+        });
+
+        certificateDetails.querySelector('#detailsCloseAction').addEventListener('click', () => {
+            detailsModal.style.display = 'none';
+        });
         
         detailsModal.style.display = 'block';
     }
@@ -277,6 +343,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('updateSemester').value = currentCertificate.semester;
         document.getElementById('updateAddress').value = currentCertificate.address;
         document.getElementById('updateCertificateNumber').value = currentCertificate.certificateNumber;
+        document.getElementById('updateIssueDate').value = currentCertificate.issueDate
+            ? new Date(currentCertificate.issueDate).toISOString().split('T')[0]
+            : '';
+        document.getElementById('updateVersion').value = currentCertificate.__v ?? '';
         document.getElementById('updateGender').value = (currentCertificate.gender || '').toLowerCase();
         
         // Close the details modal if it's open
@@ -291,6 +361,10 @@ document.addEventListener('DOMContentLoaded', () => {
         currentCertificate = currentCertificates.find(cert => cert._id === certificateId);
         
         if (!currentCertificate) return;
+
+        document.getElementById('deleteCertificateName').textContent = currentCertificate.fullName || 'Not available';
+        document.getElementById('deleteCertificateCourse').textContent = currentCertificate.course || 'Not available';
+        document.getElementById('deleteCertificateAdmission').textContent = currentCertificate.admissionNumber || 'Not available';
         
         // Close the details modal if it's open
         detailsModal.style.display = 'none';
@@ -386,7 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Search input
     if (searchInput) {
         searchInput.addEventListener('input', () => {
-            currentPage = 1; // Reset to first page when searching
+        visibleCertificateCount = certificatesPerPage;
             renderCertificates();
         });
     }
@@ -414,22 +488,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (deleteCloseButton) {
         deleteCloseButton.addEventListener('click', () => {
             deleteConfirmModal.style.display = 'none';
-        });
-    }
-    
-    // Update button in details modal
-    if (updateCertificateBtn) {
-        updateCertificateBtn.addEventListener('click', () => {
-            detailsModal.style.display = 'none';
-            showUpdateForm(currentCertificate._id);
-        });
-    }
-    
-    // Delete button in details modal
-    if (deleteCertificateBtn) {
-        deleteCertificateBtn.addEventListener('click', () => {
-            detailsModal.style.display = 'none';
-            showDeleteConfirmation(currentCertificate._id);
         });
     }
     

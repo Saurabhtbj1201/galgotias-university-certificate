@@ -63,10 +63,27 @@
 
     <main>
         <section class="dashboard-section">
-            <h2>Certificate Management</h2>
+            <div class="dashboard-heading">
+                <div class="dashboard-heading-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <path d="M14 2v6h6M8 13h8M8 17h6"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2>Certificate Management</h2>
+                    <p>Manage and maintain candidate certificate records</p>
+                </div>
+            </div>
             <div class="table-container">
                 <div class="table-actions">
-                    <input type="text" id="searchInput" placeholder="Search by name or admission number...">
+                    <label class="search-field" for="searchInput">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="11" cy="11" r="7"/>
+                            <path d="m20 20-4-4"/>
+                        </svg>
+                        <input type="search" id="searchInput" placeholder="Search by name or admission number..." autocomplete="off">
+                    </label>
                     <button id="refreshButton" class="btn refresh-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
@@ -74,10 +91,11 @@
                         Refresh
                     </button>
                 </div>
-                <div id="tableWrapper">
+                <div id="tableWrapper" role="region" aria-label="Certificate records" tabindex="0">
                     <table id="certificatesTable">
                         <thead>
                             <tr>
+                                <th>Date</th>
                                 <th>Full Name</th>
                                 <th>Course</th>
                                 <th>Admission Number</th>
@@ -88,13 +106,13 @@
                         <tbody id="certificatesTableBody">
                             <!-- Table rows will be populated by JavaScript -->
                             <tr class="loading-row">
-                                <td colspan="5" class="loading-message">Loading certificates...</td>
+                                <td colspan="6" class="loading-message">Loading certificates...</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <div id="paginationControls" class="pagination-controls">
-                    <!-- Pagination will be added by JavaScript -->
+                <div id="paginationControls" class="pagination-controls" aria-live="polite">
+                    <!-- Incremental loading controls are added by JavaScript -->
                 </div>
             </div>
         </section>
@@ -107,13 +125,8 @@
     <div id="detailsModal" class="modal">
         <div class="modal-content certificate-details-modal">
             <span class="close-button" id="detailsCloseButton">&times;</span>
-            <h2>Certificate Details</h2>
             <div id="certificateDetails" class="certificate-details">
-                <!-- Details will be populated by JavaScript -->
-            </div>
-            <div class="modal-actions">
-                <button id="updateCertificateBtn" class="btn">Update</button>
-                <button id="deleteCertificateBtn" class="btn delete-btn">Delete</button>
+                <!-- Certificate preview and details will be populated by JavaScript -->
             </div>
         </div>
     </div>
@@ -122,57 +135,72 @@
     <div id="updateModal" class="modal">
         <div class="modal-content certificate-update-modal">
             <span class="close-button" id="updateCloseButton">&times;</span>
-            <h2>Update Certificate</h2>
+            <div class="update-modal-heading">
+                <div class="update-modal-heading-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2>Update Certificate</h2>
+                    <p>Edit candidate certificate information</p>
+                </div>
+            </div>
             <form id="updateCertificateForm">
                 <input type="hidden" id="updateCertificateId">
-                
+
+                <div class="update-form-section-title">
+                    <span aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+                    </span>
+                    <strong>Personal Information</strong>
+                </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="updateFullName">Full Name</label>
+                        <label for="updateFullName">Full Name <span aria-hidden="true">*</span></label>
                         <input type="text" id="updateFullName" name="fullName" required>
                     </div>
                     <div class="form-group">
-                        <label for="updateMobile">Mobile</label>
-                        <input type="tel" id="updateMobile" name="mobile" required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="updateEmail">Email</label>
-                        <input type="email" id="updateEmail" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="updateDob">Date of Birth</label>
-                        <input type="date" id="updateDob" name="dob" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="updateGender">Gender</label>
+                        <label for="updateGender">Gender <span aria-hidden="true">*</span></label>
                         <select id="updateGender" name="gender" required>
                             <option value="" disabled>Select gender</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="updateMobile">Mobile <span aria-hidden="true">*</span></label>
+                        <input type="tel" id="updateMobile" name="mobile" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateEmail">Email <span aria-hidden="true">*</span></label>
+                        <input type="email" id="updateEmail" name="email" required>
+                    </div>
                 </div>
-                
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="updateCollege">College</label>
+                        <label for="updateDob">Date of Birth <span aria-hidden="true">*</span></label>
+                        <input type="date" id="updateDob" name="dob" required>
+                    </div>
+                </div>
+
+                <div class="update-form-section-title">
+                    <span aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/><path d="M22 10v6"/></svg>
+                    </span>
+                    <strong>Academic Information</strong>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="updateCollege">College <span aria-hidden="true">*</span></label>
                         <input type="text" id="updateCollege" name="college" required>
                     </div>
                     <div class="form-group">
-                        <label for="updateCourse">Course</label>
+                        <label for="updateCourse">Course <span aria-hidden="true">*</span></label>
                         <input type="text" id="updateCourse" name="course" required>
                     </div>
-                </div>
-                
-                <div class="form-row">
                     <div class="form-group">
-                        <label for="updateAdmissionNumber">Admission Number</label>
+                        <label for="updateAdmissionNumber">Admission Number <span aria-hidden="true">*</span></label>
                         <input type="text" id="updateAdmissionNumber" name="admissionNumber" required>
                     </div>
                     <div class="form-group">
@@ -180,26 +208,42 @@
                         <input type="text" id="updateSection" name="section" required>
                     </div>
                 </div>
-                
                 <div class="form-row">
                     <div class="form-group">
                         <label for="updateSemester">Semester</label>
                         <input type="text" id="updateSemester" name="semester" required>
                     </div>
                     <div class="form-group">
-                        <label for="updateCertificateNumber">Certificate Number</label>
+                        <label for="updateCertificateNumber">Certificate Number <span aria-hidden="true">*</span></label>
                         <input type="text" id="updateCertificateNumber" name="certificateNumber" readonly>
                     </div>
+                    <div class="form-group">
+                        <label for="updateIssueDate">Issue Date</label>
+                        <input type="date" id="updateIssueDate" name="issueDate" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateVersion">Version</label>
+                        <input type="text" id="updateVersion" name="version" readonly>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="updateAddress">Address</label>
+
+                <div class="update-form-section-title">
+                    <span aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                    </span>
+                    <strong>Address</strong>
+                </div>
+                <div class="form-group update-address-group">
+                    <label for="updateAddress">Address <span aria-hidden="true">*</span></label>
                     <textarea id="updateAddress" name="address" required></textarea>
                 </div>
                 
                 <div class="form-actions">
-                    <button type="submit" class="btn">Save Changes</button>
                     <button type="button" class="btn cancel-btn" id="updateCancelBtn">Cancel</button>
+                    <button type="submit" class="btn save-update-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+                        Save Changes
+                    </button>
                 </div>
             </form>
         </div>
@@ -209,11 +253,33 @@
     <div id="deleteConfirmModal" class="modal">
         <div class="modal-content delete-confirm-modal">
             <span class="close-button" id="deleteCloseButton">&times;</span>
-            <h2>Confirm Deletion</h2>
-            <p>Are you sure you want to delete this certificate? This action cannot be undone.</p>
-            <div class="form-actions">
-                <button id="confirmDeleteBtn" class="btn delete-btn">Yes, Delete</button>
+            <div class="delete-modal-heading">
+                <div class="delete-modal-heading-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 10v6M14 10v6"/></svg>
+                </div>
+                <div>
+                    <h2>Confirm Deletion</h2>
+                    <p>This action cannot be undone.</p>
+                </div>
+            </div>
+            <div class="delete-modal-body">
+                <div class="delete-modal-warning-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 10v6M14 10v6"/></svg>
+                </div>
+                <h3>Delete Certificate</h3>
+                <p class="delete-modal-question">Are you sure you want to delete this certificate?<br>This action cannot be undone.</p>
+                <dl class="delete-certificate-summary">
+                    <div><dt>Full Name</dt><dd id="deleteCertificateName"></dd></div>
+                    <div><dt>Course</dt><dd id="deleteCertificateCourse"></dd></div>
+                    <div><dt>Admission Number</dt><dd id="deleteCertificateAdmission"></dd></div>
+                </dl>
+            </div>
+            <div class="delete-modal-actions">
                 <button id="cancelDeleteBtn" class="btn cancel-btn">Cancel</button>
+                <button id="confirmDeleteBtn" class="btn delete-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 10v6M14 10v6"/></svg>
+                    Yes, Delete
+                </button>
             </div>
         </div>
     </div>
