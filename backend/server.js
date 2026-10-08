@@ -175,8 +175,12 @@ app.post('/api/certificate/verify', async (req, res) => {
         // Return relevant details for verification
         res.status(200).json({
             fullName: certificate.fullName,
+            gender: certificate.gender,
+            college: certificate.college,
             course: certificate.course,
             admissionNumber: certificate.admissionNumber,
+            section: certificate.section,
+            semester: certificate.semester,
             certificateNumber: certificate.certificateNumber,
             issueDate: certificate.issueDate,
             status: "Verified"
